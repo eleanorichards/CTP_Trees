@@ -35,15 +35,11 @@ public class VertexManipulator : MonoBehaviour {
     {
 
         for (int i = vertex_min; i < vertex_max; i++)
-        {            
-            
+        {                        
             vertices[i].x = stretch_X;
-
-            vertices[i].y = stretch_Y;
-           
+            vertices[i].y = stretch_Y;          
             vertices[i].z = stretch_Z;
-            i++;
-            
+            i++;            
         }
         
         mesh.vertices = vertices;
