@@ -20,8 +20,15 @@ public class CreateCylinder : MonoBehaviour
 
     void Start()
     {
+        MeshFilter mf = GetComponent<MeshFilter>();
+        Mesh mesh = mf.mesh;
         ComputeCylinder();
-
+        mesh.Clear();
+        mesh.vertices = vertices;
+        //mesh.triangles = triangles;
+        mesh.uv = uvs;
+        mesh.RecalculateNormals();
+        print("done");
     }
 
     void ComputeCylinder()
@@ -137,5 +144,7 @@ public class CreateCylinder : MonoBehaviour
             faces[topIndex + 1] = topCapOffset + midIndex;
             faces[topIndex + 2] = topCapOffset + lastIndex;
         }
+      
     }
+	
 }
