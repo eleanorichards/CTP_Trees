@@ -41,6 +41,7 @@ public class BuildMesh : MonoBehaviour {
         mesh.triangles = faces;
         mesh.uv = uvs;
         mesh.RecalculateNormals();
+        
     }
 
     void ComputeCyclinder()
@@ -87,6 +88,7 @@ public class BuildMesh : MonoBehaviour {
                 if (j == column_num - 1) angle = 0;
 
                 //compute vertices, uvs and normals for each row and column offsets
+                //Change this for curved/warped branches
                 vertices[i * column_num + j] = new Vector3(radius * Mathf.Cos(angle), i * height, radius * Mathf.Sin(angle)); //build a cylinder with an upwards orientation
                 uvs[i * column_num + j] = new Vector2(j * 1 / radius, i * 1 / halfAxis.y);
                 normals[i * column_num + j] = new Vector3(0, 0, -1.0f);
