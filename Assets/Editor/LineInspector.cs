@@ -5,38 +5,42 @@ using UnityEditor;
 
 [CustomEditor(typeof(Line))]
 public class LineInspector : Editor {
+    private Line line;
+    private Transform handleTransform;
+    private Quaternion handleRotation;
     private Vector3[] nodes;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     private void OnSceneGUI()
     {
-        Line line = target as Line;
+        line = target as Line;
         nodes = line.nodes;
 
-        Transform handleTransform = line.transform;
-        Quaternion handleRotation = handleTransform.rotation;
+        handleTransform = line.transform;
+        handleRotation = Tools.pivotRotation == PivotRotation.Local ? handleTransform.rotation : Quaternion.identity;
+
         for (int i = 0; i < nodes.Length; i++)
         {
-            nodes[i] = handleTransform.TransformPoint(line.nodes[i]);
+            //draw transform handles for each node
+            ShowPoint(i);         
         }
-        //Vector3 p0 = handleTransform.TransformPoint(line.p0);
-       // Vector3 p1 = handleTransform.TransformPoint(line.p1);
-
         Handles.color = Color.blue;
-        for (int i = 0; i < nodes.Length - 1; i++)
+        for (int i = 1; i < nodes.Length; i++)
         {
-            Handles.DrawLine(nodes[i], nodes[i+1]);
-            Handles.DoPositionHandle(nodes[i], handleRotation);
-            
+            Handles.DrawLine(nodes[i], nodes[i-1]);
+        }   
+
+    }
+
+    private void ShowPoint(int index)
+    {
+        nodes[index] = handleTransform.TransformPoint(line.nodes[index]);
+        EditorGUI.BeginChangeCheck();
+        Handles.DoPositionHandle(nodes[index], handleRotation);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Undo.RecordObject(line, "Move Point");
+            EditorUtility.SetDirty(line);
+            line.nodes[index] = handleTransform.InverseTransformPoint(nodes[index]);
         }
-        
     }
 }
