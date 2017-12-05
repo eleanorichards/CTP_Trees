@@ -8,18 +8,14 @@ public class OriginSetter : MonoBehaviour {
 
     public GameObject generator;
 
-    public float x_pos;
-    public float y_pos;
-    public float z_pos;
-
-    public float x_rot;
-    public float y_rot;
-    public float z_rot;
-
+    public float y_rotation;
+    public float y_incrementer = 0.0f;
     public float num_of_branches = 10;
-
-	// Use this for initialization
-	void Start () {
+    public float z_spinOffset;
+    public float offset = 0;
+    private float y_temp = 0;
+    // Use this for initialization
+    void Start () {
           SetBranchPositions();
     }
 	
@@ -30,12 +26,16 @@ public class OriginSetter : MonoBehaviour {
 
     void SetBranchPositions()
     {
+       
+        //rotation.x = 90 degrees by default
         branch_origins.Clear();
         for (int i = 0; i < num_of_branches; i++)
         {
             float angle = i * Mathf.PI * 2 / num_of_branches;
-            Vector3 pos = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * 5;
-            Instantiate(generator, pos, Quaternion.identity);
+            Vector3 pos = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle) * z_spinOffset);
+            y_temp += y_incrementer;
+            pos.y = y_temp;        
+            Instantiate(generator, pos, Quaternion.Euler(new Vector3(90,0, (angle*y_rotation)+offset)));
         }
     }
 }

@@ -22,19 +22,21 @@ public class BezierInspector : Editor {
         for(int i = 0; i < nodes.Length; i++)
         {
             //draw transform handles for each node
-            ShowPoint(i);
+            //ShowPoint(i);
         }
+
+       //ShowPoint(0);
         //Draw main lines
         for(int i = 1; i < nodes.Length; i++)
         {
-            Handles.color = Color.grey;
+            Handles.color = Color.green;
             Handles.DrawLine(nodes[i], nodes[i - 1]);
 
-            Handles.color = Color.cyan;
-            Vector3 lineStart = curve.GetPoint(0f);
+            Handles.color = Color.black;
+            Vector3 lineStart = curve.GetPoint(nodes, 0f);
             for (int x = 1; x <= lineSteps; x++)
             {
-                Vector3 lineEnd = curve.GetPoint(x / (float)lineSteps);
+                Vector3 lineEnd = curve.GetPoint(nodes, x / (float)lineSteps);
                 Handles.DrawLine(lineStart, lineEnd);
                 lineStart = lineEnd;
             }

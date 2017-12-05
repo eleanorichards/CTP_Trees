@@ -8,16 +8,14 @@ public class BezierCurve : MonoBehaviour {
     {
 
     }
-    public Vector3 GetPoint(float t)
+    public Vector3 GetPoint(Vector3[] nodes, float t)
     {
-        return transform.TransformPoint(Bezier.GetPoint(nodes[0], nodes[1], nodes[2], t));
-        //Vector3 transformPoint = Vector3.zero;
-        //for (int i = 3; i < nodes.Length; i++)
-        //{
-        //    transformPoint = transform.TransformPoint(Bezier.GetPoint(nodes[i], nodes[i - 1], nodes[i - 2], t));
-        //    i += 2;
-        //}
-        //return transformPoint;
+        Vector3 transformPoint = Vector3.zero;
+
+        
+        transformPoint = transform.TransformPoint(Bezier.GetPoint(nodes, t));
+        
+        return transformPoint;
     }
 
     public void Reset()
@@ -27,4 +25,10 @@ public class BezierCurve : MonoBehaviour {
             nodes[i] = new Vector3(i, 0f, 0f);
         }
     }
+
+    //public Vector3 GetVelocity(float t)
+    //{
+    //    return transform.TransformPoint(Bezier.GetFirstDerivative(nodes[0], nodes[1], nodes[2], t)) -
+    //        transform.position;
+    //}
 }
