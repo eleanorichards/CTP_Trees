@@ -25,14 +25,14 @@ public class BezierInspector : Editor {
             ShowPoint(i);
         }
         //Draw main lines
-        Handles.color = Color.grey;
         for(int i = 1; i < nodes.Length; i++)
         {
+            Handles.color = Color.grey;
             Handles.DrawLine(nodes[i], nodes[i - 1]);
 
             Handles.color = Color.cyan;
-            Vector3 lineStart = curve.GetPoint(i);
-            for (int x = 1; i <= lineSteps; x++)
+            Vector3 lineStart = curve.GetPoint(0f);
+            for (int x = 1; x <= lineSteps; x++)
             {
                 Vector3 lineEnd = curve.GetPoint(x / (float)lineSteps);
                 Handles.DrawLine(lineStart, lineEnd);

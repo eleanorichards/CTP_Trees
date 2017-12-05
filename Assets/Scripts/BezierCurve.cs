@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BezierCurve : MonoBehaviour {
     public Vector3[] nodes;
+    void Start()
+    {
 
+    }
     public Vector3 GetPoint(float t)
     {
         return transform.TransformPoint(Bezier.GetPoint(nodes[0], nodes[1], nodes[2], t));
