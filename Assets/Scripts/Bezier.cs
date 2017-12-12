@@ -5,15 +5,15 @@ using UnityEngine;
 public static class Bezier
 {
  
-    public static Vector3 GetPoint(Vector3[] nodes, float t)
+    public static Vector3 GetPoint(Vector3[] nodes, int startNode, float t)
     {
         float omt = 1f - t;
         float omt2 = omt * omt;
         float t2 = t * t;
-        return nodes[0] * (omt2 * omt) +
-            nodes[1] * (3f * omt2 * t) +
-            nodes[2] * (3f * (omt * t2)) +
-            nodes[3] * (t2 * t);
+        return nodes[startNode] * (omt2 * omt) +
+            nodes[startNode + 1] * (3f * omt2 * t) +
+            nodes[startNode + 2] * (3f * (omt * t2)) +
+            nodes[startNode + 3] * (t2 * t);
     }
 
    

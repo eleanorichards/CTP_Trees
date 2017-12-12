@@ -18,26 +18,22 @@ public class BezierInspector : Editor {
         nodes = curve.nodes;
         handleTransform = curve.transform;
         handleRotation = Tools.pivotRotation == PivotRotation.Local ? handleTransform.rotation : Quaternion.identity;
-
-        for(int i = 0; i < nodes.Length; i++)
-        {
-            //draw transform handles for each node
-            //ShowPoint(i);
-        }
-
-       //ShowPoint(0);
-        //Draw main lines
-        for(int i = 1; i < nodes.Length; i++)
+        for (int i = 0; i < nodes.Length - 1; i ++)
         {
             Handles.color = Color.green;
-            Handles.DrawLine(nodes[i], nodes[i - 1]);
+            Handles.DrawLine(nodes[i], nodes[i + 1]);
+        }
 
+        //Draw main lines
+        for(int i = 1; i < nodes.Length - 3; i+=3)
+        {
             Handles.color = Color.black;
-            Vector3 lineStart = curve.GetPoint(nodes, 0f);
+            Vector3 lineStart = curve.GetPoint(nodes, i, 0f);
             for (int x = 1; x <= lineSteps; x++)
             {
-                Vector3 lineEnd = curve.GetPoint(nodes, x / (float)lineSteps);
+                Vector3 lineEnd = curve.GetPoint(nodes, i, x / (float)lineSteps);
                 Handles.DrawLine(lineStart, lineEnd);
+                
                 lineStart = lineEnd;
             }
         }
@@ -56,5 +52,15 @@ public class BezierInspector : Editor {
         }
     }
 
-   
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        curve = target as BezierCurve;
+        if (GUILayout.Button("Add Curve"))
+        {
+            Undo.RecordObject(curve, "Add Curve");
+            curve.AddCurve();
+            EditorUtility.SetDirty(curve);
+        }
+    }
 }
