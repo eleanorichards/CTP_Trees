@@ -7,16 +7,24 @@ public class BezierCurve : MonoBehaviour
 {
     public Vector3[] nodes;
 
-    void Start()
-    {
 
-    }
-
-    public Vector3 GetPoint(Vector3[] nodes, int startNode, float t)
+    public Vector3 GetPoint(float t)
     {
-        Vector3 transformPoint = Vector3.zero;
-        transformPoint = transform.TransformPoint(Bezier.GetPoint(nodes, startNode, t));
-        return transformPoint;
+        int i;
+        if (t >= 1f)
+        {
+            t = 1f;
+            i = nodes.Length - 4;
+        }
+        else
+        {
+            t = Mathf.Clamp01(t) * CurveCount;
+            i = (int)t;
+            t -= i;
+            i *= 3;
+        }
+
+        return transform.TransformPoint(Bezier.GetPoint(nodes[i], nodes[i + 1] , nodes[i + 2], nodes[i + 3], t));      
     }
 
     public void Reset()
@@ -39,5 +47,38 @@ public class BezierCurve : MonoBehaviour
         nodes[nodes.Length - 1] = node;
     }
 
-    
+    public int CurveCount
+    {
+        get
+        {
+            return (nodes.Length - 1) / 3;
+        }
+    }
+
+    //show directional lines (for following splines)
+    public Vector3 GetDirection(float t)
+    {
+        return GetVelocity(t).normalized;
+    }
+
+    //returns magnitude of direction
+    public Vector3 GetVelocity(float t)
+    {
+        int i;
+        if (t >= 1f)
+        {
+            t = 1f;
+            i = nodes.Length - 4;
+        }
+        else
+        {
+            t = Mathf.Clamp01(t) * CurveCount;
+            i = (int)t;
+            t -= i;
+            i *= 3;
+        }
+        return transform.TransformPoint(Bezier.GetFirstDerivative(
+            nodes[i], nodes[i + 1], nodes[i + 2], nodes[i + 3], t)) - transform.position;
+    }
 }
+

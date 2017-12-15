@@ -11,31 +11,32 @@ public class BezierInspector : Editor {
     private Quaternion handleRotation;
     private Vector3[] nodes;
     private const int lineSteps = 10;
-
+    private int incrementor;
+    private const int stepsPerCurve = 10;
+    private float directionScale = 0.5f;
     private void OnSceneGUI()
     {
         curve = target as BezierCurve;
         nodes = curve.nodes;
-        handleTransform = curve.transform;
-        handleRotation = Tools.pivotRotation == PivotRotation.Local ? handleTransform.rotation : Quaternion.identity;
-        for (int i = 0; i < nodes.Length - 1; i ++)
+        //draw base lines
+        for (int i = 0; i < curve.nodes.Length - 1; i ++)
         {
             Handles.color = Color.green;
             Handles.DrawLine(nodes[i], nodes[i + 1]);
         }
 
         //Draw main lines
-        for(int i = 1; i < nodes.Length - 3; i+=3)
+        Vector3 p0 = nodes[0];
+        for(int i = 1; i < curve.nodes.Length; i+=3)
         {
             Handles.color = Color.black;
-            Vector3 lineStart = curve.GetPoint(nodes, i, 0f);
-            for (int x = 1; x <= lineSteps; x++)
-            {
-                Vector3 lineEnd = curve.GetPoint(nodes, i, x / (float)lineSteps);
-                Handles.DrawLine(lineStart, lineEnd);
-                
-                lineStart = lineEnd;
-            }
+            Vector3 p1 = nodes[i];
+            Vector3 p2 = nodes[i+1];
+            Vector3 p3 = nodes[i+2];
+
+            Handles.DrawBezier(p0, p3, p1, p2, Color.white, null, 2f);
+            p0 = p3;
+            ShowDirections();
         }
     }
 
@@ -49,6 +50,19 @@ public class BezierInspector : Editor {
             Undo.RecordObject(curve, "Move Point");
             EditorUtility.SetDirty(curve);
             curve.nodes[index] = handleTransform.InverseTransformPoint(nodes[index]);
+        }
+    }
+
+    private void ShowDirections()
+    {
+        Handles.color = Color.red;
+        Vector3 point = curve.GetPoint(0f);
+        Handles.DrawLine(point, point + curve.GetDirection(0f) * directionScale);
+        int steps = stepsPerCurve * curve.CurveCount;
+        for (int i = 1; i <= steps; i++)
+        {
+            point = curve.GetPoint(i / (float)steps);
+            Handles.DrawLine(point, point + curve.GetDirection(i / (float)steps) * directionScale);
         }
     }
 
