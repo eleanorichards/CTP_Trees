@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(BezierCurve))]
-public class BezierInspector : Editor {
-
+public class BezierInspector : Editor
+{
     private BezierCurve curve;
     private Transform handleTransform;
     private Quaternion handleRotation;
@@ -14,6 +14,7 @@ public class BezierInspector : Editor {
     private int incrementor;
     private const int stepsPerCurve = 10;
     private float directionScale = 0.5f;
+
     private void OnSceneGUI()
     {
         curve = target as BezierCurve;
@@ -76,5 +77,11 @@ public class BezierInspector : Editor {
             curve.AddCurve();
             EditorUtility.SetDirty(curve);
         }
+        if (GUILayout.Button("Do the shapes"))
+        {
+            curve.segments.GetComponent<segmentPlacer>().PlaceShapes();
+        }
     }
+
+   
 }

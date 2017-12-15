@@ -6,7 +6,7 @@ using UnityEngine;
 public class BezierCurve : MonoBehaviour
 {
     public Vector3[] nodes;
-
+    public GameObject segments;
 
     public Vector3 GetPoint(float t)
     {
