@@ -44,8 +44,8 @@ public class splineGeometry : MonoBehaviour {
         mesh.normals = normals;
     }
 	
-	// Update is called once per frame
-	void Update () {
+	//// Update is called once per frame
+	//void Update () {
 		
-	}
+	//}
 }

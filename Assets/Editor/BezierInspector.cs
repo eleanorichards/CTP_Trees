@@ -15,6 +15,7 @@ public class BezierInspector : Editor
     private const int stepsPerCurve = 10;
     private float directionScale = 0.5f;
 
+
     private void OnSceneGUI()
     {
         curve = target as BezierCurve;

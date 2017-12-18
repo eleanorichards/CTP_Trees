@@ -14,6 +14,7 @@ public class segmentPlacer : MonoBehaviour
 
     public void PlaceShapes()
     {
+        DestroyShapes();
         if (frequency <= 0 || segments == null || segments.Length == 0)
         {
             return;
@@ -24,17 +25,34 @@ public class segmentPlacer : MonoBehaviour
         {
             for (int i = 0; i < segments.Length; i++)
             {
+                //int segLength = segments.Length;
+                // System.Array.Resize(ref segments, segments.Length - segLength);
+              
                 Transform part = Instantiate(segments[i]) as Transform;
                 Vector3 pos = spline.GetPoint(f * stepSize);
+                
+                Vector3 rot = part.transform.eulerAngles;
+                rot.x += 90;
+                part.transform.eulerAngles = rot;
                 part.transform.localPosition = pos;
                 part.transform.LookAt(pos + spline.GetDirection(f * stepSize));
                 part.transform.parent = transform;
-
             }
         }
 
     }
 
+    void DestroyShapes()
+    {
+
+        GameObject[] temp = GameObject.FindGameObjectsWithTag("segment");
+        foreach(GameObject part in temp)
+        {
+            DestroyImmediate(part);
+
+        }
+        
+    }
   //      progress += Time.deltaTime * 0.1f;
 		//if(progress > 1.0f)
   //      {
