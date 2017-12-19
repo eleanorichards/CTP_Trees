@@ -7,6 +7,7 @@ public class BezierCurve : MonoBehaviour
 {
     public Vector3[] nodes;
     public GameObject segments;
+    public splineGeometry splineGeo;
 
     public Vector3 GetPoint(float t)
     {
@@ -80,5 +81,71 @@ public class BezierCurve : MonoBehaviour
         return transform.TransformPoint(Bezier.GetFirstDerivative(
             nodes[i], nodes[i + 1], nodes[i + 2], nodes[i + 3], t)) - transform.position;
     }
+
+    public Vector3 GetTangent(float t)
+    {
+        int i;
+        if (t >= 1f)
+        {
+            t = 1f;
+            i = nodes.Length - 4;
+        }
+        else
+        {
+            t = Mathf.Clamp01(t) * CurveCount;
+            i = (int)t;
+            t -= i;
+            i *= 3;
+        }
+        float omt = 1f - t;
+        float omt2 = omt * omt;
+        float t2 = t * t;
+        Vector3 tangent =
+                    nodes[i] * (-omt2) +
+                    nodes[i+1] * (3 * omt2 - 2 * omt) +
+                    nodes[i+2] * (-3 * t2 + 2 * t) +
+                    nodes[i+3] * (t2);
+        return tangent.normalized;
+    }
+
+    public Vector3 GetNormal2D(float t)
+    {
+        Vector3 tng = GetTangent(t);
+        return new Vector3(-tng.y, tng.x, 0f);
+    }
+
+
+    public Vector3 GetNormal3D(float t, Vector3 up)
+    {
+        Vector3 tng = GetTangent(t);
+        Vector3 binormal = Vector3.Cross(up, tng).normalized;
+        return Vector3.Cross(tng, binormal);
+
+    }
+
+    public Quaternion GetOrientation2D( float t)
+    {
+        Vector3 tng = GetTangent(t);
+        Vector3 nrm = GetNormal2D(t);
+        return Quaternion.LookRotation(tng, nrm);
+    }
+
+    public Quaternion GetOrientation3D(float t, Vector3 up)
+    {
+        Vector3 tng = GetTangent( t);
+        Vector3 nrm = GetNormal3D( t, up);
+        return Quaternion.LookRotation(tng, nrm);
+    }
+
+    public void ExtrudeShape()
+    {
+        //curve.segments.GetComponent<segmentPlacer>().PlaceShapes();
+        Mesh mesh = splineGeo.GetMesh();
+        var shape = splineGeo.GetExtrudeShape();
+        var path = splineGeo.GetPath();
+
+        splineGeo.Extrude(mesh, shape, path);
+    }
+
 }
 

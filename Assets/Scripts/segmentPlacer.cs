@@ -29,13 +29,8 @@ public class segmentPlacer : MonoBehaviour
                 // System.Array.Resize(ref segments, segments.Length - segLength);
               
                 Transform part = Instantiate(segments[i]) as Transform;
-                Vector3 pos = spline.GetPoint(f * stepSize);
-                
-                Vector3 rot = part.transform.eulerAngles;
-                rot.x += 90;
-                part.transform.eulerAngles = rot;
-                part.transform.localPosition = pos;
-                part.transform.LookAt(pos + spline.GetDirection(f * stepSize));
+                part.transform.rotation = spline.GetOrientation3D((f * stepSize), Vector3.up);
+                part.transform.localPosition = spline.GetPoint(f * stepSize); 
                 part.transform.parent = transform;
             }
         }
@@ -53,17 +48,4 @@ public class segmentPlacer : MonoBehaviour
         }
         
     }
-  //      progress += Time.deltaTime * 0.1f;
-		//if(progress > 1.0f)
-  //      {
-  //          progress = 0.0f;
-  //      }
-  //      Vector3 position = spline.GetPoint(progress);
-  //      transform.localPosition = position;
-
-  //      if (lookForward)
-  //      {
-  //          transform.LookAt(position + spline.GetDirection(progress));
-  //      } 
-    
 }

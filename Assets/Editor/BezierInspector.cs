@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
+ [RequireComponent(typeof(MeshFilter))]
 [CustomEditor(typeof(BezierCurve))]
 public class BezierInspector : Editor
 {
@@ -14,7 +14,13 @@ public class BezierInspector : Editor
     private int incrementor;
     private const int stepsPerCurve = 10;
     private float directionScale = 0.5f;
+    private MeshFilter mf;
 
+
+    void Start()
+    {
+
+    }
 
     private void OnSceneGUI()
     {
@@ -65,6 +71,8 @@ public class BezierInspector : Editor
         {
             point = curve.GetPoint(i / (float)steps);
             Handles.DrawLine(point, point + curve.GetDirection(i / (float)steps) * directionScale);
+            Handles.color = Color.yellow;
+            Handles.DrawLine(point, point + curve.GetTangent(i / (float)steps) * directionScale);
         }
     }
 
@@ -80,9 +88,16 @@ public class BezierInspector : Editor
         }
         if (GUILayout.Button("Do the shapes"))
         {
-            curve.segments.GetComponent<segmentPlacer>().PlaceShapes();
+            curve.ExtrudeShape();
         }
     }
 
    
+
+    
+
+
+   
+    
+
 }

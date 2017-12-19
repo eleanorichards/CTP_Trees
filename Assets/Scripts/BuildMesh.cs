@@ -12,10 +12,10 @@ public class BuildMesh : MonoBehaviour {
     public int height = 3;
 
     public Vector3[] vertices;
-    private Vector2[] uvs;
-    private Vector3[] normals;
-    int[] faces;
-    int[] triangles;
+    public Vector2[] uvs;
+    public Vector3[] normals;
+    public int[] faces;
+    public int[] triangles;
 
     public Vector3 halfAxis = Vector3.up;
 
