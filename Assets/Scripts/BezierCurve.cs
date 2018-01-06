@@ -8,13 +8,105 @@ public class BezierCurve : MonoBehaviour
     public Vector3[] nodes;
 
     public GameObject segments;
-    //public splineGeometry splineGeo;
     public GameObject branchPlacer;
+    private BezierCurve[] curves;
     private int branch_num = 5;
-        /*  
-      Vector3 position = new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f));
-      */
+    private int hierachyIndex;
+    private int memberIndex;
 
+    private BezierCurve[] BranchGroup1;
+    private BezierCurve[] BranchGroup2;
+    private BezierCurve[] BranchGroup3;
+
+
+    void Start()
+    {
+        for(int i = 0; i < nodes.Length; i++)
+        {
+            switch (gameObject.tag)
+            {
+                case "FIRST":
+                    //excecute first algorithm...
+                case "SECOND":
+                    //etc...
+                    break;
+                case "THIRD":
+                    //etc...
+                    break;
+                case "FOURTH":
+                    //etc...
+                default:
+                    break;
+            }
+            
+        }
+
+
+
+    }
+    /*  
+    Vector3 position = new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f));
+    */
+
+    public void SetInitialStatus(int _hierachyIndex, int _memberIndex)
+    {
+        hierachyIndex = _hierachyIndex;
+        memberIndex = _memberIndex;
+
+        switch (hierachyIndex)
+        {
+            case 1:
+                nodes[0] = new Vector3(0.0f,0.0f,0.0f);
+                break;
+            case 2:
+                //for(int i = 0; i < branchGroup1.Length; i++)
+                //nodes[0] = branchGroup1[i].GetPoint(memberIndex.Normalize());
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    void FindAllCurves()
+    {
+       // curves = GameObject.FindGameObjectsWithTag("BezierSpline");
+       /*   
+        *   if(curves[i].CompareTag("FIRST")
+        *   {
+        *       BranchGroup1.Add(curves[i]);
+        *   }   
+        */
+    }
+
+    /// <summary>
+    /// Sets branch shape for Trunks
+    /// Should move this to own class eventually
+    /// </summary>
+    void SetGroupOneBranches()
+    {
+
+    }
+
+    void SetGroupTwoBranches()
+    {
+
+    }
+
+    void SetGroupThreeBranches()
+    {
+
+    }
+
+    void SetGroupFourBranches()
+    {
+
+    }
+
+    void SetGroupFiveBranches()
+    {
+
+    }
     public void AddBranches()
     {
         branchPlacer.GetComponent<BranchPlacer>().AddBranch();
@@ -61,6 +153,9 @@ public class BezierCurve : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// returns (nodes.length - 1) / 3
+    /// </summary>
     public int CurveCount
     {
         get
