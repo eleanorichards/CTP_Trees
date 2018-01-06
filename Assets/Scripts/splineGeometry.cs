@@ -6,12 +6,17 @@ public class splineGeometry : MonoBehaviour {
     public MeshFilter mf;
     public Mesh mesh;
     public BezierCurve curve;
+    public int cap_resolution = 5;
+    public int radius = 1;
+    public Vertex[] vert2Ds;
 
     // Use this for initialization
     void Start () {
         //vertex locations
         mf = GetComponent<MeshFilter>();
-        mesh = mf.mesh;
+        mesh = mf.sharedMesh;
+        //vert2Ds = new Vertex[mesh.vertexCount];
+
     }
 
     ///
@@ -58,6 +63,7 @@ public class splineGeometry : MonoBehaviour {
             }
         }
         int ti = 0;
+        //creating the faces - could be moved over with cylinder code?
         for (int i = 0; i < segments; i++)
         {
             int offset = i * vertsInShape;
@@ -84,6 +90,7 @@ public class splineGeometry : MonoBehaviour {
         mesh.triangles = triangleIndices;
     }
 
+   
 
     /// 
     /// STRUCTS
@@ -147,30 +154,198 @@ public class splineGeometry : MonoBehaviour {
     ///
     public Mesh GetMesh()
     {
-        if (mf.mesh == null)
+        if (mf.sharedMesh == null)
         {
-            mf.mesh = new Mesh();
+            mf.sharedMesh = new Mesh();
         }
-        return mf.mesh;
+        return mf.sharedMesh;
     }
 
+    //public ExtrudeShape GetExtrudeShape()
+    //{
+
+    //    int height = curve.nodes.Length;
+    //    //columns and rows
+    //    int column_num = cap_resolution + 1;
+    //    int row_num = height + 1;
+
+    //    //Vertices
+    //    int vertice_num = column_num * row_num;
+
+    //    //Normals
+    //    int normals_num = vertice_num;
+
+    //    //uvs are always equal to no of vertices
+    //    int uv_num = vertice_num;
+
+    //    //side faces/tris without caps
+    //    int side_faces_num = cap_resolution * height * 2;
+
+    //    //cap faces
+    //    int cap_faces_num = cap_resolution - 2;
+
+    //    //initialise all arrays
+    //    Vector3[] vertices = new Vector3[vertice_num];
+    //    Vector3[] normals = new Vector3[normals_num];
+    //    Vector2[] uvs = new Vector2[uv_num];
+
+    //    //angle step for each column for side tris
+    //    float step = Mathf.PI * 2 / cap_resolution;
+
+    //    /*
+    //       first for loop computes all the side faces of the cylinder
+    //       second loop computes tris for top and bottom caps
+    //    */
+    //    for (int i = 0; i < row_num; i++)
+    //    {
+    //        for (int j = 0; j < column_num; j++)
+    //        {
+    //            float angle = j * step;
+
+    //            //folding from the first and last vertex
+    //            if (j == column_num - 1) angle = 0;
+
+    //            //compute vertices, uvs and normals for each row and column offsets
+    //            //Change this for curved/warped branches
+    //            vertices[i * column_num + j] = new Vector3(radius * Mathf.Cos(angle), i * height, radius * Mathf.Sin(angle)); //build a cylinder with an upwards orientation
+    //            uvs[i * column_num + j] = new Vector2(j * 1 / radius, 0);
+    //            normals[i * column_num + j] = new Vector3(0, 0, -1.0f);
+
+
+    //        }
+    //    }
+
+
+
+    //    //VERTEX DATA:
+    //    //NORMAL
+    //    //POINT
+    //    //UV
+    //    //var vert2Ds = new Vertex[] {
+    //    //        new Vertex(
+    //    //            new Vector3(0, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0),
+    //    //        new Vertex(
+    //    //            new Vector3(1, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),
+    //    //        new Vertex(
+    //    //            new Vector3(-1, 0,0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),
+    //    //        new Vertex(
+    //    //            new Vector3(0, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            1)
+    //    //    };
+
+    //    //var lines = new int[] {
+    //    //        0, 1,
+    //    //        1, 2,
+    //    //        2, 3
+    //    //    };
+
+    //    /*
+
+    //     The problem here is only once instance on vert2D is created
+
+    //     */
+    //    //mesh.vertexCount
+
+    //    // var vert2Ds = new Vertex[];
+
+
+    //        for (int i = 0; i < vertices.Length; i++)
+    //        {
+    //            vert2Ds[i] =
+    //                new Vertex(
+    //                    (vertices[i]),
+    //                    (normals[i]),
+    //                        uvs[i].x);
+
+    //        }
+
+
+    //    //var vert2Ds = new Vertex[] {
+    //    //        new Vertex(
+    //    //            new Vector3(-1, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0),
+    //    //        new Vertex(
+    //    //            new Vector3(-0.5f, 0.5f, 0.0f),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),                    
+    //    //        new Vertex(
+    //    //            new Vector3(0.0f, 1, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),
+    //    //        new Vertex(
+    //    //            new Vector3(0.5f, 0.5f, 0.0f),
+    //    //            new Vector3(0, 1, 0),
+    //    //            1),
+    //    //         new Vertex(
+    //    //            new Vector3(1.0f, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            1),
+    //    //        new Vertex(
+    //    //            new Vector3(0.5f, -0.5f, 0.0f),
+    //    //            new Vector3(0, 1, 0),
+    //    //            1),
+    //    //        new Vertex(
+    //    //            new Vector3(0.0f, -1.0f, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),
+    //    //        new Vertex(
+    //    //            new Vector3(-0.5f, -0.5f, 0f),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0.5f),
+    //    //        new Vertex(
+    //    //            new Vector3(-1, 0, 0),
+    //    //            new Vector3(0, 1, 0),
+    //    //            0)
+    //    //    };
+    //    var lines = new int[] {
+    //            0, 1,
+    //            1, 2,
+    //            2, 3,
+    //            3, 4,
+    //            4, 5,
+    //            5, 6,
+    //            6, 7,
+    //            7, 8
+
+    //        };
+
+    //    return new ExtrudeShape(vert2Ds, lines);
+
+    //}
     public ExtrudeShape GetExtrudeShape()
     {
+
+
+
+
+
+        //VERTEX DATA:
+        //NORMAL
+        //POINT
+        //UV
         var vert2Ds = new Vertex[] {
                 new Vertex(
                     new Vector3(0, 0, 0),
                     new Vector3(0, 1, 0),
                     0),
                 new Vertex(
-                    new Vector3(2, 0, 0),
+                    new Vector3(0, 0, 1),
                     new Vector3(0, 1, 0),
                     0.5f),
                 new Vertex(
-                    new Vector3(2, 0, 0),
+                    new Vector3(0, 0, 0),
                     new Vector3(0, 1, 0),
-                    0.5f),
+                    0.0f),
                 new Vertex(
-                    new Vector3(4, 0, 0),
+                    new Vector3(0, 0, -1),
                     new Vector3(0, 1, 0),
                     1)
             };
@@ -178,8 +353,58 @@ public class splineGeometry : MonoBehaviour {
         var lines = new int[] {
                 0, 1,
                 1, 2,
-                2, 3
+                2,3,             
+                
             };
+        //var vert2Ds = new Vertex[] {
+        //        new Vertex(
+        //            new Vector3(-1, 0, 0),
+        //            new Vector3(0, 1, 0),
+        //            0),
+        //        new Vertex(
+        //            new Vector3(-0.5f, 0.5f, 0.0f),
+        //            new Vector3(0, 1, 0),
+        //            0.5f),                    
+        //        new Vertex(
+        //            new Vector3(0.0f, 1, 0),
+        //            new Vector3(0, 1, 0),
+        //            0.5f),
+        //        new Vertex(
+        //            new Vector3(0.5f, 0.5f, 0.0f),
+        //            new Vector3(0, 1, 0),
+        //            1),
+        //         new Vertex(
+        //            new Vector3(1.0f, 0, 0),
+        //            new Vector3(0, 1, 0),
+        //            1),
+        //        new Vertex(
+        //            new Vector3(0.5f, -0.5f, 0.0f),
+        //            new Vector3(0, 1, 0),
+        //            1),
+        //        new Vertex(
+        //            new Vector3(0.0f, -1.0f, 0),
+        //            new Vector3(0, 1, 0),
+        //            0.5f),
+        //        new Vertex(
+        //            new Vector3(-0.5f, -0.5f, 0f),
+        //            new Vector3(0, 1, 0),
+        //            0.5f),
+        //        new Vertex(
+        //            new Vector3(-1, 0, 0),
+        //            new Vector3(0, 1, 0),
+        //            0)
+        //    };
+        //var lines = new int[] {
+        //        0, 1,
+        //        1, 2,
+        //        2, 3,
+        //        3, 4,
+        //        4, 5,
+        //        5, 6,
+        //        6, 7,
+        //        7, 8
+
+        //    };
 
         return new ExtrudeShape(vert2Ds, lines);
 
