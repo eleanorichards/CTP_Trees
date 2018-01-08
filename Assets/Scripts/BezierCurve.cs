@@ -6,43 +6,16 @@ using UnityEngine;
 public class BezierCurve : MonoBehaviour
 {
     public Vector3[] nodes;
-
     public GameObject segments;
     public GameObject branchPlacer;
-    private BezierCurve[] curves;
-    private int branch_num = 5;
-    private int hierachyIndex;
-    private int memberIndex;
+    public int hierachyIndex;
+    public int memberIndex;
 
-    private BezierCurve[] BranchGroup1;
-    private BezierCurve[] BranchGroup2;
-    private BezierCurve[] BranchGroup3;
-
+    public bool firstGroup = false;
+    public bool secondGroup = false;
 
     void Start()
     {
-        for(int i = 0; i < nodes.Length; i++)
-        {
-            switch (gameObject.tag)
-            {
-                case "FIRST":
-                    //excecute first algorithm...
-                case "SECOND":
-                    //etc...
-                    break;
-                case "THIRD":
-                    //etc...
-                    break;
-                case "FOURTH":
-                    //etc...
-                default:
-                    break;
-            }
-            
-        }
-
-
-
     }
     /*  
     Vector3 position = new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f));
@@ -55,12 +28,25 @@ public class BezierCurve : MonoBehaviour
 
         switch (hierachyIndex)
         {
-            case 1:
+            case 0:
                 nodes[0] = new Vector3(0.0f,0.0f,0.0f);
+                for(int i = 0; i < nodes.Length; i++)
+                {
+                    nodes[i] = new Vector3(0.0f, i, 0.0f);
+                }
+                break;
+            case 1:
+                //for(int i = 0; i < branchGroup1.Length; i++)
+                for (int i = 0; i < nodes.Length; i++)
+                {
+                    nodes[i] = new Vector3(0.0f, 0.0f, i);
+                }   //branchGroup1[i].GetPoint(memberIndex.Normalize());
                 break;
             case 2:
-                //for(int i = 0; i < branchGroup1.Length; i++)
-                //nodes[0] = branchGroup1[i].GetPoint(memberIndex.Normalize());
+                for (int i = 0; i < nodes.Length; i++)
+                {
+                    nodes[i] = new Vector3(i, 0.0f, 0);
+                }
                 break;
             default:
                 break;
@@ -83,9 +69,9 @@ public class BezierCurve : MonoBehaviour
     /// Sets branch shape for Trunks
     /// Should move this to own class eventually
     /// </summary>
-    void SetGroupOneBranches()
+    void GetGroupOneBranches()
     {
-
+      
     }
 
     void SetGroupTwoBranches()
