@@ -36,11 +36,10 @@ public class BezierCurve : MonoBehaviour
                 }
                 break;
             case 1:
-                //for(int i = 0; i < branchGroup1.Length; i++)
                 for (int i = 0; i < nodes.Length; i++)
                 {
                     nodes[i] = new Vector3(0.0f, 0.0f, i);
-                }   //branchGroup1[i].GetPoint(memberIndex.Normalize());
+                }   
                 break;
             case 2:
                 for (int i = 0; i < nodes.Length; i++)
@@ -54,51 +53,20 @@ public class BezierCurve : MonoBehaviour
 
     }
 
-    void FindAllCurves()
-    {
-       // curves = GameObject.FindGameObjectsWithTag("BezierSpline");
-       /*   
-        *   if(curves[i].CompareTag("FIRST")
-        *   {
-        *       BranchGroup1.Add(curves[i]);
-        *   }   
-        */
-    }
-
     /// <summary>
-    /// Sets branch shape for Trunks
-    /// Should move this to own class eventually
+    /// Returns set coordinates for index along tree
     /// </summary>
-    void GetGroupOneBranches()
+    public Vector2 SplineIndex()
     {
-      
+        return new Vector2(hierachyIndex, memberIndex);
     }
 
-    void SetGroupTwoBranches()
-    {
 
-    }
-
-    void SetGroupThreeBranches()
-    {
-
-    }
-
-    void SetGroupFourBranches()
-    {
-
-    }
-
-    void SetGroupFiveBranches()
-    {
-
-    }
     public void AddBranches()
     {
         branchPlacer.GetComponent<BranchPlacer>().AddBranch();
     }
     
-
 
     public void AddCurve()
     {

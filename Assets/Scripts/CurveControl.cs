@@ -32,7 +32,7 @@ public class CurveControl : MonoBehaviour
 
     
 
-    public void DrawCurve()
+    public void SetBranchType()
     {
 
         switch(treeType)
@@ -54,8 +54,7 @@ public class CurveControl : MonoBehaviour
                     }
                     if(i < partsInterval2 && i >= partsInterval1)
                     {
-                        splines[i].SetInitialStatus(1, i - partsInterval1);
-                        //splines[i].nodes[0] = 
+                        splines[i].SetInitialStatus(1, i - partsInterval1);                        
                     }
                     if(i < partsInterval3 && i >= partsInterval2)
                     {
@@ -63,16 +62,8 @@ public class CurveControl : MonoBehaviour
                     }
                     //So on...
 
-                    //Internal Calculations
-                    Vector3 point = splines[i].GetPoint(0f);              
-                    lineRend[i].SetPosition(1, point + splines[i].GetDirection(0f));               
-                    int steps = stepsPerCurve * splines[i].CurveCount;
-                    for (int x = 1; x < steps; x++)
-                    {
-                        point = splines[i].GetPoint(x / steps);
-                        //this is the curves within line rednerer
-                        lineRend[i].SetPosition(x, point + splines[i].GetDirection(x / (float)steps));
-                    }
+                    DrawLines(i);
+                   
                 }
                 break;
             case TreeType.FIBBONACI:
@@ -84,10 +75,21 @@ public class CurveControl : MonoBehaviour
         }
     }
 
-    void GetInitialPosition(int hierachyIndex, int memberIndex)
-    {
 
+    void DrawLines(int i)
+    {
+        //Internal Calculations
+        Vector3 point = splines[i].GetPoint(0f);
+        lineRend[i].SetPosition(0, point);
+        int steps = stepsPerCurve * splines[i].CurveCount;
+        for (int x = 1; x < steps; x++)
+        {
+            point = splines[i].GetPoint(x / (float)steps);
+            //this is the curves within line rednerer
+            lineRend[i].SetPosition(x, point + splines[i].GetDirection(x / (float)steps));
+        }
     }
+    
     /// <summary>
     /// Initialisation of Splines
     /// </summary>
