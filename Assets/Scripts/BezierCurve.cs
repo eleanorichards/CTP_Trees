@@ -30,47 +30,36 @@ public class BezierCurve : MonoBehaviour
     {
         hierachyIndex = _hierachyIndex;
         memberIndex = _memberIndex;
-        bool left = false;
 
+        
+
+    }
+
+    public void SetStartNode(Vector3 _startPos)
+    {
+        Vector3 startPos = _startPos;
         switch (hierachyIndex)
         {
             case 0:
                 PlaceTrunk();
                 break;
             case 1:
+                nodes[0] = startPos;
                 for (int i = 1; i < nodes.Length; i++)
                 {
-                    Vector3 startPos = nodes[0];
-                    if(left)
-                    {
-                        nodes[i] = startPos + new Vector3(i, 0, 0);
-                    }
-                    else
-                    {
-                        nodes[i] = startPos + new Vector3(-i, 0, 0);
-                    }
-                    left =! left;
-                }   
+                    nodes[i] = startPos + new Vector3(i, 0, 0);
+                }
                 break;
             case 2:
+                nodes[0] = startPos;
                 for (int i = 1; i < nodes.Length; i++)
-                {
-                    Vector3 startPos = nodes[0];
-                    if (left)
-                    {
-                        nodes[i] = startPos + new Vector3(i, i, 0);
-                    }
-                    else
-                    {
-                        nodes[i] = startPos + new Vector3(0, -i, i);
-                    }
-                    left = !left;
+                {                   
+                    nodes[i] = startPos + new Vector3(0, i, 0);                                       
                 }
                 break;
             default:
                 break;
         }
-
     }
 
     /// <summary>

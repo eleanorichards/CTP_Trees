@@ -93,6 +93,7 @@ public class CurveControl : MonoBehaviour
         int memberIndex = _splineNo - _noOfParents;
         int noOfParents = _noOfParents;
         int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
+        Vector3 startPos = Vector3.zero;
         splines[_splineNo].SetParentIndex(parentMemberIndex);
 
         //globalIndex = MemberIndex + noOfParents
@@ -103,14 +104,16 @@ public class CurveControl : MonoBehaviour
             {
                 if (y <= 1)
                 {
-                    Vector3 startPos = splines[i].GetPoint(y);
-                    splines[_splineNo].nodes[0] = startPos;
+                    startPos = splines[i].GetPoint(y);                  
                 }
                 else
+                {
                     y = 0;                
-            }
-            
+                }
+            }            
+            splines[_splineNo].SetStartNode(startPos);  
         }
+
     }
 
     void DrawLines(int i)
