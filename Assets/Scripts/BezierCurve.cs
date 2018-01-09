@@ -8,43 +8,63 @@ public class BezierCurve : MonoBehaviour
     public Vector3[] nodes;
     public GameObject segments;
     public GameObject branchPlacer;
+
     public int hierachyIndex;
     public int memberIndex;
 
+    public int parentHierachy;
+    public int parentIndex;
+    public int globalIndex;
+
     public bool firstGroup = false;
     public bool secondGroup = false;
+    public bool thirdgroup = false;
 
+    //Initialisation
     void Start()
     {
+
     }
-    /*  
-    Vector3 position = new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f));
-    */
 
     public void SetInitialStatus(int _hierachyIndex, int _memberIndex)
     {
         hierachyIndex = _hierachyIndex;
         memberIndex = _memberIndex;
+        bool left = false;
 
         switch (hierachyIndex)
         {
             case 0:
-                nodes[0] = new Vector3(0.0f,0.0f,0.0f);
-                for(int i = 0; i < nodes.Length; i++)
-                {
-                    nodes[i] = new Vector3(0.0f, i, 0.0f);
-                }
+                PlaceTrunk();
                 break;
             case 1:
-                for (int i = 0; i < nodes.Length; i++)
+                for (int i = 1; i < nodes.Length; i++)
                 {
-                    nodes[i] = new Vector3(0.0f, 0.0f, i);
+                    Vector3 startPos = nodes[0];
+                    if(left)
+                    {
+                        nodes[i] = startPos + new Vector3(i, 0, 0);
+                    }
+                    else
+                    {
+                        nodes[i] = startPos + new Vector3(-i, 0, 0);
+                    }
+                    left =! left;
                 }   
                 break;
             case 2:
-                for (int i = 0; i < nodes.Length; i++)
+                for (int i = 1; i < nodes.Length; i++)
                 {
-                    nodes[i] = new Vector3(i, 0.0f, 0);
+                    Vector3 startPos = nodes[0];
+                    if (left)
+                    {
+                        nodes[i] = startPos + new Vector3(i, i, 0);
+                    }
+                    else
+                    {
+                        nodes[i] = startPos + new Vector3(0, -i, i);
+                    }
+                    left = !left;
                 }
                 break;
             default:
@@ -56,11 +76,33 @@ public class BezierCurve : MonoBehaviour
     /// <summary>
     /// Returns set coordinates for index along tree
     /// </summary>
-    public Vector2 SplineIndex()
+    public Vector2 GetSplineIndex()
     {
         return new Vector2(hierachyIndex, memberIndex);
     }
 
+
+    public void SetParentIndex(int _parentIndex)
+    {
+        //parentHierachy = _parentHierachy;
+        parentIndex = _parentIndex;
+    }
+
+
+    public void PlaceTrunk()
+    {
+        nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i] = new Vector3(Random.Range(-0.5f, 0.5f), i, Random.Range(-0.5f, 0.5f));
+        }
+    }
+
+
+    public void SetGlobalIndex(int _globalIndex)
+    {
+        globalIndex = _globalIndex;
+    }
 
     public void AddBranches()
     {

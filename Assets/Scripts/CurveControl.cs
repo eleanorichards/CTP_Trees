@@ -9,10 +9,12 @@ public class CurveControl : MonoBehaviour
     public GameObject[] curves;
     public LineRenderer[] lineRend;
 
-    private const int branchCount = 100;
+    private const int branchCount = 40;
     private const int lineSteps = 10;
     private const int stepsPerCurve = 10;
+
     TreeType treeType;
+    float y = 0.0f;
 
     // Use this for initialization
     void Start () {
@@ -21,7 +23,7 @@ public class CurveControl : MonoBehaviour
         splines = new BezierCurve[branchCount];
         lineRend = new LineRenderer[branchCount];
         branchPrefab = Resources.Load<GameObject>("Bezier");
-        FindAllCurves();
+        CreateSplines();
 	}
 	
 	// Update is called once per frame
@@ -31,39 +33,50 @@ public class CurveControl : MonoBehaviour
     }
 
     
-
+    /// <summary>
+    /// Sets index numbers and parent branch
+    /// </summary>
     public void SetBranchType()
     {
+        int group2PerBranch = 8;
+        int group3PerBranch = 5;
 
         switch(treeType)
         {
-            case TreeType.DISSECANT:
-                //for each spline in the scene, set position
-                //Fibonacci sequence would mean
-                //1, 2, 3, 5, 8, 13, 21
-                //Hierachy Calculations                   
-                int partsInterval1 = 1; //1
-                int partsInterval2 = 6*1; //37
-                int partsInterval3 = 8*8 ; //101
+            case TreeType.DISSECANT:                            
+                int group1Count = 1; //one trunk
+                int group2Count = group1Count * group2PerBranch; //8 coming off the trunk
+                int group3Count = group2Count * group3PerBranch; //5 each / 40 coming off tier 2
                 
+
                 for (int i = 0; i < splines.Length; i++)
                 {
-                    if(i < partsInterval1)
+                    splines[i].SetGlobalIndex(i);
+                    if(i < group1Count)
                     {
+                        lineRend[i].startWidth = 0.5f;
+                        lineRend[i].endWidth = 0.4f;
                         splines[i].SetInitialStatus(0, 0);
+                        SetStartLocation(0, 1, i);
                     }
-                    if(i < partsInterval2 && i >= partsInterval1)
+                    if(i < group2Count && i >= group1Count)
                     {
-                        splines[i].SetInitialStatus(1, i - partsInterval1);                        
+                        lineRend[i].startWidth = 0.3f;
+                        lineRend[i].endWidth = 0.2f;
+                        splines[i].SetInitialStatus(1, i - group1Count);
+                        SetStartLocation(group1Count, group2PerBranch, i);
+                        y += ((float)1 / (float)group2PerBranch);
                     }
-                    if(i < partsInterval3 && i >= partsInterval2)
+                    if(i < group3Count && i >= group2Count)
                     {
-                        splines[i].SetInitialStatus(2, i - partsInterval2 );
+                        lineRend[i].startWidth = 0.1f;
+                        lineRend[i].endWidth = 0.05f;
+                        splines[i].SetInitialStatus(2, i - group2Count);
+                        SetStartLocation(group2Count, group3PerBranch, i);
+                        y += (1 / group3PerBranch);
                     }
                     //So on...
-
-                    DrawLines(i);
-                   
+                    DrawLines(i);               
                 }
                 break;
             case TreeType.FIBBONACI:
@@ -75,6 +88,30 @@ public class CurveControl : MonoBehaviour
         }
     }
 
+    void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo)
+    {
+        int memberIndex = _splineNo - _noOfParents;
+        int noOfParents = _noOfParents;
+        int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
+        splines[_splineNo].SetParentIndex(parentMemberIndex);
+
+        //globalIndex = MemberIndex + noOfParents
+        for (int i = 0; i < splines.Length; i++)
+        {
+            if (splines[i].hierachyIndex == (splines[_splineNo].hierachyIndex - 1)
+                && splines[i].memberIndex == parentMemberIndex) 
+            {
+                if (y <= 1)
+                {
+                    Vector3 startPos = splines[i].GetPoint(y);
+                    splines[_splineNo].nodes[0] = startPos;
+                }
+                else
+                    y = 0;                
+            }
+            
+        }
+    }
 
     void DrawLines(int i)
     {
@@ -93,16 +130,11 @@ public class CurveControl : MonoBehaviour
     /// <summary>
     /// Initialisation of Splines
     /// </summary>
-    void FindAllCurves()
+    void CreateSplines()
     {
-        // curves = GameObject.FindGameObjectsWithTag("BranchSpline");
-        // splines = new BezierCurve[curves.Length];
-        //splines = new BezierCurve[branchCount];
-        //lineRend = new LineRenderer[branchCount];
         for (int i = 0; i < branchCount; i++)
         {
             curves[i] = Instantiate(branchPrefab, transform);
-            //splines[i] = curves[i].GetComponent<BezierCurve>();
             splines[i] = curves[i].GetComponent<BezierCurve>();
             lineRend[i] = curves[i].GetComponent<LineRenderer>();
             lineRend[i].positionCount = stepsPerCurve;
