@@ -17,7 +17,7 @@ public class BranchPlacer : MonoBehaviour {
 
 	public void AddBranch()
     {
-        float stepSize = 1f / (branch_num);
+       //loat stepSize = 1f / (branch_num);
         for (int i = 0; i < branch_num; i++)
         {
             if(i == 0)

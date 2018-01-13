@@ -35,32 +35,40 @@ public class BezierCurve : MonoBehaviour
 
     }
 
-    public void SetStartNode(Vector3 _startPos)
+    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
     {
-        Vector3 startPos = _startPos;
+        float x = nodes[0].x;
+        float y = nodes[0].y;
+        float z = nodes[0].z;
+
+        nodes[0] = node0Pos;
+        nodes[1] = node1Pos;
+        Vector3 initialStep = node1Pos - node0Pos;
+
         switch (hierachyIndex)
         {
             case 0:
                 PlaceTrunk();
                 break;
             case 1:
-                nodes[0] = startPos;
-                for (int i = 1; i < nodes.Length; i++)
+                for (int i = 2; i < nodes.Length; i++)
                 {
-                    nodes[i] = startPos + new Vector3(i, 0, 0);
+                    nodes[i] = nodes[i - 1] + initialStep;
                 }
                 break;
             case 2:
-                nodes[0] = startPos;
-                for (int i = 1; i < nodes.Length; i++)
-                {                   
-                    nodes[i] = startPos + new Vector3(0, i, 0);                                       
+                for (int i = 2; i < nodes.Length; i++)
+                {
+                    nodes[i] = nodes[i - 1] + initialStep;
                 }
+
                 break;
             default:
                 break;
         }
     }
+
+   
 
     /// <summary>
     /// Returns set coordinates for index along tree
