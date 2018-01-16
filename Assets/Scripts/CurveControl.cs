@@ -87,6 +87,7 @@ public class CurveControl : MonoBehaviour
                     splines[i].SetGlobalIndex(i);
                     if (i < group1Count)
                     {
+
                         angleVariation = 90;
 
                         lineRend[i].startWidth = 0.5f;
@@ -96,21 +97,26 @@ public class CurveControl : MonoBehaviour
                     }
                     if (i <= group2Count && i >= group1Count)
                     {
+
+                        angleVariation = 90;
                         lineRend[i].startWidth = 0.3f;
-                        lineRend[i].endWidth = 0.2f;
+                        lineRend[i].endWidth = 0.1f;
+                        //splines[i].SetNodeSize(4);
                         splines[i].SetInitialStatus(1, i - group1Count);
-                        SetStartLocation(group1Count, group2PerBranch, i, 1);
                         y += ((float)1 / (float)group2PerBranch);
+                        SetStartLocation(group1Count, group2PerBranch, i, 1);
                     }
                     if (i <= group3Count && i > group2Count)
                     {
-                        angleVariation = 90;
+                        angleVariation = 50;
 
                         lineRend[i].startWidth = 0.1f;
-                        lineRend[i].endWidth = 0.05f;
+                        lineRend[i].endWidth = 0.00f;
+                        //splines[i].SetNodeSize(2);
+
                         splines[i].SetInitialStatus(2, i - group2Count);
-                        SetStartLocation(group2Count, group3PerBranch, i, 2);
                         y += ((float)1 / (float)group3PerBranch);
+                        SetStartLocation(group2Count, group3PerBranch, i, 2);
                     }
                     //So on...
                     DrawLines(i);
@@ -147,24 +153,24 @@ public class CurveControl : MonoBehaviour
             if (splines[i].hierachyIndex == (splines[_splineNo].hierachyIndex - 1)
                 && splines[i].memberIndex == parentMemberIndex)
             {
-                if (y <= 1)
+                if (y <= 0.9f)
                 {
                     startPos = splines[i].GetPoint(y);
                 }
                 else
                 {
-                    y = 0;
+                    y = 0.3f;
                     startPos = splines[i].GetPoint(y);
                 }
             }
             if (_splineNo == 0)
             {
-                splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f,1.0f,0.0f));
+                splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f,1.0f,0.0f), hierachy);
             }
 
             //the important line        
         }
-        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle, hierachy));              
+        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle, hierachy), hierachy);              
     }
 
     public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle, int hierachy)
@@ -177,11 +183,13 @@ public class CurveControl : MonoBehaviour
             case 0:
                 break;
             case 1:
+                radius = 0.8f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y;
                 pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
                 break;
             case 2:
+                radius = 0.02f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 pos.z = parentpos.z ;

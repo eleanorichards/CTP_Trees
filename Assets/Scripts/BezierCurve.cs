@@ -33,12 +33,29 @@ public class BezierCurve : MonoBehaviour
         parentHierachy = hierachyIndex - 1;
     }
 
-    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
+    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos, int hierachy)
     {
+        float sizeMultiplier = 0.0f;
+
+        switch (hierachy)
+        {
+            case 0:
+                sizeMultiplier = 1.0f;
+                break;
+            case 1:
+                sizeMultiplier = 0.70f;
+                break;
+            case 2:
+                sizeMultiplier = 0.25f;
+                break;
+            default:
+                break;
+        }
+
         nodes[0] = node0Pos;
-        nodes[1] = node1Pos;
+        nodes[1] = node1Pos ;
         //Debug.Log(node0Pos + " : " + node1Pos);
-        Vector3 initialStep = node1Pos - node0Pos;
+        Vector3 initialStep = (node1Pos - node0Pos);
 
         switch (hierachyIndex)
         {
@@ -46,21 +63,28 @@ public class BezierCurve : MonoBehaviour
                 PlaceTrunk();
                 break;
             case 1:
-                for (int i = 2; i < nodes.Length; i++)
+                for (int i = 1; i < nodes.Length; i++)
                 {
                     nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-0.2f, 0.2f);
                 }
                 break;
             case 2:
-                for (int i = 2; i < nodes.Length; i++)
+                for (int i = 1; i < nodes.Length; i++)
                 {
-                    nodes[i] = nodes[i - 1] + initialStep + RandomVector(-0.2f, 0.2f);
+                    nodes[i] = nodes[i - 1] + initialStep + RandomVector(-0.5f, 0.5f);
                 }
 
                 break;
             default:
                 break;
         }
+    }
+
+    public void SetNodeSize(int nodeNum)
+    {
+       
+        System.Array.Resize(ref nodes, nodeNum);
+       
     }
 
    public Vector3 RandomVector(float min, float max)
