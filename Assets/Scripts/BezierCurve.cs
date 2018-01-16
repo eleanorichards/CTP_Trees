@@ -35,13 +35,9 @@ public class BezierCurve : MonoBehaviour
 
     public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
     {
-        float x = nodes[0].x;
-        float y = nodes[0].y;
-        float z = nodes[0].z;
-
         nodes[0] = node0Pos;
         nodes[1] = node1Pos;
-        Debug.Log(node0Pos + " : " + node1Pos);
+        //Debug.Log(node0Pos + " : " + node1Pos);
         Vector3 initialStep = node1Pos - node0Pos;
 
         switch (hierachyIndex)
@@ -52,13 +48,13 @@ public class BezierCurve : MonoBehaviour
             case 1:
                 for (int i = 2; i < nodes.Length; i++)
                 {
-                    nodes[i] = nodes[i - 1] + initialStep;
+                    nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-0.2f, 0.2f);
                 }
                 break;
             case 2:
                 for (int i = 2; i < nodes.Length; i++)
                 {
-                    nodes[i] = nodes[i - 1] + initialStep;
+                    nodes[i] = nodes[i - 1] + initialStep + RandomVector(-0.2f, 0.2f);
                 }
 
                 break;
@@ -67,7 +63,10 @@ public class BezierCurve : MonoBehaviour
         }
     }
 
-   
+   public Vector3 RandomVector(float min, float max)
+    {
+        return new Vector3(Random.Range(min, max), Random.Range(min, max), Random.Range(min, max));
+    }
 
     /// <summary>
     /// Returns set coordinates for index along tree

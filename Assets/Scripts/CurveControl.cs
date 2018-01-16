@@ -10,6 +10,7 @@ public class CurveControl : MonoBehaviour
     public const int branchCount = 41;  //No. of branches per tree (including trunk)
     private const int lineSteps = 10;   //no of steps
     private const int stepsPerCurve = 10;
+    private float angleVariation = 90.0f;
 
     private int group1Count = 0; //Trunk n(ideally 1/2/3)
     private int group2Count = 0; //FORMAT: 8 each, 1 prev branch = 1*8 = 8
@@ -68,6 +69,7 @@ public class CurveControl : MonoBehaviour
         switch (treeType)
         {
             case TreeType.DISSECANT:
+                angleVariation = 90;
                 group2PerBranch = 8;
                 group3PerBranch = 5;
                 group1Count = 1; //one trunk
@@ -76,30 +78,38 @@ public class CurveControl : MonoBehaviour
 
                 for (int i = 0; i < splines.Length; i++)
                 {
-                    angle += 360 / (group2Count);
+
+                    //ANGLE stuff
+                    angle += angleVariation;
+                    if (angle >= 360)
+                        angle = 0;
 
                     splines[i].SetGlobalIndex(i);
                     if (i < group1Count)
                     {
+                        angleVariation = 90;
+
                         lineRend[i].startWidth = 0.5f;
                         lineRend[i].endWidth = 0.4f;
                         splines[i].SetInitialStatus(0, 0);
-                        SetStartLocation(0, 1, i);
+                        SetStartLocation(0, 1, i, 0);
                     }
                     if (i <= group2Count && i >= group1Count)
                     {
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.2f;
                         splines[i].SetInitialStatus(1, i - group1Count);
-                        SetStartLocation(group1Count, group2PerBranch, i);
+                        SetStartLocation(group1Count, group2PerBranch, i, 1);
                         y += ((float)1 / (float)group2PerBranch);
                     }
                     if (i <= group3Count && i > group2Count)
                     {
+                        angleVariation = 90;
+
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.05f;
                         splines[i].SetInitialStatus(2, i - group2Count);
-                        SetStartLocation(group2Count, group3PerBranch, i);
+                        SetStartLocation(group2Count, group3PerBranch, i, 2);
                         y += ((float)1 / (float)group3PerBranch);
                     }
                     //So on...
@@ -108,6 +118,7 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case TreeType.FIBBONACI:
+                angleVariation = 37.5f;
                 break;
 
             case TreeType.DROOPY:
@@ -121,7 +132,7 @@ public class CurveControl : MonoBehaviour
     /// <summary>
     /// sets start node pos
     /// </summary>
-    private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo)
+    private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo, int hierachy)
     {
         int memberIndex = _splineNo - _noOfParents;
         int noOfParents = _noOfParents;
@@ -153,55 +164,34 @@ public class CurveControl : MonoBehaviour
 
             //the important line        
         }
-        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle));              
+        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle, hierachy));              
     }
 
-    public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle)
+    public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle, int hierachy)
     {
         Debug.Log(angle + "(angle!)");
         //float ang = 360 / numOfChildren;
-        Vector3 pos;
-        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-        pos.y = parentpos.y;
-        pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
+        Vector3 pos =  Vector3.zero;
+        switch (hierachy)
+        {
+            case 0:
+                break;
+            case 1:
+                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                pos.y = parentpos.y;
+                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
+                break;
+            case 2:
+                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                pos.z = parentpos.z ;
+                break;
+            default:
+                break;
+        }
         return pos;
     }
 
-    /// <summary>
-    /// sets pos and orientation of all nodes
-    /// </summary>
-    private Vector3 GetNodePos(BezierCurve spline)
-    {
-        Vector3 newNode = Vector3.zero;
-        
-        float yAngle = 5.0f;
-
-        float axisXLength = (spline.nodes[1].x
-             - spline.nodes[0].x);
-        float axisYLength = (spline.nodes[1].y
-             - spline.nodes[0].y);
-        float axisZLength = (spline.nodes[1].z
-             - spline.nodes[0].z);
-
-        float XYDistance = Mathf.Sqrt(Mathf.Pow(axisXLength, 2) + Mathf.Pow(axisYLength, 2));
-        float YZDistance = Mathf.Sqrt(Mathf.Pow(axisYLength, 2) + Mathf.Pow(axisZLength, 2));
-        float ZXDistance = Mathf.Sqrt(Mathf.Pow(axisZLength, 2) + Mathf.Pow(axisXLength, 2));
-
-        //What we now want is this only for the 1st node
-        //Then add on the distance between this and original branch
-        //set this to new vec3
-        float sideCLength = (ZXDistance * Mathf.Sin(yAngle))
-            / Mathf.Sin((180 - yAngle) / 2);
-
-        //these aren't returning numbers                                                      
-        newNode.x = spline.nodes[0].x + axisXLength;
-        newNode.y = spline.nodes[0].y + axisYLength;
-        newNode.z = spline.nodes[0].z + axisZLength;
-
-        return newNode;
-
-       
-    }
 
     /// <summary>
     /// Set points for bezier curve,
