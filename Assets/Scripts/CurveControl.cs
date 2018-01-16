@@ -20,6 +20,7 @@ public class CurveControl : MonoBehaviour
 
     private TreeType treeType;
     private float y = 0.0f;
+    float angle = 0;
 
     // Use this for initialization
     private void Start()
@@ -75,6 +76,8 @@ public class CurveControl : MonoBehaviour
 
                 for (int i = 0; i < splines.Length; i++)
                 {
+                    angle += 360 / (group2Count);
+
                     splines[i].SetGlobalIndex(i);
                     if (i < group1Count)
                     {
@@ -83,7 +86,7 @@ public class CurveControl : MonoBehaviour
                         splines[i].SetInitialStatus(0, 0);
                         SetStartLocation(0, 1, i);
                     }
-                    if (i <= group2Count && i > group1Count)
+                    if (i <= group2Count && i >= group1Count)
                     {
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.2f;
@@ -120,7 +123,6 @@ public class CurveControl : MonoBehaviour
     /// </summary>
     private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo)
     {
-        float angle = 0;
         int memberIndex = _splineNo - _noOfParents;
         int noOfParents = _noOfParents;
         int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
@@ -142,7 +144,6 @@ public class CurveControl : MonoBehaviour
                 {
                     y = 0;
                     startPos = splines[i].GetPoint(y);
-
                 }
             }
             if (_splineNo == 0)
@@ -151,13 +152,13 @@ public class CurveControl : MonoBehaviour
             }
 
             //the important line        
-            angle = _groupBranchCount / (_splineNo + 1);
         }
         splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle));              
     }
 
     public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle)
     {
+        Debug.Log(angle + "(angle!)");
         //float ang = 360 / numOfChildren;
         Vector3 pos;
         pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);

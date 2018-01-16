@@ -41,6 +41,7 @@ public class BezierCurve : MonoBehaviour
 
         nodes[0] = node0Pos;
         nodes[1] = node1Pos;
+        Debug.Log(node0Pos + " : " + node1Pos);
         Vector3 initialStep = node1Pos - node0Pos;
 
         switch (hierachyIndex)
@@ -87,7 +88,7 @@ public class BezierCurve : MonoBehaviour
     public void PlaceTrunk()
     {
         nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 1; i < nodes.Length; i++)
         {
             nodes[i] = new Vector3(Random.Range(-0.5f, 0.5f), i, Random.Range(-0.5f, 0.5f));
         }
