@@ -120,6 +120,7 @@ public class CurveControl : MonoBehaviour
     /// </summary>
     private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo)
     {
+        float angle = 0;
         int memberIndex = _splineNo - _noOfParents;
         int noOfParents = _noOfParents;
         int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
@@ -144,15 +145,25 @@ public class CurveControl : MonoBehaviour
 
                 }
             }
-            if (_splineNo > 0)
-            {                     
-                    splines[_splineNo].SetAllNodes(startPos , GetNodePos(splines[_splineNo - 1]));              
-            }
-            else
+            if (_splineNo == 0)
             {
-                splines[i].SetAllNodes(Vector3.zero, Vector3.zero);
+                splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f,1.0f,0.0f));
             }
+
+            //the important line        
+            angle = _groupBranchCount / (_splineNo + 1);
         }
+        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle));              
+    }
+
+    public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle)
+    {
+        //float ang = 360 / numOfChildren;
+        Vector3 pos;
+        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+        pos.y = parentpos.y;
+        pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
+        return pos;
     }
 
     /// <summary>
@@ -162,7 +173,7 @@ public class CurveControl : MonoBehaviour
     {
         Vector3 newNode = Vector3.zero;
         
-        float yAngle = 20.0f;
+        float yAngle = 5.0f;
 
         float axisXLength = (spline.nodes[1].x
              - spline.nodes[0].x);
@@ -171,26 +182,24 @@ public class CurveControl : MonoBehaviour
         float axisZLength = (spline.nodes[1].z
              - spline.nodes[0].z);
 
-        float sideADistance = Mathf.Sqrt(Mathf.Pow(axisXLength, 2) + Mathf.Pow(axisYLength, 2));
+        float XYDistance = Mathf.Sqrt(Mathf.Pow(axisXLength, 2) + Mathf.Pow(axisYLength, 2));
+        float YZDistance = Mathf.Sqrt(Mathf.Pow(axisYLength, 2) + Mathf.Pow(axisZLength, 2));
+        float ZXDistance = Mathf.Sqrt(Mathf.Pow(axisZLength, 2) + Mathf.Pow(axisXLength, 2));
 
         //What we now want is this only for the 1st node
         //Then add on the distance between this and original branch
         //set this to new vec3
-        float sideCLength = (sideADistance * Mathf.Sin(yAngle))
+        float sideCLength = (ZXDistance * Mathf.Sin(yAngle))
             / Mathf.Sin((180 - yAngle) / 2);
 
         //these aren't returning numbers                                                      
-        newNode.x = spline.nodes[0].x + sideCLength;
+        newNode.x = spline.nodes[0].x + axisXLength;
         newNode.y = spline.nodes[0].y + axisYLength;
         newNode.z = spline.nodes[0].z + axisZLength;
 
         return newNode;
 
-        //To find the node[i+1] coordinates:
-        /*newNode[i].x = node[i].x + (SQRT[(node[i+1].x - node[i].x)^2 +
-         *
-         *
-         */
+       
     }
 
     /// <summary>

@@ -30,9 +30,7 @@ public class BezierCurve : MonoBehaviour
     {
         hierachyIndex = _hierachyIndex;
         memberIndex = _memberIndex;
-
-        
-
+        parentHierachy = hierachyIndex - 1;
     }
 
     public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
