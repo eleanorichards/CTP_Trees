@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //https://www.youtube.com/watch?v=IYMQ2ErFz0s&t=6s
 
-
-public class BuildMesh : MonoBehaviour {
-
+public class BuildMesh : MonoBehaviour
+{
     public int cap_resolution = 3;
     public int radius = 1;
     public int height = 3;
@@ -20,12 +17,14 @@ public class BuildMesh : MonoBehaviour {
     public Vector3 halfAxis = Vector3.up;
 
     // Use this for initialization
-    void Start () {
+    private void Start()
+    {
         RecalculateMesh();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
     }
 
     public void RecalculateMesh()
@@ -41,10 +40,9 @@ public class BuildMesh : MonoBehaviour {
         mesh.triangles = faces;
         mesh.uv = uvs;
         mesh.RecalculateNormals();
-        
     }
 
-    void ComputeCyclinder()
+    private void ComputeCyclinder()
     {
         //columns and rows
         int column_num = cap_resolution + 1;
@@ -52,7 +50,7 @@ public class BuildMesh : MonoBehaviour {
 
         //Vertices
         int vertice_num = column_num * row_num;
-     
+
         //Normals
         int normals_num = vertice_num;
 
@@ -93,10 +91,10 @@ public class BuildMesh : MonoBehaviour {
                 uvs[i * column_num + j] = new Vector2(j * 1 / radius, i * 1 / halfAxis.y);
                 normals[i * column_num + j] = new Vector3(0, 0, -1.0f);
 
-                    /*
-                    To create faces, we ignore the first row and the last column
-                    for every other vertex we create two triangle faces at the same time in one loop
-                    */
+                /*
+                To create faces, we ignore the first row and the last column
+                for every other vertex we create two triangle faces at the same time in one loop
+                */
                 if (i != 0 && j < column_num - 1)
                 {
                     //offset the initial space for storing tris for bottom cap
@@ -154,6 +152,5 @@ public class BuildMesh : MonoBehaviour {
             faces[topIndex + 1] = topCapOffset + midIndex;
             faces[topIndex + 2] = topCapOffset + lastIndex;
         }
-
     }
 }

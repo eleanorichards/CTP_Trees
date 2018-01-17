@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public enum GameState
 {
@@ -9,20 +6,21 @@ public enum GameState
     PAUSE,
     MENU
 }
-//GameState _GS = GameState.PLAY;
 
-public enum ViewState
+public enum TreeHeading
 {
-    LINERENDER,
-    SEGMENTPLACER,
-    NODESONLY
+    NONE,
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
 }
 
 public enum TreeType
 {
     DISSECANT,
     FIBBONACI,
-    DROOPY
+    QUAD
 }
 
 public enum BranchHier
@@ -33,22 +31,30 @@ public enum BranchHier
     FOURTH
 }
 
+public enum windDirection
+{
+    NONE,
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+}
+
+
 public class GameData : MonoBehaviour
 {
-    public ViewState _viewState;
     public TreeType _treeType;
     public BranchHier _branchType;
 
     // Use this for initialization
-    void Start ()
+    private void Start()
     {
-        _viewState = ViewState.LINERENDER;
         _treeType = TreeType.DISSECANT;
         _branchType = BranchHier.FIRST;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 }

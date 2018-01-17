@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
+﻿using UnityEngine;
 
 public class CreateCylinder : MonoBehaviour
 {
@@ -16,9 +12,9 @@ public class CreateCylinder : MonoBehaviour
     private Vector3[] vertices;
     private Vector2[] uvs;
     private Vector3[] normals;
-    int[] faces;
+    private int[] faces;
 
-    void Start()
+    private void Start()
     {
         MeshFilter mf = GetComponent<MeshFilter>();
         Mesh mesh = mf.mesh;
@@ -31,9 +27,8 @@ public class CreateCylinder : MonoBehaviour
         print("done");
     }
 
-    void ComputeCylinder()
+    private void ComputeCylinder()
     {
-
         if (capResolution < MAX_CAP_RES) capResolution = MAX_CAP_RES;
         if (radius < MAX_RADIUS) radius = MAX_RADIUS;
 
@@ -144,7 +139,5 @@ public class CreateCylinder : MonoBehaviour
             faces[topIndex + 1] = topCapOffset + midIndex;
             faces[topIndex + 2] = topCapOffset + lastIndex;
         }
-      
     }
-	
 }

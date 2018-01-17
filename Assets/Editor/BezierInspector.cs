@@ -13,18 +13,16 @@
 //    private const int stepsPerCurve = 10;
 //    private float directionScale = 0.5f;
 
-
 //    void Start()
 //    {
 //    }
 
 //    private void OnSceneGUI()
-//    {       
+//    {
 //            //somehow need to set these separately
 //            //foreach curve in curves
 //            curve = target as BezierCurve;
 //            nodes = curve.nodes;
-
 
 //            //draw base lines
 //            for (int x = 0; x < nodes.Length - 1; x ++)
@@ -46,14 +44,11 @@
 //                p0 = p3;
 //                ShowDirections();
 //            }
-        
-        
-//    }
 
+//    }
 
 //    private void ShowDirections()
 //    {
-      
 //            Handles.color = Color.red;
 //            Vector3 point = curve.GetPoint(0f);
 //            Handles.DrawLine(point, point + curve.GetDirection(0f) * directionScale);
@@ -65,12 +60,11 @@
 //                Handles.color = Color.yellow;
 //                // Handles.DrawLine(point, point + curve.GetTangent(i / (float)steps) * directionScale);
 //            }
-        
+
 //    }
 
 //    public override void OnInspectorGUI()
 //    {
-        
 //            DrawDefaultInspector();
 
 //            curve = target as BezierCurve;
@@ -88,15 +82,7 @@
 //            {
 //                curve.AddBranches();
 //            }
-        
+
 //    }
-
-   
-
-    
-
-
-   
-    
 
 //}

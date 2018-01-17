@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
@@ -11,23 +9,23 @@ public class Movement : MonoBehaviour
 
     public float rotate_speed = 10.0f;
     public float move_speed = 10.0f;
-	// Use this for initialization
-	void Start () {
-     
+
+    // Use this for initialization
+    private void Start()
+    {
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    private void Update()
+    {
         float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * move_speed;
         float vertical = Input.GetAxis("Vertical") * Time.deltaTime * move_speed;
 
         MouseRotation();
+    }
 
-	}
-
-    void MouseRotation()
-    { 
-
+    private void MouseRotation()
+    {
         float yaw = 0f;
         float pitch = 0f;
 
@@ -49,8 +47,5 @@ public class Movement : MonoBehaviour
 
         //Zoom in and out with Mouse Wheel
         transform.Translate(-Input.GetAxis("Mouse ScrollWheel") * zoomSpeed, 0, 0, Space.Self);
-    
     }
 }
-
-    

@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class OldSnippets : MonoBehaviour {
+public class OldSnippets : MonoBehaviour
+{
+    // Use this for initialization
+    private void Start()
+    {
+    }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Update is called once per frame
+    private void Update()
+    {
+    }
 
     //private Vector3 GetNodePos(BezierCurve spline)
     //{
@@ -37,14 +35,12 @@ public class OldSnippets : MonoBehaviour {
     //    float sideCLength = (ZXDistance * Mathf.Sin(yAngle))
     //        / Mathf.Sin((180 - yAngle) / 2);
 
-    //    //these aren't returning numbers                                                      
+    //    //these aren't returning numbers
     //    newNode.x = spline.nodes[0].x + axisXLength;
     //    newNode.y = spline.nodes[0].y + axisYLength;
     //    newNode.z = spline.nodes[0].z + axisZLength;
 
     //    return newNode;
 
-
     //}
-
 }

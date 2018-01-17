@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class splineGeometry : MonoBehaviour {
+public class splineGeometry : MonoBehaviour
+{
     public MeshFilter mf;
     public Mesh mesh;
     public BezierCurve curve;
@@ -11,17 +11,17 @@ public class splineGeometry : MonoBehaviour {
     public Vertex[] vert2Ds;
 
     // Use this for initialization
-    void Start () {
+    private void Start()
+    {
         //vertex locations
         mf = GetComponent<MeshFilter>();
         mesh = mf.sharedMesh;
         //vert2Ds = new Vertex[mesh.vertexCount];
-
     }
 
     ///
     /// EXTRUDE
-    /// 
+    ///
     public void Extrude(Mesh mesh, ExtrudeShape shape, OrientedPoint[] path)
     {
         int vertsInShape = shape.vert2Ds.Length;
@@ -82,7 +82,6 @@ public class splineGeometry : MonoBehaviour {
             }
         }
 
-
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.normals = normals;
@@ -90,17 +89,14 @@ public class splineGeometry : MonoBehaviour {
         mesh.triangles = triangleIndices;
     }
 
-   
-
-    /// 
+    ///
     /// STRUCTS
-    /// 
+    ///
     public struct Vertex
     {
         public Vector3 point;
         public Vector3 normal;
         public float uCoord;
-
 
         public Vertex(Vector3 point, Vector3 normal, float uCoord)
         {
@@ -147,8 +143,8 @@ public class splineGeometry : MonoBehaviour {
         {
             return rotation * dir;
         }
-
     }
+
     ///
     ///GETTERS
     ///
@@ -163,7 +159,6 @@ public class splineGeometry : MonoBehaviour {
 
     //public ExtrudeShape GetExtrudeShape()
     //{
-
     //    int height = curve.nodes.Length;
     //    //columns and rows
     //    int column_num = cap_resolution + 1;
@@ -211,11 +206,8 @@ public class splineGeometry : MonoBehaviour {
     //            uvs[i * column_num + j] = new Vector2(j * 1 / radius, 0);
     //            normals[i * column_num + j] = new Vector3(0, 0, -1.0f);
 
-
     //        }
     //    }
-
-
 
     //    //VERTEX DATA:
     //    //NORMAL
@@ -255,7 +247,6 @@ public class splineGeometry : MonoBehaviour {
 
     //    // var vert2Ds = new Vertex[];
 
-
     //        for (int i = 0; i < vertices.Length; i++)
     //        {
     //            vert2Ds[i] =
@@ -266,7 +257,6 @@ public class splineGeometry : MonoBehaviour {
 
     //        }
 
-
     //    //var vert2Ds = new Vertex[] {
     //    //        new Vertex(
     //    //            new Vector3(-1, 0, 0),
@@ -275,7 +265,7 @@ public class splineGeometry : MonoBehaviour {
     //    //        new Vertex(
     //    //            new Vector3(-0.5f, 0.5f, 0.0f),
     //    //            new Vector3(0, 1, 0),
-    //    //            0.5f),                    
+    //    //            0.5f),
     //    //        new Vertex(
     //    //            new Vector3(0.0f, 1, 0),
     //    //            new Vector3(0, 1, 0),
@@ -322,11 +312,6 @@ public class splineGeometry : MonoBehaviour {
     //}
     public ExtrudeShape GetExtrudeShape()
     {
-
-
-
-
-
         //VERTEX DATA:
         //NORMAL
         //POINT
@@ -353,8 +338,7 @@ public class splineGeometry : MonoBehaviour {
         var lines = new int[] {
                 0, 1,
                 1, 2,
-                2,3,             
-                
+                2,3,
             };
         //var vert2Ds = new Vertex[] {
         //        new Vertex(
@@ -364,7 +348,7 @@ public class splineGeometry : MonoBehaviour {
         //        new Vertex(
         //            new Vector3(-0.5f, 0.5f, 0.0f),
         //            new Vector3(0, 1, 0),
-        //            0.5f),                    
+        //            0.5f),
         //        new Vertex(
         //            new Vector3(0.0f, 1, 0),
         //            new Vector3(0, 1, 0),
@@ -407,12 +391,10 @@ public class splineGeometry : MonoBehaviour {
         //    };
 
         return new ExtrudeShape(vert2Ds, lines);
-
     }
 
     public OrientedPoint[] GetPath()
     {
-
         var path = new List<OrientedPoint>();
 
         for (float t = 0; t <= 1; t += 0.1f)
@@ -424,7 +406,4 @@ public class splineGeometry : MonoBehaviour {
 
         return path.ToArray();
     }
-
 }
-
-

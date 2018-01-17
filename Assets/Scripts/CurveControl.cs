@@ -7,10 +7,9 @@ public class CurveControl : MonoBehaviour
     public GameObject[] curves;
     public LineRenderer[] lineRend;
 
-    public const int branchCount = 41;  //No. of branches per tree (including trunk)
+    private const int branchCount = 41;  //No. of branches per tree (including trunk)
     private const int lineSteps = 10;   //no of steps
     private const int stepsPerCurve = 10;
-    private float angleVariation = 90.0f;
 
     private int group1Count = 0; //Trunk n(ideally 1/2/3)
     private int group2Count = 0; //FORMAT: 8 each, 1 prev branch = 1*8 = 8
@@ -19,9 +18,12 @@ public class CurveControl : MonoBehaviour
     private int group2PerBranch = 0; // no. of branches per prev. branch (8)
     private int group3PerBranch = 0; //(5)
 
-    private TreeType treeType;
+    private float angleVariation = 90.0f;
     private float y = 0.0f;
-    float angle = 0;
+    private float angle = 0;
+
+    private TreeType treeType;
+    private TreeHeading treeHeading;
 
     // Use this for initialization
     private void Start()
@@ -78,56 +80,48 @@ public class CurveControl : MonoBehaviour
 
                 for (int i = 0; i < splines.Length; i++)
                 {
-
                     //ANGLE stuff
                     angle += angleVariation;
                     if (angle >= 360)
                         angle = 0;
 
                     splines[i].SetGlobalIndex(i);
+                    //TRUNK
                     if (i < group1Count)
                     {
-
                         angleVariation = 90;
-
                         lineRend[i].startWidth = 0.5f;
-                        lineRend[i].endWidth = 0.4f;
+                        lineRend[i].endWidth = 0.2f;
                         splines[i].SetInitialStatus(0, 0);
                         SetStartLocation(0, 1, i, 0);
                     }
+                    //TIER 1
                     if (i <= group2Count && i >= group1Count)
                     {
-
                         angleVariation = 90;
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.1f;
-                        //splines[i].SetNodeSize(4);
                         splines[i].SetInitialStatus(1, i - group1Count);
                         y += ((float)1 / (float)group2PerBranch);
                         SetStartLocation(group1Count, group2PerBranch, i, 1);
                     }
+                    //TIER 2
                     if (i <= group3Count && i > group2Count)
                     {
                         angleVariation = 50;
-
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
-                        //splines[i].SetNodeSize(2);
-
                         splines[i].SetInitialStatus(2, i - group2Count);
                         y += ((float)1 / (float)group3PerBranch);
                         SetStartLocation(group2Count, group3PerBranch, i, 2);
                     }
-                    //So on...
+                    //draw lines from points
                     DrawLines(i);
                 }
                 break;
 
             case TreeType.FIBBONACI:
                 angleVariation = 37.5f;
-                break;
-
-            case TreeType.DROOPY:
                 break;
 
             default:
@@ -162,44 +156,53 @@ public class CurveControl : MonoBehaviour
                     y = 0.3f;
                     startPos = splines[i].GetPoint(y);
                 }
+                Debug.Log(y);
             }
             if (_splineNo == 0)
             {
-                splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f,1.0f,0.0f), hierachy);
+                splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f, 1.0f, 0.0f));
             }
 
-            //the important line        
+            //the important line
         }
-        splines[_splineNo].SetAllNodes(startPos , circleParentBranch(startPos, 1.0f, angle, hierachy), hierachy);              
+        splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, 1.0f, angle, hierachy));
     }
 
+    /// <summary>
+    /// set the first node of each branch in a circular radius around the current parent
+    /// node[1] position = parent branch + small amount (add amount 
+    /// </summary>
     public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle, int hierachy)
     {
-        Debug.Log(angle + "(angle!)");
         //float ang = 360 / numOfChildren;
-        Vector3 pos =  Vector3.zero;
+        Vector3 pos = Vector3.zero;
+
         switch (hierachy)
         {
             case 0:
                 break;
+
             case 1:
                 radius = 0.8f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y;
-                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
+                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 break;
+
             case 2:
                 radius = 0.02f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-                pos.z = parentpos.z ;
+                pos.z = parentpos.z;
                 break;
+
             default:
                 break;
         }
+        Debug.Log(parentpos + " and " + pos);
         return pos;
+        
     }
-
 
     /// <summary>
     /// Set points for bezier curve,

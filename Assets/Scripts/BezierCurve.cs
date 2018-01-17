@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public class BezierCurve : MonoBehaviour
 {
     public Vector3[] nodes;
-    public GameObject segments;
-    public GameObject branchPlacer;
+    //public GameObject segments;
+    //public GameObject branchPlacer;
 
     public int hierachyIndex;
     public int memberIndex;
@@ -16,14 +13,13 @@ public class BezierCurve : MonoBehaviour
     public int parentIndex;
     public int globalIndex;
 
-    public bool firstGroup = false;
-    public bool secondGroup = false;
-    public bool thirdgroup = false;
+    private Vector3 initialStep;
+
+    private TreeHeading treeHeading;
 
     //Initialisation
-    void Start()
+    private void Start()
     {
-
     }
 
     public void SetInitialStatus(int _hierachyIndex, int _memberIndex)
@@ -33,29 +29,11 @@ public class BezierCurve : MonoBehaviour
         parentHierachy = hierachyIndex - 1;
     }
 
-    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos, int hierachy)
+    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
     {
-        float sizeMultiplier = 0.0f;
-
-        switch (hierachy)
-        {
-            case 0:
-                sizeMultiplier = 1.0f;
-                break;
-            case 1:
-                sizeMultiplier = 0.70f;
-                break;
-            case 2:
-                sizeMultiplier = 0.25f;
-                break;
-            default:
-                break;
-        }
-
         nodes[0] = node0Pos;
-        nodes[1] = node1Pos ;
-        //Debug.Log(node0Pos + " : " + node1Pos);
-        Vector3 initialStep = (node1Pos - node0Pos);
+        nodes[1] = node1Pos;
+        initialStep = (node1Pos - node0Pos);
 
         switch (hierachyIndex)
         {
@@ -63,58 +41,76 @@ public class BezierCurve : MonoBehaviour
                 PlaceTrunk();
                 break;
             case 1:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-0.2f, 0.2f);
-                }
+                PlaceTierOne();
                 break;
             case 2:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    nodes[i] = nodes[i - 1] + initialStep + RandomVector(-0.5f, 0.5f);
-                }
-
+                PlaceTierTwo();
                 break;
             default:
                 break;
         }
     }
 
-    public void SetNodeSize(int nodeNum)
+    public void PlaceTrunk()
     {
-       
-        System.Array.Resize(ref nodes, nodeNum);
-       
+        int y = 2;
+        nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
+        for (int i = 1; i < nodes.Length; i++)
+        {
+            nodes[i] = new Vector3(Random.Range(-0.5f, 0.5f), y, Random.Range(-0.5f, 0.5f));
+            y += 2;
+        }
     }
 
-   public Vector3 RandomVector(float min, float max)
+    public void PlaceTierOne()
+    {
+        switch (treeHeading)
+        {
+            case TreeHeading.NONE:
+                for (int i = 1; i < nodes.Length; i++)
+                {
+                    nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-0.5f, 0.5f);
+                }
+                break;
+            case TreeHeading.NORTH:
+                for (int i = 1; i < nodes.Length; i++)
+                {
+                    nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-0.5f, 0.5f);
+                }
+                break;
+            case TreeHeading.EAST:
+                break;
+            case TreeHeading.SOUTH:
+                break;
+            case TreeHeading.WEST:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void PlaceTierTwo()
+    {
+        for (int i = 1; i < nodes.Length; i++)
+        {
+            nodes[i] = nodes[i - 1] + initialStep + RandomVector(-0.2f, 0.2f);
+        }
+    }
+
+    public void SetNodeSize(int nodeNum)
+    {
+        System.Array.Resize(ref nodes, nodeNum);
+    }
+
+    public Vector3 RandomVector(float min, float max)
     {
         return new Vector3(Random.Range(min, max), Random.Range(min, max), Random.Range(min, max));
     }
-
-    /// <summary>
-    /// Returns set coordinates for index along tree
-    /// </summary>
-    public Vector2 GetSplineIndex()
-    {
-        return new Vector2(hierachyIndex, memberIndex);
-    }
-
 
     public void SetParentIndex(int _parentIndex)
     {
         //parentHierachy = _parentHierachy;
         parentIndex = _parentIndex;
-    }
-
-
-    public void PlaceTrunk()
-    {
-        nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
-        for (int i = 1; i < nodes.Length; i++)
-        {
-            nodes[i] = new Vector3(Random.Range(-0.5f, 0.5f), i, Random.Range(-0.5f, 0.5f));
-        }
     }
 
 
@@ -125,9 +121,8 @@ public class BezierCurve : MonoBehaviour
 
     public void AddBranches()
     {
-        branchPlacer.GetComponent<BranchPlacer>().AddBranch();
+        //branchPlacer.GetComponent<BranchPlacer>().AddBranch();
     }
-    
 
     public void AddCurve()
     {
@@ -157,7 +152,7 @@ public class BezierCurve : MonoBehaviour
             i *= 3;
         }
 
-        return transform.TransformPoint(Bezier.GetPoint(nodes[i], nodes[i + 1] , nodes[i + 2], nodes[i + 3], t));      
+        return transform.TransformPoint(Bezier.GetPoint(nodes[i], nodes[i + 1], nodes[i + 2], nodes[i + 3], t));
     }
 
     public void Reset()
@@ -205,24 +200,20 @@ public class BezierCurve : MonoBehaviour
             nodes[i], nodes[i + 1], nodes[i + 2], nodes[i + 3], t)) - transform.position;
     }
 
-    
-
     public Vector3 GetNormal2D(float t)
     {
         Vector3 tng = GetDirection(t);
         return new Vector3(-tng.y, tng.x, 0f);
     }
 
-
     public Vector3 GetNormal3D(float t, Vector3 up)
     {
         Vector3 tng = GetDirection(t);
         Vector3 binormal = Vector3.Cross(up, tng).normalized;
         return Vector3.Cross(tng, binormal);
-
     }
 
-    public Quaternion GetOrientation2D( float t)
+    public Quaternion GetOrientation2D(float t)
     {
         Vector3 tng = GetDirection(t);
         Vector3 nrm = GetNormal2D(t);
@@ -231,20 +222,18 @@ public class BezierCurve : MonoBehaviour
 
     public Quaternion GetOrientation3D(float t, Vector3 up)
     {
-        Vector3 tng = GetDirection( t);
-        Vector3 nrm = GetNormal3D( t, up);
+        Vector3 tng = GetDirection(t);
+        Vector3 nrm = GetNormal3D(t, up);
         return Quaternion.LookRotation(tng, nrm);
     }
 
     public void ExtrudeShape()
     {
-        segments.GetComponent<segmentPlacer>().PlaceShapes();
+        //segments.GetComponent<segmentPlacer>().PlaceShapes();
         //Mesh mesh = splineGeo.GetMesh();
         //var shape = splineGeo.GetExtrudeShape();
         //var path = splineGeo.GetPath();
 
         //splineGeo.Extrude(mesh, shape, path);
     }
-
 }
-

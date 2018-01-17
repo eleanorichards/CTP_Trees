@@ -1,36 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProceduralMesh : MonoBehaviour
 {
-    float height;
-    int nbSides;
+    private float height;
+    private int nbSides;
 
     // Outter shell is at radius1 + radius2 / 2, inner shell at radius1 - radius2 / 2
-    float bottomRadius1;
-    float bottomRadius2;
-    float topRadius1;
-    float topRadius2;
+    private float bottomRadius1;
 
-    int nbVerticesCap;
-    int nbVerticesSides;
+    private float bottomRadius2;
+    private float topRadius1;
+    private float topRadius2;
 
-    Mesh mesh;
+    private int nbVerticesCap;
+    private int nbVerticesSides;
+
+    private Mesh mesh;
 
     // bottom + top + sides
-    Vector3[] vertices;
-    int vert;
-    float _2pi;
-    Vector2[] uvs;
+    private Vector3[] vertices;
+
+    private int vert;
+    private float _2pi;
+    private Vector2[] uvs;
 
     // Bottom cap
-    int sideCounter;
+    private int sideCounter;
 
     // bottom + top + sides
-    Vector3[] normales;
+    private Vector3[] normales;
 
-    void Start()
+    private void Start()
     {
         height = 1f;
         nbSides = 24;
@@ -54,14 +54,10 @@ public class ProceduralMesh : MonoBehaviour
 
         mesh = GetComponent<MeshFilter>().mesh;
         mesh.Clear();
-
     }
 
-    void Vertices()
+    private void Vertices()
     {
-
-
-
         while (vert < nbVerticesCap)
         {
             sideCounter = sideCounter == nbSides ? 0 : sideCounter;
@@ -119,7 +115,7 @@ public class ProceduralMesh : MonoBehaviour
         }
     }
 
-    void Normales()
+    private void Normales()
     {
         // bottom + top + sides
         sideCounter = 0;
@@ -165,7 +161,7 @@ public class ProceduralMesh : MonoBehaviour
         }
     }
 
-    void UVs()
+    private void UVs()
     {
         uvs = new Vector2[vertices.Length];
 
@@ -207,7 +203,7 @@ public class ProceduralMesh : MonoBehaviour
         }
     }
 
-    void Triangles()
+    private void Triangles()
     {
         int nbFace = nbSides * 4;
         int nbTriangles = nbFace * 2;
@@ -267,7 +263,6 @@ public class ProceduralMesh : MonoBehaviour
             sideCounter++;
         }
 
-
         // Sides (in)
         while (sideCounter < nbSides * 4)
         {
@@ -291,6 +286,5 @@ public class ProceduralMesh : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateBounds();
-
     }
-} 
+}
