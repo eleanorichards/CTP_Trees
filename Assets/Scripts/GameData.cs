@@ -44,11 +44,13 @@ public enum windDirection
 public class GameData : MonoBehaviour
 {
     public TreeType _treeType;
+    public TreeHeading _treeHeading;
     public BranchHier _branchType;
 
     // Use this for initialization
     private void Start()
     {
+        _treeHeading = TreeHeading.NONE;
         _treeType = TreeType.DISSECANT;
         _branchType = BranchHier.FIRST;
     }

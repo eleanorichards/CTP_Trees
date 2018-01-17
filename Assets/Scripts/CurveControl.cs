@@ -19,7 +19,7 @@ public class CurveControl : MonoBehaviour
     private int group3PerBranch = 0; //(5)
 
     private float angleVariation = 90.0f;
-    private float y = 0.0f;
+    private float branchStep = 0.0f;
     private float angle = 0;
 
     private TreeType treeType;
@@ -89,7 +89,6 @@ public class CurveControl : MonoBehaviour
                     //TRUNK
                     if (i < group1Count)
                     {
-                        angleVariation = 90;
                         lineRend[i].startWidth = 0.5f;
                         lineRend[i].endWidth = 0.2f;
                         splines[i].SetInitialStatus(0, 0);
@@ -102,7 +101,7 @@ public class CurveControl : MonoBehaviour
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.1f;
                         splines[i].SetInitialStatus(1, i - group1Count);
-                        y += ((float)1 / (float)group2PerBranch);
+                        branchStep += ((float)1 / (float)group2PerBranch);
                         SetStartLocation(group1Count, group2PerBranch, i, 1);
                     }
                     //TIER 2
@@ -112,7 +111,7 @@ public class CurveControl : MonoBehaviour
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
                         splines[i].SetInitialStatus(2, i - group2Count);
-                        y += ((float)1 / (float)group3PerBranch);
+                        branchStep += ((float)1 / (float)group3PerBranch);
                         SetStartLocation(group2Count, group3PerBranch, i, 2);
                     }
                     //draw lines from points
@@ -147,24 +146,21 @@ public class CurveControl : MonoBehaviour
             if (splines[i].hierachyIndex == (splines[_splineNo].hierachyIndex - 1)
                 && splines[i].memberIndex == parentMemberIndex)
             {
-                if (y <= 0.9f)
+                if (branchStep > 1.0f)
                 {
-                    startPos = splines[i].GetPoint(y);
+                    branchStep = 0.3f;                  
                 }
-                else
-                {
-                    y = 0.3f;
-                    startPos = splines[i].GetPoint(y);
-                }
-                Debug.Log(y);
+
+                startPos = splines[i].GetPoint(branchStep);
             }
             if (_splineNo == 0)
             {
                 splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f, 1.0f, 0.0f));
             }
 
-            //the important line
         }
+
+        //the important line
         splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, 1.0f, angle, hierachy));
     }
 
@@ -176,32 +172,66 @@ public class CurveControl : MonoBehaviour
     {
         //float ang = 360 / numOfChildren;
         Vector3 pos = Vector3.zero;
-
-        switch (hierachy)
+        switch (treeHeading)    
         {
-            case 0:
-                break;
+            case TreeHeading.NONE:
+                switch (hierachy)
+                {
+                    case 0:
+                        break;
 
-            case 1:
-                radius = 0.8f;
-                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-                pos.y = parentpos.y;
-                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-                break;
+                    case 1:
+                        radius = 0.8f;
+                        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                        pos.y = parentpos.y;
+                        pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                        break;
 
-            case 2:
-                radius = 0.02f;
-                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-                pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-                pos.z = parentpos.z;
+                    case 2:
+                        radius = 0.02f;
+                        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                        pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                        pos.z = parentpos.z;
+                        break;
+                    default:
+                        break;
+                }
+                Debug.Log(parentpos + " and " + pos);
+                
                 break;
+            case TreeHeading.NORTH:
+                switch (hierachy)
+                {
+                    case 0:
+                        break;
 
+                    case 1:
+                        radius = 0.8f;
+                        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                        pos.y = parentpos.y + radius;
+                        pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                        break;
+
+                    case 2:
+                        radius = 0.02f;
+                        pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                        pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                        pos.z = parentpos.z;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case TreeHeading.EAST:
+                break;
+            case TreeHeading.SOUTH:
+                break;
+            case TreeHeading.WEST:
+                break;
             default:
                 break;
         }
-        Debug.Log(parentpos + " and " + pos);
         return pos;
-        
     }
 
     /// <summary>

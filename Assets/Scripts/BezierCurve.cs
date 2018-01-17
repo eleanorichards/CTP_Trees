@@ -15,7 +15,6 @@ public class BezierCurve : MonoBehaviour
 
     private Vector3 initialStep;
 
-    private TreeHeading treeHeading;
 
     //Initialisation
     private void Start()
@@ -64,7 +63,8 @@ public class BezierCurve : MonoBehaviour
 
     public void PlaceTierOne()
     {
-        switch (treeHeading)
+        
+        switch (treeheading)
         {
             case TreeHeading.NONE:
                 for (int i = 1; i < nodes.Length; i++)
