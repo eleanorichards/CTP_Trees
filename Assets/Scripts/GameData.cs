@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 
+public enum BranchHier
+{
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH
+}
+
 public enum GameState
 {
     PLAY,
     PAUSE,
     MENU
-}
-
-public enum TreeHeading
-{
-    NONE,
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
 }
 
 public enum TreeType
@@ -23,15 +22,7 @@ public enum TreeType
     QUAD
 }
 
-public enum BranchHier
-{
-    FIRST,
-    SECOND,
-    THIRD,
-    FOURTH
-}
-
-public enum windDirection
+public enum WindHeading
 {
     NONE,
     NORTH,
@@ -40,23 +31,21 @@ public enum windDirection
     WEST
 }
 
-
 public class GameData : MonoBehaviour
 {
-    public TreeType _treeType;
-    public TreeHeading _treeHeading;
     public BranchHier _branchType;
+    public int _treeNum = 1;
+    public TreeType _treeType;
+    public WindHeading _windHeading;
+    public float _windSpeed = 0.0f;
+    public float _sunStrength = 1.0f;
+    public float _tangliness = 0.0f;
 
     // Use this for initialization
     private void Start()
     {
-        _treeHeading = TreeHeading.NONE;
+        _windHeading = WindHeading.NONE;
         _treeType = TreeType.DISSECANT;
         _branchType = BranchHier.FIRST;
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
     }
 }
