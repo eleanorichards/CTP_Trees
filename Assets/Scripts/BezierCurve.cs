@@ -60,7 +60,7 @@ public class BezierCurve : MonoBehaviour
         nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
         for (int i = 1; i < nodes.Length; i++)
         {
-            nodes[i] = new Vector3(Random.Range(-0.5f, 0.5f), y, Random.Range(-_GD._tangliness, _GD._tangliness));
+			nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
             y += 2;
         }
     }
@@ -141,7 +141,7 @@ public class BezierCurve : MonoBehaviour
     {
         for (int i = 1; i < nodes.Length; i++)
         {
-            nodes[i] = nodes[i - 1] + initialStep + RandomVector(-_GD._tangliness, _GD._tangliness);
+			nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness) );
         }
     }
 
@@ -152,7 +152,7 @@ public class BezierCurve : MonoBehaviour
 
     public Vector3 RandomVector(float min, float max)
     {
-        return new Vector3(Random.Range(min, max), Random.Range(min, max), Random.Range(min, max));
+        return new Vector3(Random.Range(min, max), Random.Range(min, max) + 0.2f, Random.Range(min, max));
     }
 
     public void SetParentIndex(int _parentIndex)

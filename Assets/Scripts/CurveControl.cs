@@ -7,7 +7,7 @@ public class CurveControl : MonoBehaviour
     public GameObject[] curves;
     public LineRenderer[] lineRend;
 
-    private const int branchCount = 41;  //No. of branches per tree (including trunk)
+    private const int branchCount = 64;  //No. of branches per tree (including trunk)
     private const int lineSteps = 10;   //no of steps
     private const int stepsPerCurve = 10;
 
@@ -75,12 +75,12 @@ public class CurveControl : MonoBehaviour
             case TreeType.DISSECANT:
                 angleVariation = 180;
                 group2PerBranch = 8;
-                group3PerBranch = 5;
+                group3PerBranch = 8;
                 group1Count = 1; //one trunk
                 group2Count = group1Count * group2PerBranch; //8 coming off the trunk
                 group3Count = group2Count * group3PerBranch; //5 each / 40 coming off tier 2
 
-                for (int i = 0; i < splines.Length; i++)
+                for (int i = 1; i < splines.Length; i++)
                 {
                     //ANGLE stuff
                     angle += angleVariation;
@@ -89,7 +89,7 @@ public class CurveControl : MonoBehaviour
 
                     splines[i].SetGlobalIndex(i);
                     //TRUNK
-                    if (i < group1Count)
+                    if (i <= group1Count)
                     {
                         lineRend[i].startWidth = 0.5f;
                         lineRend[i].endWidth = 0.2f;
@@ -97,7 +97,7 @@ public class CurveControl : MonoBehaviour
                         SetStartLocation(0, 1, i, 0);
                     }
                     //TIER 1
-                    if (i <= group2Count && i >= group1Count)
+                    if (i <= group2Count && i > group1Count)
                     {
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.1f;
@@ -120,10 +120,10 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case TreeType.FIBBONACI:
-                angleVariation = 37.5f;
+                angleVariation = 137.5f;
                 group2PerBranch = 8;
                 group3PerBranch = 5;
-                group1Count = 2; //one trunk
+                group1Count = 1; //two trunk
                 group2Count = group1Count * group2PerBranch; //8 coming off the trunk
                 group3Count = group2Count * group3PerBranch; //5 each / 40 coming off tier 2
 
@@ -144,7 +144,7 @@ public class CurveControl : MonoBehaviour
                         SetStartLocation(0, 1, i, 0);
                     }
                     //TIER 1
-                    if (i <= group2Count && i >= group1Count)
+                    if (i < group2Count && i >= group1Count)
                     {
                         angleVariation = 90;
                         lineRend[i].startWidth = 0.3f;
@@ -154,7 +154,7 @@ public class CurveControl : MonoBehaviour
                         SetStartLocation(group1Count, group2PerBranch, i, 1);
                     }
                     //TIER 2
-                    if (i <= group3Count && i > group2Count)
+                    if (i < group3Count && i >= group2Count)
                     {
                         angleVariation = 50;
                         lineRend[i].startWidth = 0.1f;
@@ -272,14 +272,14 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case 1:
-                radius = 0.8f;
+                radius = 1.0f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y;
                 pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 break;
 
             case 2:
-                radius = 0.2f;
+                radius = 0.01f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 pos.z = parentpos.z;
