@@ -17,9 +17,10 @@ public enum GameState
 
 public enum TreeType
 {
-    DISSECANT,
-    FIBBONACI,
-    QUAD
+    DICHOTOMOUS, //branching in to two equal parts
+    SYMPODIAL,  //branching in to many lateral (can be uneven) parts
+    MONOPODIAL, //branching from a single trunk
+    WHORLED     //spiral/fibbonacci? from previous branch
 }
 
 public enum WindHeading
@@ -45,7 +46,7 @@ public class GameData : MonoBehaviour
     private void Start()
     {
         _windHeading = WindHeading.NONE;
-        _treeType = TreeType.DISSECANT;
+        _treeType = TreeType.DICHOTOMOUS;
         _branchType = BranchHier.FIRST;
     }
 }

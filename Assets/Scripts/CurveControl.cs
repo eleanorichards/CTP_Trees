@@ -7,7 +7,7 @@ public class CurveControl : MonoBehaviour
     public GameObject[] curves;
     public LineRenderer[] lineRend;
 
-    private const int branchCount = 64;  //No. of branches per tree (including trunk)
+    private const int branchCount = 41;  //No. of branches per tree (including trunk)
     private const int lineSteps = 10;   //no of steps
     private const int stepsPerCurve = 10;
 
@@ -72,7 +72,7 @@ public class CurveControl : MonoBehaviour
     {
         switch (_GD._treeType)
         {
-            case TreeType.DISSECANT:
+            case TreeType.DICHOTOMOUS:
                 angleVariation = 180;
                 group2PerBranch = 8;
                 group3PerBranch = 8;
@@ -119,7 +119,7 @@ public class CurveControl : MonoBehaviour
                 }
                 break;
 
-            case TreeType.FIBBONACI:
+            case TreeType.SYMPODIAL:
                 angleVariation = 137.5f;
                 group2PerBranch = 8;
                 group3PerBranch = 5;
@@ -146,7 +146,6 @@ public class CurveControl : MonoBehaviour
                     //TIER 1
                     if (i < group2Count && i >= group1Count)
                     {
-                        angleVariation = 90;
                         lineRend[i].startWidth = 0.3f;
                         lineRend[i].endWidth = 0.1f;
                         splines[i].SetInitialStatus(1, i - group1Count);
@@ -156,7 +155,6 @@ public class CurveControl : MonoBehaviour
                     //TIER 2
                     if (i < group3Count && i >= group2Count)
                     {
-                        angleVariation = 50;
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
                         splines[i].SetInitialStatus(2, i - group2Count);
@@ -168,7 +166,7 @@ public class CurveControl : MonoBehaviour
                 }
                 break;
 
-            case TreeType.QUAD:
+            case TreeType.MONOPODIAL:
                 angleVariation = 90;
                 group2PerBranch = 8;
                 group3PerBranch = 5;
@@ -196,7 +194,7 @@ public class CurveControl : MonoBehaviour
                     if (i <= group2Count && i >= group1Count)
                     {
                         angleVariation = 90;
-                        lineRend[i].startWidth = 0.3f;
+                        lineRend[i].startWidth = 0.25f;
                         lineRend[i].endWidth = 0.1f;
                         splines[i].SetInitialStatus(1, i - group1Count);
                         branchStep += ((float)1 / (float)group2PerBranch);
@@ -254,16 +252,16 @@ public class CurveControl : MonoBehaviour
         }
 
         //the important line
-        splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, 1.0f, angle, hierachy));
+        splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, angle, hierachy));
     }
 
     /// <summary>
     /// set the first node of each branch in a circular radius around the current parent
     /// node[1] position = parent branch + small amount (add amount
     /// </summary>
-    public Vector3 circleParentBranch(Vector3 parentpos, float radius, float angle, int hierachy)
+    public Vector3 circleParentBranch(Vector3 parentpos, float angle, int hierachy)
     {
-        //float ang = 360 / numOfChildren;
+        float radius = 0.0f;
         Vector3 pos = Vector3.zero;
 
         switch (hierachy)
@@ -272,23 +270,22 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case 1:
-                radius = 1.0f;
+                radius = 0.6f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y;
                 pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 break;
 
             case 2:
-                radius = 0.01f;
-                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-                pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-                pos.z = parentpos.z;
+                radius = 0.005f;
+                pos.x = parentpos.x;
+                pos.y = parentpos.y + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 break;
 
             default:
                 break;
         }
-        Debug.Log(parentpos + " and " + pos);
 
         return pos;
     }
