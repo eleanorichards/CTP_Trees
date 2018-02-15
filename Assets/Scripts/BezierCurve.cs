@@ -60,11 +60,12 @@ public class BezierCurve : MonoBehaviour
         nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
         for (int i = 1; i < nodes.Length; i++)
         {
-			nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
+            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
             y += 2;
         }
     }
 
+    //Tier one for the first set of branches along the tree
     public void PlaceTierOne()
     {
         switch (_GD._windHeading)
@@ -141,7 +142,7 @@ public class BezierCurve : MonoBehaviour
     {
         for (int i = 1; i < nodes.Length; i++)
         {
-			nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness) );
+            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
         }
     }
 

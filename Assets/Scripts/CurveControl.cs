@@ -178,7 +178,7 @@ public class CurveControl : MonoBehaviour
                 {
                     //ANGLE stuff
                     angle += angleVariation;
-                    if (angle >= 360)
+                    if (angle > 1)
                         angle = 0;
 
                     splines[i].SetGlobalIndex(i);
@@ -193,7 +193,7 @@ public class CurveControl : MonoBehaviour
                     //TIER 1
                     if (i <= group2Count && i >= group1Count)
                     {
-                        angleVariation = 90;
+                        angleVariation = 1.0f / group2Count;
                         lineRend[i].startWidth = 0.25f;
                         lineRend[i].endWidth = 0.1f;
                         splines[i].SetInitialStatus(1, i - group1Count);
@@ -203,7 +203,7 @@ public class CurveControl : MonoBehaviour
                     //TIER 2
                     if (i <= group3Count && i > group2Count)
                     {
-                        angleVariation = 50;
+                        angleVariation = 1.0f / group3Count;
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
                         splines[i].SetInitialStatus(2, i - group2Count);
@@ -270,17 +270,17 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case 1:
-                radius = 0.6f;
+                radius = 1f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y;
                 pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 break;
 
             case 2:
-                radius = 0.005f;
-                pos.x = parentpos.x;
-                pos.y = parentpos.y + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-                pos.z = parentpos.z + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                radius = 1f;
+                pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+                pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                pos.z = parentpos.z;
                 break;
 
             default:
