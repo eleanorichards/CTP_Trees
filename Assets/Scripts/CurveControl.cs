@@ -277,7 +277,7 @@ public class CurveControl : MonoBehaviour
                 break;
 
             case 2:
-                radius = 1f;
+                radius = 0.1f;
                 pos.x = parentpos.x + radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                 pos.y = parentpos.y + radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                 pos.z = parentpos.z;
