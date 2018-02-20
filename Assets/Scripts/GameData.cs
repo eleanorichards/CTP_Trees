@@ -46,7 +46,7 @@ public class GameData : MonoBehaviour
     private void Start()
     {
         _windHeading = WindHeading.NONE;
-        _treeType = TreeType.DICHOTOMOUS;
+        _treeType = TreeType.SYMPODIAL;
         _branchType = BranchHier.FIRST;
     }
 }

@@ -2,10 +2,12 @@
 
 public class CurveControl : MonoBehaviour
 {
-    public BezierCurve[] splines;
     public GameObject branchPrefab = null;
+    public GameObject branchPPrefab = null;
+    public BezierCurve[] splines;
     public GameObject[] curves;
     public LineRenderer[] lineRend;
+    public GameObject[] branchParents;
 
     private const int branchCount = 41;  //No. of branches per tree (including trunk)
     private const int lineSteps = 10;   //no of steps
@@ -34,8 +36,10 @@ public class CurveControl : MonoBehaviour
         curves = new GameObject[branchCount];
         splines = new BezierCurve[branchCount];
         lineRend = new LineRenderer[branchCount];
-        branchPrefab = Resources.Load<GameObject>("Bezier");
+        branchParents = new GameObject[branchCount];
 
+        branchPrefab = Resources.Load<GameObject>("Bezier");
+        branchPPrefab = Resources.Load<GameObject>("branchParent");
         //Initialising Data
         int group1Count = 1; //one trunk
         int group2Count = group1Count * group2PerBranch; //8 coming off the trunk
@@ -56,7 +60,10 @@ public class CurveControl : MonoBehaviour
     {
         for (int i = 0; i < branchCount; i++)
         {
-            curves[i] = Instantiate(branchPrefab, transform);
+            branchParents[i] = Instantiate(branchPPrefab, transform);
+            //curves[i] = Instantiate(branchPrefab, transform);
+            curves[i] = branchParents[i].GetComponentInChildren < GameObject>();
+           // curves[i].transform.SetParent(branchParents[i].transform);
             splines[i] = curves[i].GetComponent<BezierCurve>();
             lineRend[i] = curves[i].GetComponent<LineRenderer>();
             lineRend[i].positionCount = stepsPerCurve;
@@ -110,6 +117,7 @@ public class CurveControl : MonoBehaviour
                     {
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
+                        //lineRend[i].alignment = lineRend[i - group2PerBranch].alignment; //line renderer aligment
                         splines[i].SetInitialStatus(2, i - group2Count);
                         branchStep += ((float)1 / (float)group3PerBranch);
                         SetStartLocation(group2Count, group3PerBranch, i, 2);
@@ -225,10 +233,13 @@ public class CurveControl : MonoBehaviour
     /// </summary>
     private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo, int hierachy)
     {
+        float rotAngle = 0.0f;
+
         int memberIndex = _splineNo - _noOfParents;
         int noOfParents = _noOfParents;
         int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
         Vector3 startPos = Vector3.zero;
+        Vector3 startRot = Vector3.zero;
         splines[_splineNo].SetParentIndex(parentMemberIndex);
 
         //globalIndex = MemberIndex + noOfParents
@@ -242,7 +253,7 @@ public class CurveControl : MonoBehaviour
                 {
                     branchStep = 0.3f;
                 }
-
+                startRot = branchParents[i].transform.eulerAngles;
                 startPos = splines[i].GetPoint(branchStep);
             }
             if (_splineNo == 0)
@@ -250,9 +261,26 @@ public class CurveControl : MonoBehaviour
                 splines[i].SetAllNodes(Vector3.zero, new Vector3(0.0f, 1.0f, 0.0f));
             }
         }
+        switch(hierachy)
+        {
+            case 0:
+                break;
+            case 1:
+                splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, angle, hierachy));
+                break;
+            case 2:
+                //the important line
+                branchParents[_splineNo].transform.position = startPos;
+                branchParents[_splineNo].transform.eulerAngles = startRot;
+                branchParents[_splineNo].transform.eulerAngles += new Vector3(rotAngle, 10, rotAngle);
+                //splines[_splineNo].transform.parent.transform.position = startPos;
+                rotAngle += 10.0f;
+                //splines[_splineNo].SetAllNodes(startPos, RotateBranch(startPos, new Vector3(startPos.x , startPos.y + 0.5f, startPos.z + 0.5f), rotAngle, hierachy));
+                break;
+            default:
+                break;
+        }
 
-        //the important line
-        splines[_splineNo].SetAllNodes(startPos, circleParentBranch(startPos, angle, hierachy));
     }
 
     /// <summary>
@@ -290,6 +318,40 @@ public class CurveControl : MonoBehaviour
         return pos;
     }
 
+    /// <summary>
+    /// Rotate lineRenderer around point 
+    /// </summary>
+    /// <param name="node0">Pivot point</param>
+    /// <param name="nodeX">Point to rotate</param>
+    /// <param name="angle">Angle of rotation</param>
+    private Vector3 RotateBranch(Vector3 node0, Vector3 nodeX, float angle, int hierachy)
+    {
+
+        float PIDiv180 = Mathf.PI / 180;
+        Vector3 result = Vector3.zero;
+
+        switch (hierachy)
+        {
+            case 0:
+                break;
+
+            case 1:
+                break;
+
+            case 2:
+
+            float xRot = (nodeX.x - node0.x);
+            float yRot = (nodeX.z - node0.z);
+            angle = -angle * PIDiv180;
+            result = new Vector3(Mathf.Cos(angle) * xRot - Mathf.Sin(angle) * yRot + node0.x, 0, Mathf.Sin(angle) * xRot + Mathf.Cos(angle) * yRot + node0.z);
+                break;
+            default:
+                break;
+        }
+
+        return result;
+    }
+    
     /// <summary>
     /// Set points for bezier curve,
     /// Place linerenderer steps along curve
