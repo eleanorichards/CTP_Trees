@@ -29,23 +29,24 @@ public class BezierCurve : MonoBehaviour
         parentHierachy = hierachyIndex - 1;
     }
 
-    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
+    public void SetAllNodes(Vector3 node0Pos)
     {
         nodes[0] = node0Pos;
-        nodes[1] = node1Pos;
-        initialStep = (node1Pos - node0Pos);
-
+        // initialStep = (node1Pos - node0Pos);
         switch (hierachyIndex)
         {
             case 0:
+                initialStep = new Vector3(0, 2, 0);
                 PlaceTrunk();
                 break;
 
             case 1:
+                initialStep = new Vector3(0, 0, 1);
                 PlaceTierOne();
                 break;
 
             case 2:
+                initialStep = new Vector3(1, 0, 0);
                 PlaceTierTwo();
                 break;
 
@@ -56,8 +57,8 @@ public class BezierCurve : MonoBehaviour
 
     public void PlaceTrunk()
     {
+        nodes[0] = Vector3.zero;
         int y = 2;
-        nodes[0] = new Vector3(0.0f, 0.0f, 0.0f);
         for (int i = 1; i < nodes.Length; i++)
         {
             nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
@@ -73,8 +74,10 @@ public class BezierCurve : MonoBehaviour
             case WindHeading.NONE:
                 for (int i = 1; i < nodes.Length; i++)
                 {
+                    //nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
                     nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
                 }
+
                 break;
 
             case WindHeading.NORTH:
@@ -139,6 +142,22 @@ public class BezierCurve : MonoBehaviour
     }
 
     public void PlaceTierTwo()
+    {
+        for (int i = 1; i < nodes.Length; i++)
+        {
+            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
+        }
+    }
+
+    public void RotateTierOne()
+    {
+        for (int i = 1; i < nodes.Length; i++)
+        {
+            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
+        }
+    }
+
+    public void RotateTierTwo()
     {
         for (int i = 1; i < nodes.Length; i++)
         {
