@@ -43,7 +43,7 @@ public class BezierCurve : MonoBehaviour
 
         for (int i = 1; i < segmentCount; i++)
         {
-            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), i, Random.Range(-_GD._tangliness, _GD._tangliness));
+            nodes[i] = new Vector3(0, i, 0);
         }
     }
 

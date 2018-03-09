@@ -110,18 +110,18 @@ public class PlaceBranches : MonoBehaviour
             case 0:
 
                 BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
-                line.positionCount = 8; //2 Curves long
+                line.positionCount = 16; //2 Curves long
                 line.startWidth = thickness * 1.1f; //Following Darwin's ratio
-                line.endWidth = thickness * 0.9f;
+                line.endWidth = thickness * 0.8f;
                 spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
                 break;
 
             case 1:
                 BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
-                line.positionCount = 4; //1 curve long
+                line.positionCount = 12; //1 curve long
                 line.startWidth = (thickness / tierCount[1]) * 1.1f;
-                line.endWidth = (thickness / tierCount[1]) * 0.9f;
+                line.endWidth = (thickness / tierCount[1]) * 0.8f;
                 spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
 
@@ -129,9 +129,9 @@ public class PlaceBranches : MonoBehaviour
 
             case 2:
                 BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
-                line.positionCount = 2; //< 1 Curve long
+                line.positionCount = 8; // 1 Curve long
                 line.startWidth = (thickness / tierCount[2]) * 1.1f;
-                line.endWidth = (thickness / tierCount[2]) * 0.9f;
+                line.endWidth = (thickness / tierCount[2]) * 0.8f;
                 spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
 
@@ -139,9 +139,9 @@ public class PlaceBranches : MonoBehaviour
 
             case 3:
                 BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
-                line.positionCount = 2;
+                line.positionCount = 4;
                 line.startWidth = (thickness / tierCount[3]) * 1.1f;
-                line.endWidth = (thickness / tierCount[3]) * 0.9f;
+                line.endWidth = (thickness / tierCount[3]) * 0.8f;
                 spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
 
@@ -181,9 +181,8 @@ public class PlaceBranches : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < line.positionCount; i++)
-            {
-            }
+            print("more nodes needed");
+            return;
         }
     }
 }
