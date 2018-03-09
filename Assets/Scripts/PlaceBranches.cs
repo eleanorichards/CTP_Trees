@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlaceBranches : MonoBehaviour
 {
+    private DrawBranches drawBranches;
     private FractalGen fractalGen;
     private List<GameObject> BranchTransforms = new List<GameObject>();
 
@@ -11,7 +12,8 @@ public class PlaceBranches : MonoBehaviour
     public int[] tierCount;
 
     private int branchNum;
-    private int depth; //Reverse direction of hierachy
+    private int stepsPerCurve = 5; //quality of curves
+    private float thickness = 1.0f; //Reverse direction of hierachy
 
     // Use this for initialization
     private void Start()
@@ -27,30 +29,30 @@ public class PlaceBranches : MonoBehaviour
             BranchTransforms.Add(branch);
             LineRenderer line = BranchTransforms[i].AddComponent<LineRenderer>();
             BranchData _BD = BranchTransforms[i].AddComponent<BranchData>();
-            InitBranchValues(i);
-            InitBranchPos(i);
+            BezierCurve spline = BranchTransforms[i].AddComponent<BezierCurve>();
+            InitBranchValues(i, _BD);
+            InitBranchPos(i, _BD);
             InitLineRenderer(line);
+            InitBranchSpline(i, line, _BD, spline);
         }
     }
 
     private void InitLineRenderer(LineRenderer line)
     {
+        int tiers = tierCount.Length;
+
         line.GetComponent<Renderer>().enabled = true;
         line.useWorldSpace = false;
-        // line.startWidth = _depth * 0.08f;
+        line.SetPosition(1, new Vector3(0, 1, 0));
+        line.startWidth = 0.1f;
+        line.endWidth = 0.08f;
+        //line.startWidth = _depth * 0.08f;
         //line.endWidth = _depth * 0.06f;
-        line.startColor = Color.black;
-        line.endColor = Color.green;
         line.material = Resources.Load("bark") as Material;
     }
 
-    private void InitBranchValues(int globalID)
+    private void InitBranchValues(int globalID, BranchData _BD)
     {
-        BranchData _BD = BranchTransforms[globalID].GetComponent<BranchData>();
-        for (int i = 0; i < tierCount.Length; i++)
-        {
-        }
-
         if (globalID < tierCount[0])
         {
             _BD.Hierachy = 0;
@@ -77,12 +79,10 @@ public class PlaceBranches : MonoBehaviour
         }
     }
 
-    private void InitBranchPos(int globalID)
+    private void InitBranchPos(int globalID, BranchData _BD)
     {
-        BranchData _BD = BranchTransforms[globalID].GetComponent<BranchData>();
-        ReturnBranchParent(_BD); //BRANCHPARENT
-
-        BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+        BranchTransforms[globalID].transform.Rotate(globalID * 1.5f, 0, 0);
+        BranchTransforms[globalID].transform.SetParent(ReturnBranchParent(_BD).transform);
     }
 
     private GameObject ReturnBranchParent(BranchData _BD)
@@ -103,7 +103,87 @@ public class PlaceBranches : MonoBehaviour
         return gameObject;
     }
 
-    private void InitBranchSpline(int hierachy)
+    private void InitBranchSpline(int globalID, LineRenderer line, BranchData _BD, BezierCurve spline)
     {
+        switch (_BD.Hierachy)
+        {
+            case 0:
+
+                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                line.positionCount = 8; //2 Curves long
+                line.startWidth = thickness * 1.1f; //Following Darwin's ratio
+                line.endWidth = thickness * 0.9f;
+                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                SetLineToSpline(line, spline);
+                break;
+
+            case 1:
+                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                line.positionCount = 4; //1 curve long
+                line.startWidth = (thickness / tierCount[1]) * 1.1f;
+                line.endWidth = (thickness / tierCount[1]) * 0.9f;
+                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                SetLineToSpline(line, spline);
+
+                break;
+
+            case 2:
+                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                line.positionCount = 2; //< 1 Curve long
+                line.startWidth = (thickness / tierCount[2]) * 1.1f;
+                line.endWidth = (thickness / tierCount[2]) * 0.9f;
+                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                SetLineToSpline(line, spline);
+
+                break;
+
+            case 3:
+                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                line.positionCount = 2;
+                line.startWidth = (thickness / tierCount[3]) * 1.1f;
+                line.endWidth = (thickness / tierCount[3]) * 0.9f;
+                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                SetLineToSpline(line, spline);
+
+                break;
+
+            default:
+                break;
+        }
+
+        ////Internal Calculations
+        //Vector3 point = splines[_globalID].GetPoint(0f);
+        //line.SetPosition(0, point);
+        //int steps = stepsPerCurve * splines[_globalID].CurveCount;
+        //for (int x = 1; x < steps; x++)
+        //{
+        //    point = splines[_globalID].GetPoint(x / (float)steps);
+        //    //this is the curves within line rednerer
+        //    line.SetPosition(x, point + splines[_globalID].GetDirection(x / (float)steps));
+        //}
+    }
+
+    private void SetLineToSpline(LineRenderer line, BezierCurve spline)
+    {
+        if (line.positionCount >= 4)
+        {
+            //Internal Calculations
+            Vector3 point = spline.GetPoint(0f);
+            line.SetPosition(0, point);
+            int steps = stepsPerCurve * spline.CurveCount;
+            line.positionCount = steps;
+            for (int x = 1; x < steps; x++)
+            {
+                point = spline.GetPoint(x / (float)steps);
+                //this is the curves within line rednerer
+                line.SetPosition(x, point + spline.GetDirection(x / (float)steps));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < line.positionCount; i++)
+            {
+            }
+        }
     }
 }

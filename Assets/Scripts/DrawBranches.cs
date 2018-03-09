@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DrawBranches : MonoBehaviour
 {
+    private float deg_to_rad = Mathf.PI / 180.0f;
+    public int depth = 9; // gets slow over 15
+    private float scale = 0.2f;
+
     // Use this for initialization
     private void Start()
     {
@@ -12,6 +16,18 @@ public class DrawBranches : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    private void drawTree(float x1, float y1, float angle, int _depth)
+    {
+        if (_depth != 0)
+        {
+            float x2 = x1 + (Mathf.Cos(angle * deg_to_rad) * _depth * scale);
+            float y2 = y1 + (Mathf.Sin(angle * deg_to_rad) * _depth * scale);
+            drawLine(x1, y1, x2, y2, _depth);
+            drawTree(x2, y2, angle - 20, _depth - 1);
+            drawTree(x2, y2, angle + 20, _depth - 1);
+        }
     }
 
     private void drawLine(float x1, float y1, float x2, float y2, int _depth) // color variable is current depth, could be used for coloring different depths

@@ -29,29 +29,21 @@ public class BezierCurve : MonoBehaviour
         parentHierachy = hierachyIndex - 1;
     }
 
-    public void SetAllNodes(Vector3 node0Pos)
+    public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
     {
         nodes[0] = node0Pos;
-        // initialStep = (node1Pos - node0Pos);
-        switch (hierachyIndex)
+        nodes[1] = node1Pos;
+
+        initialStep = (node1Pos - node0Pos);
+    }
+
+    public void DrawSpline(Vector3 node0Pos, int segmentCount)
+    {
+        SetNodeSize(segmentCount);
+
+        for (int i = 1; i < segmentCount; i++)
         {
-            case 0:
-                initialStep = new Vector3(0, 2, 0);
-                PlaceTrunk();
-                break;
-
-            case 1:
-                initialStep = new Vector3(0, 0, 1);
-                PlaceTierOne();
-                break;
-
-            case 2:
-                initialStep = new Vector3(1, 0, 0);
-                PlaceTierTwo();
-                break;
-
-            default:
-                break;
+            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), i, Random.Range(-_GD._tangliness, _GD._tangliness));
         }
     }
 
@@ -63,89 +55,6 @@ public class BezierCurve : MonoBehaviour
         {
             nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
             y += 2;
-        }
-    }
-
-    //Tier one for the first set of branches along the tree
-    public void PlaceTierOne()
-    {
-        switch (_GD._windHeading)
-        {
-            case WindHeading.NONE:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    //nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                }
-
-                break;
-
-            case WindHeading.NORTH:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    if (nodes[1].x > 0)
-                    {
-                        nodes[i] = new Vector3((nodes[i - 1].x + initialStep.x), ((nodes[i - 1].y + initialStep.y) + 1), (nodes[i - 1].z + initialStep.z)) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                    else
-                    {
-                        nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                }
-                break;
-
-            case WindHeading.EAST:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    if (nodes[1].z < 0)
-                    {
-                        nodes[i] = new Vector3((nodes[i - 1].x + initialStep.x), (nodes[i - 1].y + initialStep.y + 1), (nodes[i - 1].z + initialStep.z)) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                    else
-                    {
-                        nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                }
-                break;
-
-            case WindHeading.SOUTH:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    if (nodes[1].x < 0)
-                    {
-                        nodes[i] = new Vector3((nodes[i - 1].x + initialStep.x), (nodes[i - 1].y + initialStep.y + 1), (nodes[i - 1].z + initialStep.z)) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                    else
-                    {
-                        nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                }
-                break;
-
-            case WindHeading.WEST:
-                for (int i = 1; i < nodes.Length; i++)
-                {
-                    if (nodes[1].z > 0)
-                    {
-                        nodes[i] = new Vector3((nodes[i - 1].x + initialStep.x), (nodes[i - 1].y + initialStep.y + 1), (nodes[i - 1].z + initialStep.z)) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                    else
-                    {
-                        nodes[i] = (nodes[i - 1] + initialStep) + RandomVector(-_GD._tangliness, _GD._tangliness);
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    public void PlaceTierTwo()
-    {
-        for (int i = 1; i < nodes.Length; i++)
-        {
-            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
         }
     }
 
@@ -216,7 +125,7 @@ public class BezierCurve : MonoBehaviour
     {
         get
         {
-            return (nodes.Length - 1) / 3;
+            return (nodes.Length - 1) / 4;
         }
     }
 

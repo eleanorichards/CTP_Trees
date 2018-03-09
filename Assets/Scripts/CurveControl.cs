@@ -252,7 +252,7 @@ public class CurveControl : MonoBehaviour
                                                             // if (i > 0)
                 branchParents[_splineID].transform.SetParent(branchParents[i].transform);//Set parent branch AS PARENT //APPLE
                                                                                          //splines[_splineID].transform.RotateAround(splines[i].transform.position, yRot);
-                splines[_splineID].SetAllNodes(branchParents[i].transform.position);
+                splines[_splineID].SetAllNodes(Vector3.zero, Vector3.up);
             }
         }
 
@@ -337,7 +337,7 @@ public class CurveControl : MonoBehaviour
         {
             point = splines[i].GetPoint(x / (float)steps);
             //this is the curves within line rednerer
-            lineRend[i].SetPosition(x, point + splines[i].GetDirection(x / (float)steps));
+            lineRend[i].SetPosition(x, point /*+ splines[i].GetDirection(x / (float)steps)*/);
         }
     }
 
