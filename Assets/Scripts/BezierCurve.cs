@@ -47,17 +47,6 @@ public class BezierCurve : MonoBehaviour
         }
     }
 
-    public void PlaceTrunk()
-    {
-        nodes[0] = Vector3.zero;
-        int y = 2;
-        for (int i = 1; i < nodes.Length; i++)
-        {
-            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), y, Random.Range(-_GD._tangliness, _GD._tangliness));
-            y += 2;
-        }
-    }
-
     public void SetNodeSize(int nodeNum)
     {
         System.Array.Resize(ref nodes, nodeNum);
@@ -66,17 +55,6 @@ public class BezierCurve : MonoBehaviour
     public Vector3 RandomVector(float min, float max)
     {
         return new Vector3(Random.Range(min, max), Random.Range(min, max) + 0.2f, Random.Range(min, max));
-    }
-
-    public void SetParentIndex(int _parentIndex)
-    {
-        //parentHierachy = _parentHierachy;
-        parentIndex = _parentIndex;
-    }
-
-    public void SetGlobalIndex(int _globalIndex)
-    {
-        globalIndex = _globalIndex;
     }
 
     public void AddCurve()
@@ -125,7 +103,7 @@ public class BezierCurve : MonoBehaviour
     {
         get
         {
-            return (nodes.Length - 1) / 4;
+            return (nodes.Length - 1) / 3;
         }
     }
 
@@ -180,15 +158,5 @@ public class BezierCurve : MonoBehaviour
         Vector3 tng = GetDirection(t);
         Vector3 nrm = GetNormal3D(t, up);
         return Quaternion.LookRotation(tng, nrm);
-    }
-
-    public void ExtrudeShape()
-    {
-        //segments.GetComponent<segmentPlacer>().PlaceShapes();
-        //Mesh mesh = splineGeo.GetMesh();
-        //var shape = splineGeo.GetExtrudeShape();
-        //var path = splineGeo.GetPath();
-
-        //splineGeo.Extrude(mesh, shape, path);
     }
 }

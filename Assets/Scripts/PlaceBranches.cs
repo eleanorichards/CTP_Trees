@@ -15,6 +15,10 @@ public class PlaceBranches : MonoBehaviour
     private int stepsPerCurve = 5; //quality of curves
     private float thickness = 1.0f; //Reverse direction of hierachy
 
+    private float tier1Progress = 0.0f;
+    private float tier2Progress = 0.0f;
+    private float tier3Progress = 0.0f;
+
     // Use this for initialization
     private void Start()
     {
@@ -108,59 +112,57 @@ public class PlaceBranches : MonoBehaviour
         switch (_BD.Hierachy)
         {
             case 0:
-
-                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
                 line.positionCount = 16; //2 Curves long
                 line.startWidth = thickness * 1.1f; //Following Darwin's ratio
                 line.endWidth = thickness * 0.8f;
-                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                spline.DrawSpline(transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
+                BranchTransforms[globalID].transform.position
+                    = Vector3.zero;
                 break;
 
             case 1:
-                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                if (tier1Progress > 1.0f) tier1Progress = 0;
+                tier1Progress += 1.0f / ((float)tierCount[1] / (float)tierCount[0]);
                 line.positionCount = 12; //1 curve long
                 line.startWidth = (thickness / tierCount[1]) * 1.1f;
                 line.endWidth = (thickness / tierCount[1]) * 0.8f;
-                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                spline.DrawSpline(transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
+                BranchTransforms[globalID].transform.position
+    = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tier1Progress);
 
                 break;
 
             case 2:
-                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                if (tier2Progress > 1.0f) tier2Progress = 0;
+                tier2Progress += 1.0f / ((float)tierCount[2] / (float)tierCount[1]);
                 line.positionCount = 8; // 1 Curve long
                 line.startWidth = (thickness / tierCount[2]) * 1.1f;
                 line.endWidth = (thickness / tierCount[2]) * 0.8f;
-                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                spline.DrawSpline(transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
+                BranchTransforms[globalID].transform.position
+                    = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tier2Progress);
 
                 break;
 
             case 3:
-                BranchTransforms[globalID].transform.position = ReturnBranchParent(_BD).transform.position;
+                if (tier3Progress > 1.0f) tier3Progress = 0;
+                tier3Progress += 1.0f / ((float)tierCount[3] / (float)tierCount[2]);
                 line.positionCount = 4;
                 line.startWidth = (thickness / tierCount[3]) * 1.1f;
                 line.endWidth = (thickness / tierCount[3]) * 0.8f;
-                spline.DrawSpline(ReturnBranchParent(_BD).transform.position, line.positionCount);
+                spline.DrawSpline(transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
+                BranchTransforms[globalID].transform.position
+                    = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tier3Progress);
 
                 break;
 
             default:
                 break;
         }
-
-        ////Internal Calculations
-        //Vector3 point = splines[_globalID].GetPoint(0f);
-        //line.SetPosition(0, point);
-        //int steps = stepsPerCurve * splines[_globalID].CurveCount;
-        //for (int x = 1; x < steps; x++)
-        //{
-        //    point = splines[_globalID].GetPoint(x / (float)steps);
-        //    //this is the curves within line rednerer
-        //    line.SetPosition(x, point + splines[_globalID].GetDirection(x / (float)steps));
-        //}
     }
 
     private void SetLineToSpline(LineRenderer line, BezierCurve spline)
