@@ -33,12 +33,12 @@ public class CurveControl : MonoBehaviour
     {
         //GAMEDATA
         _GD = GetComponent<GameData>();
+        branchParents = new GameObject[branchCount];
 
         //INITIALISE BRANCH PARTS
         curves = new GameObject[branchCount];
         splines = new BezierCurve[branchCount];
         lineRend = new LineRenderer[branchCount];
-        branchParents = new GameObject[branchCount];
 
         branchPrefab = Resources.Load<GameObject>("Bezier");
         branchPPrefab = Resources.Load<GameObject>("branchParent");
@@ -63,11 +63,10 @@ public class CurveControl : MonoBehaviour
         for (int i = 0; i < branchCount; i++)
         {
             branchParents[i] = Instantiate(branchPPrefab, transform);
-            //curves[i] = Instantiate(branchPrefab, transform);
-            //curves[i] = branchParents[i].GetComponentInChildren <GameObject>();
-            // curves[i].transform.SetParent(branchParents[i].transform);
             splines[i] = branchParents[i].GetComponentInChildren<BezierCurve>();
             lineRend[i] = branchParents[i].GetComponentInChildren<LineRenderer>();
+            lineRend[i].useWorldSpace = false;
+
             lineRend[i].positionCount = stepsPerCurve;
             lineRend[i].startColor = Color.black;
             lineRend[i].endColor = Color.grey;
@@ -187,11 +186,6 @@ public class CurveControl : MonoBehaviour
 
                 for (int i = 0; i < splines.Length; i++)
                 {
-                    //ANGLE stuff
-                    angle += angleVariation;
-                    if (angle > 1)
-                        angle = 0;
-
                     splines[i].SetGlobalIndex(i);
                     //TRUNK
                     if (i < group1Count)
@@ -204,17 +198,19 @@ public class CurveControl : MonoBehaviour
                     //TIER 1
                     if (i <= group2Count && i >= group1Count)
                     {
-                        angleVariation = 1.0f / group2Count;
                         lineRend[i].startWidth = 0.25f;
                         lineRend[i].endWidth = 0.1f;
-                        splines[i].SetInitialStatus(1, i - group1Count);
                         branchStep += ((float)1.0f / (float)group2PerBranch);
+                        splines[i].SetInitialStatus(1, i - group1Count);
+                        //branchParents[i].transform.Rotate(RotateBranch(group2Count, 1), Space.Self);
+                        //splines[i].transform.Rotate(RotateBranch(group2Count, 1), Space.Self);
                         SetStartLocation(group1Count, group2PerBranch, i, 1);
+                        // RotateBranch(group2Count, 1);
+                        // branchParents[i].transform.eulerAngles = RotateBranch(group2Count, 1);
                     }
                     //TIER 2
                     if (i <= group3Count && i > group2Count)
                     {
-                        angleVariation = 1.0f / group3Count;
                         lineRend[i].startWidth = 0.1f;
                         lineRend[i].endWidth = 0.00f;
                         splines[i].SetInitialStatus(2, i - group2Count);
@@ -234,37 +230,33 @@ public class CurveControl : MonoBehaviour
     /// <summary>
     /// sets start node pos
     /// </summary>
-    private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineNo, int hierachy)
+    private void SetStartLocation(int _noOfParents, int _groupBranchCount, int _splineID, int hierachy)
     {
-        int memberIndex = _splineNo - _noOfParents;
-        int noOfParents = _noOfParents;
+        int memberIndex = _splineID - _noOfParents;
         int parentMemberIndex = (int)(memberIndex / _groupBranchCount);
         Vector3 startPos = Vector3.zero;
-        splines[_splineNo].SetParentIndex(parentMemberIndex);
+        splines[_splineID].SetParentIndex(parentMemberIndex);
 
         //globalIndex = MemberIndex + noOfParents
         for (int i = 0; i < splines.Length; i++)
         {
             //If splines[i] == parent Spline
-            if (splines[i].hierachyIndex == (splines[_splineNo].hierachyIndex - 1)
+            if (splines[i].hierachyIndex == (splines[_splineID].hierachyIndex - 1)
                 && splines[i].memberIndex == parentMemberIndex)
             {
-                if (branchStep > 1.0f) //I don't know why this isn't 1
+                if (branchStep > 0.5f) //I don't know why this isn't 1
                 {
                     branchStep = 0.1f;
                 }
-                startPos = splines[i].GetPoint(branchStep); //THIS IS RETURNING POINT IN WORLD SPACE
-                branchParents[_splineNo].transform.SetParent(branchParents[i].transform);//Set parent branch AS PARENT
+                startPos = splines[i].GetPoint(branchStep); //THIS IS RETURNING POINT IN WORLD SPACE ?+ branchParents[i].transform
+                                                            // if (i > 0)
+                branchParents[_splineID].transform.SetParent(branchParents[i].transform);//Set parent branch AS PARENT //APPLE
+                                                                                         //splines[_splineID].transform.RotateAround(splines[i].transform.position, yRot);
+                splines[_splineID].SetAllNodes(branchParents[i].transform.position);
             }
-            // if(i )
         }
 
-        branchParents[_splineNo].transform.position = startPos;
-        splines[_splineNo].SetAllNodes(Vector3.zero);
-        //branchParents[_splineNo].transform.Rotate(new Vector3(90, 0, 0));
-        //branchParents[_splineNo].transform.Rotate(RotateBranch((float)_groupBranchCount, hierachy));
-        //if hierachy == 1
-        //setPosition ( 0 ) // setrotation( 0 )
+        branchParents[_splineID].transform.position = startPos;
     }
 
     private Vector3 RotateBranch(float _groupBranchCount, int hierachy)
@@ -333,7 +325,7 @@ public class CurveControl : MonoBehaviour
 
     /// <summary>
     /// Set points for bezier curve,
-    /// Place linerenderer steps along curve
+    /// Place linerenderer steps along curve //APPLE
     /// </summary>
     private void DrawLines(int i)
     {

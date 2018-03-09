@@ -149,22 +149,6 @@ public class BezierCurve : MonoBehaviour
         }
     }
 
-    public void RotateTierOne()
-    {
-        for (int i = 1; i < nodes.Length; i++)
-        {
-            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
-        }
-    }
-
-    public void RotateTierTwo()
-    {
-        for (int i = 1; i < nodes.Length; i++)
-        {
-            nodes[i] = (nodes[i - 1] + initialStep) + (RandomVector(-_GD._tangliness, _GD._tangliness));
-        }
-    }
-
     public void SetNodeSize(int nodeNum)
     {
         System.Array.Resize(ref nodes, nodeNum);
@@ -184,11 +168,6 @@ public class BezierCurve : MonoBehaviour
     public void SetGlobalIndex(int _globalIndex)
     {
         globalIndex = _globalIndex;
-    }
-
-    public void AddBranches()
-    {
-        //branchPlacer.GetComponent<BranchPlacer>().AddBranch();
     }
 
     public void AddCurve()
