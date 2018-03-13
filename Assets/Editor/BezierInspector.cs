@@ -43,7 +43,7 @@ public class BezierInspector : Editor
             Vector3 p3 = nodes[y + 2];
 
             //Handles.DrawBezier(p0, p3, p1, p2, Color.white, null, 2f);
-            Handles.DrawBezier(p0 + spline.GetPoint(0f), p3 + spline.GetPoint(0f), p1 + spline.GetPoint(0f), p2 + spline.GetPoint(0f), Color.white, null, 2f);
+            Handles.DrawBezier(p0 + spline.GetPoint(0f) + spline.transform.position, p3 + spline.GetPoint(0f), p1 + spline.GetPoint(0f), p2 + spline.GetPoint(0f), Color.red, null, 2f);
             p0 = p3;
             // ShowDirections();
         }
@@ -51,7 +51,7 @@ public class BezierInspector : Editor
 
     private void ShowDirections()
     {
-        Handles.color = Color.red;
+        Handles.color = Color.yellow;
         Vector3 point = spline.GetPoint(0f);
         Handles.DrawLine(point, point + spline.GetDirection(0f) * directionScale);
         int steps = stepsPerCurve * spline.CurveCount;
@@ -59,7 +59,6 @@ public class BezierInspector : Editor
         {
             point = spline.GetPoint(x / (float)steps);
             Handles.DrawLine(point, point + spline.GetDirection(x / (float)steps) * directionScale);
-            Handles.color = Color.yellow;
             // Handles.DrawLine(point, point + curve.GetTangent(i / (float)steps) * directionScale);
         }
     }

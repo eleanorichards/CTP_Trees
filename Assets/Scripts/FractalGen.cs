@@ -48,8 +48,6 @@ public class FractalGen : MonoBehaviour
         line.useWorldSpace = false;
         line.startWidth = _depth * 0.08f;
         line.endWidth = _depth * 0.06f;
-        line.startColor = Color.black;
-        line.endColor = Color.green;
         line.material = Resources.Load("bark") as Material;
         //draw the line: original script is 2D,  Z=0
         line.SetPosition(0, new Vector3(x1, y1, 0));
