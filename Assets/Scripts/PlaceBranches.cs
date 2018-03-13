@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlaceBranches : MonoBehaviour
 {
-    private DrawBranches drawBranches;
     private FractalGen fractalGen;
     private List<GameObject> BranchTransforms = new List<GameObject>();
 
@@ -18,6 +17,56 @@ public class PlaceBranches : MonoBehaviour
     private float tier1Progress = 0.0f;
     private float tier2Progress = 0.0f;
     private float tier3Progress = 0.0f;
+
+    private Vector3 newRot = Vector3.zero;
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            BuildTree();
+        }
+    }
+
+    private void BuildTree()
+    {
+        foreach (GameObject oldBranch in BranchTransforms)
+        {
+            //BranchTransforms.Remove(oldBranch);
+            Destroy(oldBranch);
+        }
+        BranchTransforms.Clear();
+
+        tier1Progress = 0.0f;
+        tier2Progress = 0.0f;
+        tier3Progress = 0.0f;
+
+        newRot = Vector3.zero;
+        branchNum = 0;
+
+        for (int i = 0; i < tierCount.Length; i++)
+        {
+            branchNum += tierCount[i];
+        }
+
+        for (int i = 0; i < branchNum; i++)
+        {
+            GameObject branch = new GameObject("branch" + i);
+            BranchTransforms.Add(branch);
+            LineRenderer line = BranchTransforms[i].AddComponent<LineRenderer>();
+            BranchData _BD = BranchTransforms[i].AddComponent<BranchData>();
+            BezierCurve spline = BranchTransforms[i].AddComponent<BezierCurve>();
+            InitBranchValues(i, _BD);
+            InitLineRenderer(line);
+            InitBranchSpline(i, line, _BD, spline);
+        }
+
+        for (int i = branchNum - 1; i > -1; i--)
+        {
+            BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
+            InitBranchRot(i, _BD);
+        }
+    }
 
     // Use this for initialization
     private void Start()
@@ -35,9 +84,13 @@ public class PlaceBranches : MonoBehaviour
             BranchData _BD = BranchTransforms[i].AddComponent<BranchData>();
             BezierCurve spline = BranchTransforms[i].AddComponent<BezierCurve>();
             InitBranchValues(i, _BD);
-            InitBranchPos(i, _BD);
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
+        }
+        for (int i = branchNum - 1; i > -1; i--)
+        {
+            BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
+            InitBranchRot(i, _BD);
         }
     }
 
@@ -48,10 +101,6 @@ public class PlaceBranches : MonoBehaviour
         line.GetComponent<Renderer>().enabled = true;
         line.useWorldSpace = false;
         line.SetPosition(1, new Vector3(0, 1, 0));
-        line.startWidth = 0.1f;
-        line.endWidth = 0.08f;
-        //line.startWidth = _depth * 0.08f;
-        //line.endWidth = _depth * 0.06f;
         line.material = Resources.Load("bark") as Material;
     }
 
@@ -83,10 +132,35 @@ public class PlaceBranches : MonoBehaviour
         }
     }
 
-    private void InitBranchPos(int globalID, BranchData _BD)
+    private void InitBranchRot(int globalID, BranchData _BD)
     {
-        BranchTransforms[globalID].transform.Rotate(globalID * 1.5f, 0, 0);
+        //need to iterate in reverse to avoid affecting children
+        switch (_BD.Hierachy)
+        {
+            case 0:
+                newRot = Vector3.zero;
+                break;
+
+            case 1:
+                newRot.y += 360.0f / tierCount[1]; //IN A CIRCLE
+                newRot.x = -75.0f;
+                break;
+
+            case 2:
+                newRot.y += 360.0f / (tierCount[2] / tierCount[1]); //IN A CIRCLE
+                newRot.x = -75.0f;
+                break;
+
+            case 3:
+                newRot.y += 360.0f / (tierCount[3] / tierCount[2]); //IN A CIRCLE
+                newRot.x = -75.0f;
+                break;
+
+            default:
+                break;
+        }
         BranchTransforms[globalID].transform.SetParent(ReturnBranchParent(_BD).transform);
+        BranchTransforms[globalID].transform.Rotate(newRot);
     }
 
     private GameObject ReturnBranchParent(BranchData _BD)
@@ -130,14 +204,14 @@ public class PlaceBranches : MonoBehaviour
                 spline.DrawSpline(transform.position, line.positionCount);
                 SetLineToSpline(line, spline);
                 BranchTransforms[globalID].transform.position
-    = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tier1Progress);
+                    = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tier1Progress);
 
                 break;
 
             case 2:
                 if (tier2Progress > 1.0f) tier2Progress = 0;
                 tier2Progress += 1.0f / ((float)tierCount[2] / (float)tierCount[1]);
-                line.positionCount = 8; // 1 Curve long
+                line.positionCount = 4; // 1 Curve long
                 line.startWidth = (thickness / tierCount[2]) * 1.1f;
                 line.endWidth = (thickness / tierCount[2]) * 0.8f;
                 spline.DrawSpline(transform.position, line.positionCount);
@@ -174,12 +248,14 @@ public class PlaceBranches : MonoBehaviour
             line.SetPosition(0, point);
             int steps = stepsPerCurve * spline.CurveCount;
             line.positionCount = steps;
-            for (int x = 1; x < steps; x++)
+            line.SetPosition(0, spline.GetPoint(0));
+            for (int x = 1; x < steps - 1; x++)
             {
-                point = spline.GetPoint(x / (float)steps);
+                point = spline.GetPoint((float)x / (float)steps);
                 //this is the curves within line rednerer
-                line.SetPosition(x, point + spline.GetDirection(x / (float)steps));
+                line.SetPosition(x, point);
             }
+            line.SetPosition(line.positionCount - 1, spline.GetPoint(1));
         }
         else
         {

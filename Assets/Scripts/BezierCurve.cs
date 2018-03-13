@@ -19,14 +19,6 @@ public class BezierCurve : MonoBehaviour
     //Initialisation
     private void Start()
     {
-        _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
-    }
-
-    public void SetInitialStatus(int _hierachyIndex, int _memberIndex)
-    {
-        hierachyIndex = _hierachyIndex;
-        memberIndex = _memberIndex;
-        parentHierachy = hierachyIndex - 1;
     }
 
     public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
@@ -41,9 +33,12 @@ public class BezierCurve : MonoBehaviour
     {
         SetNodeSize(segmentCount);
 
+        if (!_GD)
+            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+
         for (int i = 1; i < segmentCount; i++)
         {
-            nodes[i] = new Vector3(0, i, 0);
+            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), i, Random.Range(-_GD._tangliness, _GD._tangliness));
         }
     }
 

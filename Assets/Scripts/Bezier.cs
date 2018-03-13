@@ -4,6 +4,7 @@ public static class Bezier
 {
     public static Vector3 GetPoint(Vector3 node1, Vector3 node2, Vector3 node3, Vector3 node4, float t)
     {
+        t = Mathf.Clamp01(t);
         float omt = 1f - t;
         float omt2 = omt * omt;
         float t2 = t * t;
