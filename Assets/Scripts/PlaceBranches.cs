@@ -54,7 +54,11 @@ public class PlaceBranches : MonoBehaviour
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
         }
-
+        //Fractal pass
+        for (int i = (tierCount[0] + tierCount[1]); i < branchNum; i++)
+        {
+            //AddFractals(BranchTransforms[i].GetComponent<BranchData>());
+        }
         for (int i = branchNum - 1; i > -1; i--)
         {
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
@@ -90,6 +94,12 @@ public class PlaceBranches : MonoBehaviour
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
             InitBranchRot(i, _BD);
         }
+    }
+
+    private void AddFractals(BranchData _BD)
+    {
+        GameObject fractal = Resources.Load("FractalObj") as GameObject;
+        Instantiate(fractal, ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(0.98f), Quaternion.identity);
     }
 
     private void InitLineRenderer(LineRenderer line)
