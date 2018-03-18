@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlaceBranches : MonoBehaviour
 {
     private FractalGen fractalGen;
+    private DrawBranches drawBranch;
+    private GameData _GD;
     private List<GameObject> BranchTransforms = new List<GameObject>();
 
     [Tooltip("Should be multiple of predecessor")]
@@ -17,6 +19,14 @@ public class PlaceBranches : MonoBehaviour
     private float thickness = 1.0f; //Reverse direction of hierachy
 
     private Vector3 newRot = Vector3.zero;
+
+    // Use this for initialization
+    private void Start()
+    {
+        _GD = _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        drawBranch = GetComponent<DrawBranches>();
+        BuildTree();
+    }
 
     private void Update()
     {
@@ -53,53 +63,17 @@ public class PlaceBranches : MonoBehaviour
             InitBranchValues(i, _BD);
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
+            //Fractal pass
+            if (i > (branchNum - tierCount[tierCount.Length - 1]))
+                drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>());
         }
-        //Fractal pass
-        for (int i = (tierCount[0] + tierCount[1]); i < branchNum; i++)
-        {
-            //AddFractals(BranchTransforms[i].GetComponent<BranchData>());
-        }
+
+        //rotationPass - in reverse to avoid parent's effects
         for (int i = branchNum - 1; i > -1; i--)
         {
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
             InitBranchRot(i, _BD);
         }
-    }
-
-    // Use this for initialization
-    private void Start()
-    {
-        for (int i = 0; i < tierCount.Length; i++)
-        {
-            branchNum += tierCount[i];
-        }
-        for (int i = 0; i < tierProgress.Length; i++)
-        {
-            tierProgress[i] = 0.0f;
-        }
-
-        for (int i = 0; i < branchNum; i++)
-        {
-            GameObject branch = new GameObject("branch" + i);
-            BranchTransforms.Add(branch);
-            LineRenderer line = BranchTransforms[i].AddComponent<LineRenderer>();
-            BranchData _BD = BranchTransforms[i].AddComponent<BranchData>();
-            BezierCurve spline = BranchTransforms[i].AddComponent<BezierCurve>();
-            InitBranchValues(i, _BD);
-            InitLineRenderer(line);
-            InitBranchSpline(i, line, _BD, spline);
-        }
-        for (int i = branchNum - 1; i > -1; i--)
-        {
-            BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
-            InitBranchRot(i, _BD);
-        }
-    }
-
-    private void AddFractals(BranchData _BD)
-    {
-        GameObject fractal = Resources.Load("FractalObj") as GameObject;
-        Instantiate(fractal, ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(0.98f), Quaternion.identity);
     }
 
     private void InitLineRenderer(LineRenderer line)
@@ -130,43 +104,29 @@ public class PlaceBranches : MonoBehaviour
         {
             _BD.Hierachy = 2;
             _BD.GlobalID = globalID; //Set global ID
-            _BD.GroupID = globalID - (tierCount[1] + 1); //Set Group ID
+            _BD.GroupID = globalID - (tierCount[1] + tierCount[0]); //Set Group ID
         }
         else if (globalID < tierCount[3] + tierCount[2] + tierCount[1] + tierCount[0])
         {
             _BD.Hierachy = 3;
             _BD.GlobalID = globalID; //Set global ID
-            _BD.GroupID = globalID - (tierCount[2] + 1); //Set Group ID
+            _BD.GroupID = globalID - (tierCount[2] + tierCount[1] + tierCount[0]); //Set Group ID
         }
     }
 
+    /// <summary>
+    ///         N[270]
+    ///
+    ///     E[180]       W[0]
+    ///
+    ///         S[90]
+    /// </summary>
     private void InitBranchRot(int globalID, BranchData _BD)
     {
-        //need to iterate in reverse to avoid affecting children
-        switch (_BD.Hierachy)
-        {
-            case 0:
-                newRot = Vector3.zero;
-                break;
-
-            case 1:
-                newRot.y += 360.0f / tierCount[1]; //IN A CIRCLE
-                newRot.x = -55.0f;
-                break;
-
-            case 2:
-                newRot.y += 360.0f / (tierCount[2] / tierCount[1]); //IN A CIRCLE
-                newRot.x = -55.0f;
-                break;
-
-            case 3:
-                newRot.y += 360.0f / (tierCount[3] / tierCount[2]); //IN A CIRCLE
-                newRot.x = -55.0f;
-                break;
-
-            default:
-                break;
-        }
+        //First pass for default pos
+        newRot = drawBranch.InitBranchDefaults(newRot, _BD);
+        //second pass (weighting soon) for environmental
+        newRot = drawBranch.WindHeadingRot(newRot, _BD);
         BranchTransforms[globalID].transform.SetParent(ReturnBranchParent(_BD).transform);
         BranchTransforms[globalID].transform.Rotate(newRot);
     }
@@ -191,27 +151,22 @@ public class PlaceBranches : MonoBehaviour
 
     private void InitBranchSpline(int globalID, LineRenderer line, BranchData _BD, BezierCurve spline)
     {
-        if (_BD.Hierachy < 1) //TRUNK
+        if (tierProgress[_BD.Hierachy] > 1) //If branch
         {
-            line.positionCount = 16; //2 Curves long
-            line.startWidth = thickness * 1.1f; //Following Darwin's ratio
-            line.endWidth = thickness * 0.4f;
-            spline.DrawSpline(transform.position, line.positionCount);
-            SetLineToSpline(line, spline);
-            BranchTransforms[globalID].transform.position
-                = Vector3.zero;
+            tierProgress[_BD.Hierachy] = 0;
         }
-        else
+
+        line.positionCount = 16 / (_BD.Hierachy + 1); //Cannot divide by 0
+        line.startWidth = (thickness / tierCount[_BD.Hierachy]) * 1.1f;
+        line.endWidth = (thickness / tierCount[_BD.Hierachy]) * 0.5f;
+        drawBranch.DrawSplineBranches(spline, _BD);
+        //spline.DrawSpline(transform.position, line.positionCount, _BD);
+        SetLineToSpline(line, spline);
+        if (_BD.Hierachy > 0) //TRUNK
         {
-            if (tierProgress[_BD.Hierachy] > 1) tierProgress[_BD.Hierachy] = 0;
-            line.positionCount = 16 / _BD.Hierachy;
             tierProgress[_BD.Hierachy] += 1.0f / ((float)tierCount[_BD.Hierachy] / (float)tierCount[_BD.Hierachy - 1]);
-            line.startWidth = (thickness / tierCount[_BD.Hierachy]) * 1.1f;
-            line.endWidth = (thickness / tierCount[_BD.Hierachy]) * 0.5f;
-            spline.DrawSpline(transform.position, line.positionCount);
-            SetLineToSpline(line, spline);
             BranchTransforms[globalID].transform.position
-            = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tierProgress[_BD.Hierachy]);
+        = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tierProgress[_BD.Hierachy]);
         }
     }
 

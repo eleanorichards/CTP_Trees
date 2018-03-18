@@ -20,7 +20,8 @@ public enum TreeType
     DICHOTOMOUS, //branching in to two equal parts
     SYMPODIAL,  //branching in to many lateral (can be uneven) parts
     MONOPODIAL, //branching from a single trunk
-    WHORLED     //spiral/fibbonacci? from previous branch
+    WHORLED,     //spiral/fibbonacci? from previous branch
+    WEEPING
 }
 
 public enum WindHeading
@@ -41,6 +42,7 @@ public class GameData : MonoBehaviour
     public float _windSpeed = 0.0f;
     public float _sunStrength = 1.0f;
     public float _tangliness = 0.0f;
+    public bool surrounded = false;
 
     // Use this for initialization
     private void Start()

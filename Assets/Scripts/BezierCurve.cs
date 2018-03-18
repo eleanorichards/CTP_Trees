@@ -7,9 +7,23 @@ public class BezierCurve : MonoBehaviour
     private Vector3 initialStep;
     private GameData _GD;
 
-    //Initialisation
-    private void Start()
+    /// <summary>
+    /// First Func Called
+    /// Initialise here, BranchData already set
+    /// </summary>
+    /// <param name="node0Pos"></param>
+    /// <param name="segmentCount"></param>
+    public void DrawSpline(Vector3 node0Pos, int segmentCount, BranchData _BD)
     {
+        SetNodeSize(segmentCount);
+        //i == 1/groupID
+        if (!_GD)
+            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+
+        for (int i = 1; i < segmentCount; i++)
+        {
+            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), i, Random.Range(-_GD._tangliness, _GD._tangliness));
+        }
     }
 
     public void SetAllNodes(Vector3 node0Pos, Vector3 node1Pos)
@@ -18,19 +32,6 @@ public class BezierCurve : MonoBehaviour
         nodes[1] = node1Pos;
 
         initialStep = (node1Pos - node0Pos);
-    }
-
-    public void DrawSpline(Vector3 node0Pos, int segmentCount)
-    {
-        SetNodeSize(segmentCount);
-
-        if (!_GD)
-            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
-
-        for (int i = 1; i < segmentCount; i++)
-        {
-            nodes[i] = new Vector3(Random.Range(-_GD._tangliness, _GD._tangliness), i, Random.Range(-_GD._tangliness, _GD._tangliness));
-        }
     }
 
     public void SetNodeSize(int nodeNum)
