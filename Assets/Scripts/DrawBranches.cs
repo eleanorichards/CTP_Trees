@@ -255,8 +255,8 @@ public class DrawBranches : MonoBehaviour
 
     public void AddFractals(BranchData _BD, BezierCurve _parent)
     {
-        GameObject fractal = Resources.Load("FractalObj") as GameObject;
-        Vector3 rotPos = _parent.GetPoint(1) - _parent.GetPoint(0.98f);
+        GameObject fractal = Resources.Load("Fractal") as GameObject;
+        Vector3 rotPos = _parent.transform.rotation.eulerAngles;
         //float rotationZ = (float)(Mathf.Atan2(rotPos.y, rotPos.x) / (2 * Mathf.PI));
         //float rotationX = (float)(Mathf.Atan2(rotPos.x, rotPos.z) / (2 * Mathf.PI));
         //float rotationY = (float)(Mathf.Atan2(rotPos.y, rotPos.z) / (2 * Mathf.PI));
