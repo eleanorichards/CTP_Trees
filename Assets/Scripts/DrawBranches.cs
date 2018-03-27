@@ -99,7 +99,7 @@ public class DrawBranches : MonoBehaviour
                 break;
 
             case TreeType.WHORLED:
-                newRot.y += 90.0f;
+                newRot.y += 37.0f;
                 newRot.x = -55.0f;
                 break;
 
@@ -122,7 +122,7 @@ public class DrawBranches : MonoBehaviour
 
                     case 3:
                         newRot.y += 90.0f;
-                        newRot.x = -125.0f;
+                        newRot.x = -55.0f;
                         break;
                 }
                 break;
@@ -260,9 +260,10 @@ public class DrawBranches : MonoBehaviour
         //float rotationZ = (float)(Mathf.Atan2(rotPos.y, rotPos.x) / (2 * Mathf.PI));
         //float rotationX = (float)(Mathf.Atan2(rotPos.x, rotPos.z) / (2 * Mathf.PI));
         //float rotationY = (float)(Mathf.Atan2(rotPos.y, rotPos.z) / (2 * Mathf.PI));
-
-        //Instantiate(fractal, _parent.GetPoint(1), Quaternion.identity, _parent.gameObject.transform);
-        //fractal.transform.Rotate(new Vector3(rotationX, rotationY, rotationZ));
+        Debug.Log(rotPos);
+        //NOT SURE why not working
+        Instantiate(fractal, _parent.GetPoint(1), Quaternion.LookRotation(_parent.GetPoint(1) - _parent.GetPoint(0.98f)), _parent.gameObject.transform);
+        //fractal.GetComponent<FractalGen>().RotateFractal(rotPos);
     }
 }
 

@@ -10,7 +10,7 @@ public class FractalGen : MonoBehaviour
 
     private void Start()
     {
-        drawTree(0 + transform.position.x, 0 + transform.position.y, 90, 1); // x, y, angle, depth
+        drawTree(0 + transform.position.x, 0 + transform.position.y, 90, depth); // x, y, angle, depth
     }
 
     private void Update()
@@ -29,8 +29,8 @@ public class FractalGen : MonoBehaviour
             float x2 = x1 + (Mathf.Cos(angle * deg_to_rad) * _depth * scale);
             float y2 = y1 + (Mathf.Sin(angle * deg_to_rad) * _depth * scale);
             drawLine(x1, y1, x2, y2, _depth);
-            drawTree(x2, y2, angle - 20, _depth);
-            drawTree(x2, y2, angle + 20, _depth);
+            drawTree(x2, y2, angle - 20, _depth - 1);
+            drawTree(x2, y2, angle + 20, _depth - 1);
         }
     }
 
@@ -44,7 +44,6 @@ public class FractalGen : MonoBehaviour
 
         // add line renderer to our gameobject
         LineRenderer line = branch.AddComponent<LineRenderer>();
-        line.GetComponent<Renderer>().enabled = true;
         line.useWorldSpace = false;
         line.startWidth = (_depth * 0.08f) * 0.3f;
         line.endWidth = (_depth * 0.06f) * 0.3f;
@@ -52,5 +51,10 @@ public class FractalGen : MonoBehaviour
         //draw the line: original script is 2D,  Z=0
         line.SetPosition(0, new Vector3(x1, y1, transform.position.z));
         line.SetPosition(1, new Vector3(x2, y2, transform.position.z));
+    }
+
+    public void RotateFractal(Vector3 rotation)
+    {
+        transform.Rotate(rotation);
     }
 }

@@ -23,7 +23,7 @@ public class PlaceBranches : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        _GD = _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
         drawBranch = GetComponent<DrawBranches>();
         BuildTree();
     }
@@ -64,8 +64,6 @@ public class PlaceBranches : MonoBehaviour
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
             //Fractal pass
-            if (i > (branchNum - tierCount[tierCount.Length - 1]))
-                drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>());
         }
 
         //rotationPass - in reverse to avoid parent's effects
@@ -73,6 +71,11 @@ public class PlaceBranches : MonoBehaviour
         {
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
             InitBranchRot(i, _BD);
+        }
+        for (int i = branchNum - tierCount[tierCount.Length - 1] - 1; i < branchNum - 1; i++)
+        {
+            if (i > (branchNum - tierCount[tierCount.Length - 1]))
+                drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>());
         }
     }
 
