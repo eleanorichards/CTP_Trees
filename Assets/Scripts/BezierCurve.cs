@@ -15,6 +15,8 @@ public class BezierCurve : MonoBehaviour
     /// <param name="segmentCount"></param>
     public void DrawSpline(Vector3 node0Pos, int segmentCount, BranchData _BD)
     {
+        if (segmentCount < 4)
+            segmentCount = 4;
         SetNodeSize(segmentCount);
         //i == 1/groupID
         if (!_GD)

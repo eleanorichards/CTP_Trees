@@ -39,42 +39,21 @@ public class DrawBranches : MonoBehaviour
         if (!_GD)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
         float height = 0;
+
         if (_GD.surrounded)
-        {
-            height = 20;
-        }
-        else
-        {
             height = 30;
-        }
+        else
+            height = 40;
 
-        switch (_BD.Hierachy)
-        {
-            case 0:
+        //calculatoins arre okay.
+        //sometimes groupID = 0 branch is at the tip
+        height /= (((float)_BD.Hierachy + 1) / 10.0f) + 2;
 
-                break;
-
-            case 1:
-                height = height / 2;
-                break;
-
-            case 2:
-                height = height / 3;
-
-                break;
-
-            case 3:
-                height = height / 4;
-
-                break;
-
-            default:
-                break;
-        }
+        height /= (((float)_BD.GroupID / 10.0f) + 1);
 
         //SUNSTRENGTH percentage
-        height *= _GD._sunStrength;
-        int nodeNum = (int)height - ((int)height % 4);
+        // height *= _GD._sunStrength;
+        int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
         spline.DrawSpline(transform.position, nodeNum, _BD);
     }
 
