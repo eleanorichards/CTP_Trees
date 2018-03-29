@@ -10,14 +10,14 @@ public class FractalGen : MonoBehaviour
 
     private void Start()
     {
-        drawTree(0 + transform.position.x, 0 + transform.position.y, 90, depth); // x, y, angle, depth
+        drawTree(transform.position.x, transform.position.y, 90, depth); // x, y, angle, depth
     }
 
     private void Update()
     {
         if (Input.GetButtonDown("Jump"))
         {
-            drawTree(0 + transform.position.x, 0 + transform.position.y, 90, depth); // x, y, angle, depth
+            drawTree(transform.position.x, transform.position.y, 90, depth); // x, y, angle, depth
         }
     }
 
@@ -55,6 +55,6 @@ public class FractalGen : MonoBehaviour
 
     public void RotateFractal(Vector3 rotation)
     {
-        transform.Rotate(rotation);
+        transform.Rotate(rotation, Space.Self);
     }
 }

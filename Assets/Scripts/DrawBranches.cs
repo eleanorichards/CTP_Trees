@@ -232,17 +232,18 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
-    public void AddFractals(BranchData _BD, BezierCurve _parent)
+    public GameObject AddFractals(BranchData _BD, BezierCurve _parent)
     {
-        GameObject fractal = Resources.Load("Fractal") as GameObject;
+        GameObject fractal = Resources.Load("FractalObj") as GameObject;
         Vector3 rotPos = _parent.transform.rotation.eulerAngles;
         //float rotationZ = (float)(Mathf.Atan2(rotPos.y, rotPos.x) / (2 * Mathf.PI));
         //float rotationX = (float)(Mathf.Atan2(rotPos.x, rotPos.z) / (2 * Mathf.PI));
         //float rotationY = (float)(Mathf.Atan2(rotPos.y, rotPos.z) / (2 * Mathf.PI));
         Debug.Log(rotPos);
         //NOT SURE why not working
-        Instantiate(fractal, _parent.GetPoint(1), Quaternion.LookRotation(_parent.GetPoint(1) - _parent.GetPoint(0.98f)), _parent.gameObject.transform);
-        //fractal.GetComponent<FractalGen>().RotateFractal(rotPos);
+        Instantiate(fractal, _parent.GetPoint(1), Quaternion.identity, _parent.gameObject.transform);
+        // transform.Rotate(_parent.GetPoint(1) - _parent.GetPoint(0.98f));
+        return fractal;
     }
 }
 

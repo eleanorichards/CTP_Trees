@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlaceBranches : MonoBehaviour
 {
-    private FractalGen fractalGen;
     private DrawBranches drawBranch;
     private GameData _GD;
     private List<GameObject> BranchTransforms = new List<GameObject>();
+    private List<GameObject> fractalList = new List<GameObject>();
 
     [Tooltip("Should be multiple of predecessor")]
     public int[] tierCount;
@@ -44,6 +44,7 @@ public class PlaceBranches : MonoBehaviour
             Destroy(oldBranch);
         }
         BranchTransforms.Clear();
+        fractalList.Clear();
 
         newRot = Vector3.zero;
         branchNum = 0;
@@ -63,7 +64,6 @@ public class PlaceBranches : MonoBehaviour
             InitBranchValues(i, _BD);
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
-            //Fractal pass
         }
 
         //rotationPass - in reverse to avoid parent's effects
@@ -74,8 +74,18 @@ public class PlaceBranches : MonoBehaviour
         }
         for (int i = branchNum - tierCount[tierCount.Length - 1] - 1; i < branchNum - 1; i++)
         {
-            if (i > (branchNum - tierCount[tierCount.Length - 1]))
-                drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>());
+            //Fractal pass
+            //if (i > (branchNum - tierCount[tierCount.Length - 1]))
+            fractalList.Add(drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>()));
+            RotateFractals(BranchTransforms[i].GetComponent<BezierCurve>(), i);
+        }
+    }
+
+    private void RotateFractals(BezierCurve _parent, int index)
+    {
+        foreach (GameObject fractal in fractalList)
+        {
+            fractal.transform.Rotate(_parent.GetPoint(1) - _parent.GetPoint(0.98f));
         }
     }
 
