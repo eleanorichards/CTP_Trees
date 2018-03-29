@@ -7,14 +7,18 @@ public class UIManager : MonoBehaviour
 {
     public Dropdown windHeadingDD;
     public Dropdown treeTypeDD;
+    public Dropdown lightHeadingDD;
 
     public Slider windSpeedSlider;
     public Slider treeNumSlider;
     public Slider tanglinessSlider;
 
+    public Toggle leavesToggle;
+    public Toggle surroundedToggle;
     private GameData _GD;
 
     private WindHeading windHeading;
+    private LightHeading lightHeading;
     private TreeType treeType;
 
     // Use this for initialization
@@ -55,6 +59,19 @@ public class UIManager : MonoBehaviour
         treeTypeDD.AddOptions(treeNames);
     }
 
+    //LIGHT HEADING DD
+    public void LightIndexChanged(int index)
+    {
+        _GD._lightHeading = (LightHeading)index;
+    }
+
+    private void PopulateLightList()
+    {
+        string[] headingNames = LightHeading.GetNames(typeof(LightHeading));
+        List<string> lightNames = new List<string>(headingNames);
+        lightHeadingDD.AddOptions(lightNames);
+    }
+
     //SLIDERS
 
     //WINDSPEED
@@ -74,4 +91,8 @@ public class UIManager : MonoBehaviour
     {
         _GD._tangliness = tanglinessSlider.value;
     }
+
+    //LEAVES
+
+    //SURROUNDED
 }

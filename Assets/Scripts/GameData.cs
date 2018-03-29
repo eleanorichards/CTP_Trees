@@ -1,13 +1,5 @@
 ﻿using UnityEngine;
 
-public enum BranchHier
-{
-    FIRST,
-    SECOND,
-    THIRD,
-    FOURTH
-}
-
 public enum GameState
 {
     PLAY,
@@ -33,12 +25,22 @@ public enum WindHeading
     WEST
 }
 
+public enum LightHeading
+{
+    NONE,
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+}
+
 public class GameData : MonoBehaviour
 {
-    public BranchHier _branchType;
     public int _treeNum = 1;
     public TreeType _treeType;
     public WindHeading _windHeading;
+    public LightHeading _lightHeading;
+
     public float _windSpeed = 0.0f;
     public float _sunStrength = 1.0f;
     public float _tangliness = 0.0f;
@@ -49,6 +51,5 @@ public class GameData : MonoBehaviour
     {
         _windHeading = WindHeading.NONE;
         _treeType = TreeType.SYMPODIAL;
-        _branchType = BranchHier.FIRST;
     }
 }

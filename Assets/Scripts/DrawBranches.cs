@@ -232,15 +232,68 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
+    public Vector3 LightHeadingRot(Vector3 _originalRot, BranchData _BD)
+    {
+        Vector3 newRot = _originalRot;
+        //SECOND PASS FOR ENVIRON EFFECTS
+        switch (_GD._lightHeading)
+        {
+            case LightHeading.NONE:
+                break;
+
+            case LightHeading.NORTH:
+
+                if ((newRot.y % 360.0f) > 180 && (newRot.y % 360.0f) < 360)
+                {
+                    newRot.x = -3.0f * _GD._sunStrength;
+                }
+                if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = 2.0f * _GD._sunStrength;
+
+                break;
+
+            case LightHeading.EAST:
+
+                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
+                {
+                    newRot.x = -3.0f * _GD._sunStrength;
+                }
+
+                if (_BD.Hierachy < 1)//Trunk
+                    newRot.x = 1.0f * _GD._sunStrength;
+
+                break;
+
+            case LightHeading.SOUTH:
+                if ((newRot.y % 360.0f) < 180 && (newRot.y % 360.0f) > 0)
+                {
+                    newRot.x = -3.0f * _GD._sunStrength;
+                }
+
+                if (_BD.Hierachy < 1)//Trunk
+                    newRot.x = 1.0f * _GD._sunStrength;
+
+                break;
+
+            case LightHeading.WEST:
+                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
+                {
+                    newRot.x = -3.0f * _GD._sunStrength;
+                }
+                if (_BD.Hierachy < 1)//Trunk
+                    newRot.x = 2.0f * _GD._sunStrength;
+
+                break;
+
+            default:
+                break;
+        }
+        return newRot;
+    }
+
     public GameObject AddFractals(BranchData _BD, BezierCurve _parent)
     {
         GameObject fractal = Resources.Load("FractalObj") as GameObject;
-        Vector3 rotPos = _parent.transform.rotation.eulerAngles;
-        //float rotationZ = (float)(Mathf.Atan2(rotPos.y, rotPos.x) / (2 * Mathf.PI));
-        //float rotationX = (float)(Mathf.Atan2(rotPos.x, rotPos.z) / (2 * Mathf.PI));
-        //float rotationY = (float)(Mathf.Atan2(rotPos.y, rotPos.z) / (2 * Mathf.PI));
-        Debug.Log(rotPos);
-        //NOT SURE why not working
         Instantiate(fractal, _parent.GetPoint(1), Quaternion.identity, _parent.gameObject.transform);
         // transform.Rotate(_parent.GetPoint(1) - _parent.GetPoint(0.98f));
         return fractal;
@@ -258,3 +311,7 @@ public class DrawBranches : MonoBehaviour
 //        drawTree(x2, y2, angle + 20, _depth - 1);
 //    }
 //}
+//Vector3 rotPos = _parent.transform.rotation.eulerAngles;
+////float rotationZ = (float)(Mathf.Atan2(rotPos.y, rotPos.x) / (2 * Mathf.PI));
+////float rotationX = (float)(Mathf.Atan2(rotPos.x, rotPos.z) / (2 * Mathf.PI));
+////float rotationY = (float)(Mathf.Atan2(rotPos.y, rotPos.z) / (2 * Mathf.PI));
