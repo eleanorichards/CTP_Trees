@@ -64,10 +64,12 @@ public class PlaceBranches : MonoBehaviour
             InitBranchValues(i, _BD);
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
+            if (i > (branchNum - tierCount[tierCount.Length - 1]))
+                fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
         }
 
         //rotationPass - in reverse to avoid parent's effects
-        for (int i = branchNum - 1; i > -1; i--)
+        for (int i = branchNum - 1; i > 0; i--)
         {
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
             InitBranchRot(i, _BD);
@@ -75,17 +77,17 @@ public class PlaceBranches : MonoBehaviour
         for (int i = branchNum - tierCount[tierCount.Length - 1] - 1; i < branchNum - 1; i++)
         {
             //Fractal pass
-            //if (i > (branchNum - tierCount[tierCount.Length - 1]))
-            fractalList.Add(drawBranch.AddFractals(BranchTransforms[i].GetComponent<BranchData>(), BranchTransforms[i].GetComponent<BezierCurve>()));
-            RotateFractals(BranchTransforms[i].GetComponent<BezierCurve>(), i);
+            RotateFractals(BranchTransforms[i], i);
         }
     }
 
-    private void RotateFractals(BezierCurve _parent, int index)
+    private void RotateFractals(GameObject _parent, int index)
     {
         foreach (GameObject fractal in fractalList)
         {
-            fractal.transform.Rotate(_parent.GetPoint(1) - _parent.GetPoint(0.98f));
+            // fractal.transform.SetParent(BranchTransforms[index].transform);
+            //fractal.transform.position = _parent.GetPoint(1);
+            fractal.transform.Rotate(fractal.transform.parent.transform.rotation.eulerAngles);
         }
     }
 
@@ -137,11 +139,21 @@ public class PlaceBranches : MonoBehaviour
     private void InitBranchRot(int globalID, BranchData _BD)
     {
         //First pass for default pos
-        newRot = drawBranch.InitBranchDefaults(newRot, _BD);
-        //second pass (weighting soon) for environmental
-        newRot = drawBranch.WindHeadingRot(newRot, _BD);
+        newRot = SetRotationWeighting(newRot, _BD);
+
         BranchTransforms[globalID].transform.SetParent(ReturnBranchParent(_BD).transform);
         BranchTransforms[globalID].transform.Rotate(newRot);
+    }
+
+    private Vector3 SetRotationWeighting(Vector3 oldRot, BranchData _BD)
+    {
+        Vector3 newRot = oldRot;
+        Vector3 v1 = drawBranch.InitBranchDefaults(newRot, _BD);
+        Vector3 v2 = drawBranch.WindHeadingRot(newRot, _BD);
+        Vector3 v3 = drawBranch.SunDirectionRot(newRot, _BD);
+
+        newRot += (v3 + v2 + v1) * 0.01f; //etc ect
+        return newRot;
     }
 
     private GameObject ReturnBranchParent(BranchData _BD)

@@ -53,8 +53,8 @@ public class FractalGen : MonoBehaviour
         line.SetPosition(1, new Vector3(x2, y2, transform.position.z));
     }
 
-    public void RotateFractal(Vector3 rotation)
-    {
-        transform.Rotate(rotation, Space.Self);
-    }
+    //public void RotateFractal(Vector3 rotation)
+    //{
+    //    transform.Rotate(rotation, Space.Self);
+    //}
 }

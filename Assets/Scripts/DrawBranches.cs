@@ -291,12 +291,14 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
-    public GameObject AddFractals(BranchData _BD, BezierCurve _parent)
+    public GameObject AddFractals(GameObject _parent, BezierCurve _parentCurve)
     {
         GameObject fractal = Resources.Load("FractalObj") as GameObject;
-        Instantiate(fractal, _parent.GetPoint(1), Quaternion.identity, _parent.gameObject.transform);
-        // transform.Rotate(_parent.GetPoint(1) - _parent.GetPoint(0.98f));
-        return fractal;
+        GameObject thisFractal = Instantiate(fractal, _parentCurve.GetPoint(1), Quaternion.identity);
+        thisFractal.transform.SetParent(_parent.transform);
+        //thisFractal.transform.SetPositionAndRotation(_parentCurve.GetPoint(1), _parent.transform.rotation);
+        //thisFractal.transform.Rotate(_parent.transform.rotation.eulerAngles);
+        return thisFractal;
     }
 }
 
