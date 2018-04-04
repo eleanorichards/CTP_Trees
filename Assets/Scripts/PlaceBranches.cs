@@ -64,8 +64,9 @@ public class PlaceBranches : MonoBehaviour
             InitBranchValues(i, _BD);
             InitLineRenderer(line);
             InitBranchSpline(i, line, _BD, spline);
-            if (i > (branchNum - tierCount[tierCount.Length - 1]))
-                fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
+            if (_GD.leaves)
+                if (i > (branchNum - tierCount[tierCount.Length - 1]))
+                    fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
         }
 
         //rotationPass - in reverse to avoid parent's effects
@@ -77,7 +78,7 @@ public class PlaceBranches : MonoBehaviour
         for (int i = branchNum - tierCount[tierCount.Length - 1] - 1; i < branchNum - 1; i++)
         {
             //Fractal pass
-            RotateFractals(BranchTransforms[i], i);
+            //RotateFractals(BranchTransforms[i], i);
         }
     }
 

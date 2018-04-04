@@ -45,6 +45,7 @@ public class GameData : MonoBehaviour
     public float _sunStrength = 1.0f;
     public float _tangliness = 0.0f;
     public bool surrounded = false;
+    public bool leaves = false;
 
     // Use this for initialization
     private void Start()

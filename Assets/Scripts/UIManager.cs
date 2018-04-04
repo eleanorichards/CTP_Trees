@@ -93,6 +93,15 @@ public class UIManager : MonoBehaviour
     }
 
     //LEAVES
+    public void HasLeaves(bool _leaves)
+    {
+        _GD.leaves = _leaves;
+        //return _leaves;
+    }
 
     //SURROUNDED
+    public void IsSurrounded(bool _isSurrounded)
+    {
+        _GD.surrounded = _isSurrounded;
+    }
 }
