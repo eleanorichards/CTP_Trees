@@ -149,11 +149,12 @@ public class PlaceBranches : MonoBehaviour
     private Vector3 SetRotationWeighting(Vector3 oldRot, BranchData _BD)
     {
         Vector3 newRot = oldRot;
-        Vector3 v1 = drawBranch.InitBranchDefaults(newRot, _BD);
-        Vector3 v2 = drawBranch.WindHeadingRot(newRot, _BD);
-        Vector3 v3 = drawBranch.SunDirectionRot(newRot, _BD);
+        Vector3 initialRot = drawBranch.InitBranchDefaults(newRot, _BD);
 
-        newRot += (v3 + v2 + v1) * 0.01f; //etc ect
+        Vector3 v2 = drawBranch.WindHeadingRot(initialRot, _BD);
+        Vector3 v3 = drawBranch.SunHeadingRot(initialRot, _BD);
+
+        newRot = initialRot + v2 + v3; //etc ect
         return newRot;
     }
 

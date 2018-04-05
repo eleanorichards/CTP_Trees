@@ -9,6 +9,9 @@ public class DrawBranches : MonoBehaviour
     private float scale = 0.2f;
     private GameData _GD;
 
+    public float maxWindAngle = 50.0f;
+    public float maxSunAngle = 70.0f;
+
     ///Height
     //Surrounded/solo
     //moisture
@@ -51,7 +54,6 @@ public class DrawBranches : MonoBehaviour
 
         height /= (((float)_BD.GroupID / 10.0f) + 1);
 
-        //SUNSTRENGTH percentage
         // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
         spline.DrawSpline(transform.position, nodeNum, _BD);
@@ -114,127 +116,9 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
-    public Vector3 SunDirectionRot(Vector3 _originalRot, BranchData _BD)
+    public Vector3 SunHeadingRot(Vector3 _originalRot, BranchData _BD)
     {
-        Vector3 newRot = _originalRot;
-        //SECOND PASS FOR ENVIRON EFFECTS
-        switch (_GD._windHeading)
-        {
-            case WindHeading.NONE:
-                break;
-
-            case WindHeading.NORTH:
-
-                if ((newRot.y % 360.0f) > 180 && (newRot.y % 360.0f) < 360)
-                {
-                    newRot.x = -3.0f * _GD._sunStrength;
-                }
-                if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = 2.0f * _GD._sunStrength;
-
-                break;
-
-            case WindHeading.EAST:
-
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
-                {
-                    newRot.x = -3.0f * _GD._sunStrength;
-                }
-
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._sunStrength;
-
-                break;
-
-            case WindHeading.SOUTH:
-                if ((newRot.y % 360.0f) < 180 && (newRot.y % 360.0f) > 0)
-                {
-                    newRot.x = -3.0f * _GD._sunStrength;
-                }
-
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._sunStrength;
-
-                break;
-
-            case WindHeading.WEST:
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
-                {
-                    newRot.x = -3.0f * _GD._sunStrength;
-                }
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 2.0f * _GD._sunStrength;
-
-                break;
-
-            default:
-                break;
-        }
-        return newRot;
-    }
-
-    public Vector3 WindHeadingRot(Vector3 _originalRot, BranchData _BD)
-    {
-        Vector3 newRot = _originalRot;
-        //SECOND PASS FOR ENVIRON EFFECTS
-        switch (_GD._windHeading)
-        {
-            case WindHeading.NONE:
-                break;
-
-            case WindHeading.NORTH:
-
-                if ((newRot.y % 360.0f) > 180 && (newRot.y % 360.0f) < 360)
-                {
-                    newRot.x = -3.0f * _GD._windSpeed;
-                }
-                if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = 2.0f * _GD._windSpeed;
-
-                break;
-
-            case WindHeading.EAST:
-
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
-                {
-                    newRot.x = -3.0f * _GD._windSpeed;
-                }
-
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._windSpeed;
-
-                break;
-
-            case WindHeading.SOUTH:
-                if ((newRot.y % 360.0f) < 180 && (newRot.y % 360.0f) > 0)
-                {
-                    newRot.x = -3.0f * _GD._windSpeed;
-                }
-
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._windSpeed;
-
-                break;
-
-            case WindHeading.WEST:
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
-                {
-                    newRot.x = -3.0f * _GD._windSpeed;
-                }
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 2.0f * _GD._windSpeed;
-
-                break;
-
-            default:
-                break;
-        }
-        return newRot;
-    }
-
-    public Vector3 LightHeadingRot(Vector3 _originalRot, BranchData _BD)
-    {
-        Vector3 newRot = _originalRot;
+        Vector3 newRot = Vector3.zero;
         //SECOND PASS FOR ENVIRON EFFECTS
         switch (_GD._lightHeading)
         {
@@ -243,52 +127,132 @@ public class DrawBranches : MonoBehaviour
 
             case LightHeading.NORTH:
 
-                if ((newRot.y % 360.0f) > 180 && (newRot.y % 360.0f) < 360)
+                if (_BD.Hierachy == 1)
                 {
-                    newRot.x = -3.0f * _GD._sunStrength;
+                    if (ReturnBranchFacingDir(_originalRot) == "N")
+                    {
+                        newRot.x = maxSunAngle * _GD._sunStrength;
+                    }
                 }
-                if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = 2.0f * _GD._sunStrength;
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxSunAngle * _GD._sunStrength;
 
                 break;
 
             case LightHeading.EAST:
 
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
+                if (_BD.Hierachy == 1)
                 {
-                    newRot.x = -3.0f * _GD._sunStrength;
+                    if (ReturnBranchFacingDir(_originalRot) == "E")
+                    {
+                        newRot.x = maxSunAngle * _GD._sunStrength;
+                    }
                 }
-
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._sunStrength;
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxSunAngle * _GD._sunStrength;
 
                 break;
 
             case LightHeading.SOUTH:
-                if ((newRot.y % 360.0f) < 180 && (newRot.y % 360.0f) > 0)
-                {
-                    newRot.x = -3.0f * _GD._sunStrength;
-                }
 
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 1.0f * _GD._sunStrength;
+                if (_BD.Hierachy == 1)
+                {
+                    if (ReturnBranchFacingDir(_originalRot) == "S")
+                    {
+                        newRot.x = maxSunAngle * _GD._sunStrength;
+                    }
+                }
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxSunAngle * _GD._sunStrength;
 
                 break;
 
             case LightHeading.WEST:
-                if ((newRot.y % 360.0f) > 270 || (newRot.y % 360.0f) < 90)
+
+                if (_BD.Hierachy == 1)
                 {
-                    newRot.x = -3.0f * _GD._sunStrength;
+                    if (ReturnBranchFacingDir(_originalRot) == "W")
+                    {
+                        newRot.x = maxSunAngle * _GD._sunStrength;
+                    }
                 }
-                if (_BD.Hierachy < 1)//Trunk
-                    newRot.x = 2.0f * _GD._sunStrength;
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxSunAngle * _GD._sunStrength;
 
                 break;
 
             default:
                 break;
         }
-        return newRot;
+        return new Vector3(newRot.x, 0, 0); //changes angle that branches can sprout out (towards sun)
+    }
+
+    public Vector3 WindHeadingRot(Vector3 _originalRot, BranchData _BD) //newRot = (max) -100 degrees * windspeed (0-1)
+    {
+        Vector3 newRot = Vector3.zero;
+        //SECOND PASS FOR ENVIRON EFFECTS
+        switch (_GD._windHeading)
+        {
+            case WindHeading.NONE:
+                break;
+
+            case WindHeading.NORTH:
+
+                if (_BD.Hierachy == 1)
+                {
+                    if (ReturnBranchFacingDir(_originalRot) == "N")
+                    {
+                        newRot.x = maxWindAngle * _GD._windSpeed;
+                    }
+                }
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxWindAngle * _GD._windSpeed;
+                break;
+
+            case WindHeading.EAST:
+
+                if (_BD.Hierachy == 1)
+                {
+                    if (ReturnBranchFacingDir(_originalRot) == "E")
+                    {
+                        newRot.x = maxWindAngle * _GD._windSpeed;
+                    }
+                }
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxWindAngle * _GD._windSpeed;
+
+                break;
+
+            case WindHeading.SOUTH:
+                if (_BD.Hierachy == 1)
+                {
+                    if (ReturnBranchFacingDir(_originalRot) == "S")
+                    {
+                        newRot.x = maxWindAngle * _GD._windSpeed;
+                    }
+                }
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxWindAngle * _GD._windSpeed;
+
+                break;
+
+            case WindHeading.WEST:
+                if (_BD.Hierachy == 1)
+                {
+                    if (ReturnBranchFacingDir(_originalRot) == "W")
+                    {
+                        newRot.x = maxWindAngle * _GD._windSpeed;
+                    }
+                }
+                else if (_BD.Hierachy < 1) //Trunk
+                    newRot.x = maxWindAngle * _GD._windSpeed;
+
+                break;
+
+            default:
+                break;
+        }
+        return new Vector3(newRot.x, 0, 0);
     }
 
     public GameObject AddFractals(GameObject _parent, BezierCurve _parentCurve)
@@ -299,6 +263,29 @@ public class DrawBranches : MonoBehaviour
         //thisFractal.transform.SetPositionAndRotation(_parentCurve.GetPoint(1), _parent.transform.rotation);
         //thisFractal.transform.Rotate(_parent.transform.rotation.eulerAngles);
         return thisFractal;
+    }
+
+    public string ReturnBranchFacingDir(Vector3 rotation)
+    {
+        while (rotation.y < 0)
+            rotation.y += 360;
+        if ((rotation.y % 360.0f) > 180 && (rotation.y % 360.0f) < 360)
+        {
+            return "N";
+        }
+        if (((rotation.y % 360.0f) > 270 && (rotation.y % 360.0f) < 360) || ((rotation.y % 360.0f) < 90 && (rotation.y % 360.0f) > 0))
+        {
+            return "E";
+        }
+        if ((rotation.y % 360.0f) < 180 && (rotation.y % 360.0f) > 0)
+        {
+            return "S";
+        }
+        if (((rotation.y % 360.0f) < 270 && (rotation.y % 360.0f) > 90))
+        {
+            return "W";
+        }
+        return "";
     }
 }
 
