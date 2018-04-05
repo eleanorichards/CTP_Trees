@@ -9,8 +9,8 @@ public class DrawBranches : MonoBehaviour
     private float scale = 0.2f;
     private GameData _GD;
 
-    public float maxWindAngle = 50.0f;
-    public float maxSunAngle = 70.0f;
+    public float maxWindAngle = 30.0f;
+    public float maxSunAngle = 50.0f;
 
     ///Height
     //Surrounded/solo
@@ -129,7 +129,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "N")
+                    if (ReturnBranchFacingDir(_originalRot, "N") == "N")
                     {
                         newRot.x = maxSunAngle * _GD._sunStrength;
                     }
@@ -143,7 +143,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "E")
+                    if (ReturnBranchFacingDir(_originalRot, "E") == "E")
                     {
                         newRot.x = maxSunAngle * _GD._sunStrength;
                     }
@@ -157,7 +157,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "S")
+                    if (ReturnBranchFacingDir(_originalRot, "S") == "S")
                     {
                         newRot.x = maxSunAngle * _GD._sunStrength;
                     }
@@ -171,7 +171,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "W")
+                    if (ReturnBranchFacingDir(_originalRot, "W") == "W")
                     {
                         newRot.x = maxSunAngle * _GD._sunStrength;
                     }
@@ -200,7 +200,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "N")
+                    if (ReturnBranchFacingDir(_originalRot, "N") == "N")
                     {
                         newRot.x = maxWindAngle * _GD._windSpeed;
                     }
@@ -213,7 +213,7 @@ public class DrawBranches : MonoBehaviour
 
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "E")
+                    if (ReturnBranchFacingDir(_originalRot, "E") == "E")
                     {
                         newRot.x = maxWindAngle * _GD._windSpeed;
                     }
@@ -226,7 +226,7 @@ public class DrawBranches : MonoBehaviour
             case WindHeading.SOUTH:
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "S")
+                    if (ReturnBranchFacingDir(_originalRot, "S") == "S")
                     {
                         newRot.x = maxWindAngle * _GD._windSpeed;
                     }
@@ -239,7 +239,7 @@ public class DrawBranches : MonoBehaviour
             case WindHeading.WEST:
                 if (_BD.Hierachy == 1)
                 {
-                    if (ReturnBranchFacingDir(_originalRot) == "W")
+                    if (ReturnBranchFacingDir(_originalRot, "W") == "W")
                     {
                         newRot.x = maxWindAngle * _GD._windSpeed;
                     }
@@ -265,23 +265,24 @@ public class DrawBranches : MonoBehaviour
         return thisFractal;
     }
 
-    public string ReturnBranchFacingDir(Vector3 rotation)
+    public string ReturnBranchFacingDir(Vector3 rotation, string checkZone)
     {
         while (rotation.y < 0)
             rotation.y += 360;
-        if ((rotation.y % 360.0f) > 180 && (rotation.y % 360.0f) < 360)
+        if (((rotation.y % 360.0f) > 180 && (rotation.y % 360.0f) < 360) && checkZone == "N")
         {
             return "N";
         }
-        if (((rotation.y % 360.0f) > 270 && (rotation.y % 360.0f) < 360) || ((rotation.y % 360.0f) < 90 && (rotation.y % 360.0f) > 0))
+        if ((((rotation.y % 360.0f) > 270 && (rotation.y % 360.0f) < 360)
+            || ((rotation.y % 360.0f) < 90 && (rotation.y % 360.0f) > 0)) && checkZone == "E")
         {
             return "E";
         }
-        if ((rotation.y % 360.0f) < 180 && (rotation.y % 360.0f) > 0)
+        if (((rotation.y % 360.0f) < 180 && (rotation.y % 360.0f) > 0) && checkZone == "S")
         {
             return "S";
         }
-        if (((rotation.y % 360.0f) < 270 && (rotation.y % 360.0f) > 90))
+        if ((((rotation.y % 360.0f) < 270 && (rotation.y % 360.0f) > 90)) && checkZone == "W")
         {
             return "W";
         }

@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     public Dropdown lightHeadingDD;
 
     public Slider windSpeedSlider;
+    public Slider sunStrengthSlider;
+
     public Slider treeNumSlider;
     public Slider tanglinessSlider;
 
@@ -27,9 +29,11 @@ public class UIManager : MonoBehaviour
         _GD = GetComponent<GameData>();
 
         windHeading = _GD._windHeading;
+        lightHeading = _GD._lightHeading;
         treeType = _GD._treeType;
 
         PopulateWindList();
+        PopulateLightList();
         PopulateTreeList();
     }
 
@@ -78,6 +82,12 @@ public class UIManager : MonoBehaviour
     public void WindSliderChanged()
     {
         _GD._windSpeed = windSpeedSlider.value;
+    }
+
+    //SUN STRENGTH
+    public void SunStrengthSliderChanged()
+    {
+        _GD._sunStrength = sunStrengthSlider.value;
     }
 
     //TREENUM
