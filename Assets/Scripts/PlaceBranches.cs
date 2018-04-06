@@ -14,7 +14,7 @@ public class PlaceBranches : MonoBehaviour
 
     private float[] tierProgress = new float[10];
 
-    private int branchNum;
+    private int branchNum; //density!
     private int stepsPerCurve = 5; //quality of curves
     private float thickness = 1.0f; //Reverse direction of hierachy
 
