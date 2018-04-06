@@ -116,6 +116,17 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
+    public float GetTreeHeight(BranchData _BD)
+    {
+        float height = 0.0f;
+        height = 50.0f;
+        if (_GD.surrounded)
+        {
+            height += 10.0f;
+        }
+        return height;
+    }
+
     public Vector3 SunHeadingRot(Vector3 _originalRot, BranchData _BD)
     {
         Vector3 newRot = Vector3.zero;
