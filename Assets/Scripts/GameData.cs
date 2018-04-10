@@ -34,15 +34,25 @@ public enum LightHeading
     WEST
 }
 
+public enum TempZones
+{
+    NONE,
+    TEMPERATE, //constant rain, stable temp
+    TROPICAL    //erratic highish temp, rain & drought 
+}
+
 public class GameData : MonoBehaviour
 {
     public int _treeNum = 1;
     public TreeType _treeType;
     public WindHeading _windHeading;
     public LightHeading _lightHeading;
+    public TempZones _tempZones;
 
     public float _windSpeed = 0.0f;
     public float _sunStrength = 1.0f;
+    public float _avgTemp = 0.0f;
+    public float _avgPrecip = 0.0f;
     public float _tangliness = 0.0f;
     public bool surrounded = false;
     public bool leaves = false;
@@ -52,5 +62,6 @@ public class GameData : MonoBehaviour
     {
         _windHeading = WindHeading.NONE;
         _treeType = TreeType.SYMPODIAL;
+        _tempZones = TempZones.NONE;
     }
 }

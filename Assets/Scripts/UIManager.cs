@@ -8,20 +8,24 @@ public class UIManager : MonoBehaviour
     public Dropdown windHeadingDD;
     public Dropdown treeTypeDD;
     public Dropdown lightHeadingDD;
+    public Dropdown tempDD;
 
     public Slider windSpeedSlider;
     public Slider sunStrengthSlider;
-
     public Slider treeNumSlider;
     public Slider tanglinessSlider;
+    public Slider tempSlider;
+    public Slider precipSlider;
 
     public Toggle leavesToggle;
     public Toggle surroundedToggle;
+
     private GameData _GD;
 
     private WindHeading windHeading;
     private LightHeading lightHeading;
     private TreeType treeType;
+    private TempZones tempZone;
 
     // Use this for initialization
     private void Start()
@@ -31,10 +35,12 @@ public class UIManager : MonoBehaviour
         windHeading = _GD._windHeading;
         lightHeading = _GD._lightHeading;
         treeType = _GD._treeType;
+        tempZone = _GD._tempZones;
 
         PopulateWindList();
         PopulateLightList();
         PopulateTreeList();
+        PopulateTempList();
     }
 
     //WIND HEADING DD
@@ -76,12 +82,38 @@ public class UIManager : MonoBehaviour
         lightHeadingDD.AddOptions(lightNames);
     }
 
+    //TEMP HEADING DD
+    public void TempIndexChanged(int index)
+    {
+        _GD._tempZones = (TempZones)index;
+    }
+
+    private void PopulateTempList()
+    {
+        string[] headingNames = TempZones.GetNames(typeof(TempZones));
+        List<string> tempNames = new List<string>(headingNames);
+        tempDD.AddOptions(tempNames);
+    }
+
+
     //SLIDERS
 
     //WINDSPEED
     public void WindSliderChanged()
     {
         _GD._windSpeed = windSpeedSlider.value;
+    }
+
+    //PRECIP
+    public void PrecipSliderChanged()
+    {
+        _GD._avgPrecip = precipSlider.value;
+    }
+
+    //TEMP
+    public void TempSliderChanged()
+    {
+        _GD._avgTemp = tempSlider.value;
     }
 
     //SUN STRENGTH
