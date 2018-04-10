@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 79287a8560c1e4544bda3022c0be150a
+timeCreated: 1523370085
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Clear Sans Thin
+  fontNames:
+  - Clear Sans Thin
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
