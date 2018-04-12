@@ -38,7 +38,7 @@ public enum TempZones
 {
     NONE,
     TEMPERATE, //constant rain, stable temp
-    TROPICAL    //erratic highish temp, rain & drought 
+    TROPICAL    //erratic highish temp, rain & drought
 }
 
 public class GameData : MonoBehaviour

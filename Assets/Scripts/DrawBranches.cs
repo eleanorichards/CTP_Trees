@@ -118,12 +118,14 @@ public class DrawBranches : MonoBehaviour
 
     public float GetTreeHeight(BranchData _BD)
     {
-        float height = 0.0f;
-        height = 50.0f;
-        if (_GD.surrounded)
+        float height = 50.0f;
+
+        if (_GD.surrounded) //soon, this should be moved to represent the density of the forest
         {
             height += 10.0f;
         }
+        height += _GD._avgPrecip;
+        height += _GD._avgTemp;
         return height;
     }
 
@@ -217,7 +219,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * _GD._windSpeed;
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
                 break;
 
             case WindHeading.EAST:
@@ -230,7 +232,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * _GD._windSpeed;
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
 
                 break;
 
@@ -243,7 +245,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * _GD._windSpeed;
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
 
                 break;
 
@@ -256,7 +258,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * _GD._windSpeed;
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
 
                 break;
 

@@ -51,6 +51,7 @@ public class PlaceBranches : MonoBehaviour
 
         for (int i = 0; i < tierCount.Length; i++)
         {
+            tierProgress[i] = 0;
             branchNum += tierCount[i];
         }
 
@@ -178,11 +179,6 @@ public class PlaceBranches : MonoBehaviour
 
     private void InitBranchSpline(int globalID, LineRenderer line, BranchData _BD, BezierCurve spline)
     {
-        if (tierProgress[_BD.Hierachy] > 1) //If branch
-        {
-            tierProgress[_BD.Hierachy] = 0;
-        }
-
         line.positionCount = 16 / (_BD.Hierachy + 1); //Cannot divide by 0
         line.startWidth = (thickness / tierCount[_BD.Hierachy]) * 1.1f;
         line.endWidth = (thickness / tierCount[_BD.Hierachy]) * 0.5f;
@@ -191,7 +187,11 @@ public class PlaceBranches : MonoBehaviour
         SetLineToSpline(line, spline);
         if (_BD.Hierachy > 0) //TRUNK
         {
-            tierProgress[_BD.Hierachy] += 1.0f / ((float)tierCount[_BD.Hierachy] / (float)tierCount[_BD.Hierachy - 1]);
+            tierProgress[_BD.Hierachy] += (1.0f / ((float)tierCount[_BD.Hierachy] / (float)tierCount[_BD.Hierachy - 1]));
+            if (tierProgress[_BD.Hierachy] > 1) //If branch
+            {
+                tierProgress[_BD.Hierachy] = 0;
+            }
             BranchTransforms[globalID].transform.position
         = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tierProgress[_BD.Hierachy]);
         }
