@@ -54,8 +54,9 @@ public class PlaceBranches : MonoBehaviour
             branchNum += tierCount[i];
         }
 
-        thickness = drawBranch.GetTreeHeight() / 10.0f;
-
+        thickness = drawBranch.GetTreeHeight() / 15.0f;
+        _GD._tangliness = 0.3f;
+        drawBranch.SetTreeTangliness();
         for (int i = 0; i < branchNum; i++)
         {
             GameObject branch = new GameObject("branch" + i);

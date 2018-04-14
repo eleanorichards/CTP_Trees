@@ -53,7 +53,7 @@ public class GameData : MonoBehaviour
     public float _sunStrength = 1.0f;
     public float _avgTemp = 0.0f;
     public float _avgPrecip = 0.0f;
-    public float _tangliness = 0.0f;
+    public float _tangliness = 0.1f;
     public float density = 0.0f;
     public bool leaves = false;
 
