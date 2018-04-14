@@ -48,12 +48,6 @@ public class DrawBranches : MonoBehaviour
         else
             height = 40;
 
-        //calculatoins arre okay.
-        //sometimes groupID = 0 branch is at the tip
-        height /= (((float)_BD.Hierachy + 1) / 10.0f) + 2;
-
-        height /= (((float)_BD.GroupID / 10.0f) + 1);
-
         // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
         spline.DrawSpline(transform.position, nodeNum, _BD);
@@ -119,6 +113,11 @@ public class DrawBranches : MonoBehaviour
     public float GetTreeHeight(BranchData _BD)
     {
         float height = 50.0f;
+        //calculatoins arre okay.
+        //sometimes groupID = 0 branch is at the tip
+        height /= (((float)_BD.Hierachy + 1) / 10.0f) + 2;
+
+        height /= (((float)_BD.GroupID / 10.0f) + 1);
 
         if (_GD.surrounded) //soon, this should be moved to represent the density of the forest
         {
