@@ -54,7 +54,7 @@ public class GameData : MonoBehaviour
     public float _avgTemp = 0.0f;
     public float _avgPrecip = 0.0f;
     public float _tangliness = 0.0f;
-    public bool surrounded = false;
+    public float density = 0.0f;
     public bool leaves = false;
 
     // Use this for initialization

@@ -12,13 +12,12 @@ public class UIManager : MonoBehaviour
 
     public Slider windSpeedSlider;
     public Slider sunStrengthSlider;
-    public Slider treeNumSlider;
     public Slider tanglinessSlider;
     public Slider tempSlider;
     public Slider precipSlider;
+    public Slider densitySlider;
 
     public Toggle leavesToggle;
-    public Toggle surroundedToggle;
 
     private GameData _GD;
 
@@ -98,6 +97,12 @@ public class UIManager : MonoBehaviour
 
     //SLIDERS
 
+    //PRECIP
+    public void DensitySliderChanged()
+    {
+        _GD.density = densitySlider.value;
+    }
+
     //WINDSPEED
     public void WindSliderChanged()
     {
@@ -122,12 +127,6 @@ public class UIManager : MonoBehaviour
         _GD._sunStrength = sunStrengthSlider.value;
     }
 
-    //TREENUM
-    public void TreeNumSliderChanged()
-    {
-        _GD._treeNum = (int)treeNumSlider.value;
-    }
-
     //TANGLINESS
     public void TanglinessSliderChanged()
     {
@@ -141,9 +140,5 @@ public class UIManager : MonoBehaviour
         //return _leaves;
     }
 
-    //SURROUNDED
-    public void IsSurrounded(bool _isSurrounded)
-    {
-        _GD.surrounded = _isSurrounded;
-    }
+  
 }

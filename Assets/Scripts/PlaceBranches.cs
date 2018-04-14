@@ -40,7 +40,6 @@ public class PlaceBranches : MonoBehaviour
     {
         foreach (GameObject oldBranch in BranchTransforms)
         {
-            //BranchTransforms.Remove(oldBranch);
             Destroy(oldBranch);
         }
         BranchTransforms.Clear();
@@ -54,6 +53,8 @@ public class PlaceBranches : MonoBehaviour
             tierProgress[i] = 0;
             branchNum += tierCount[i];
         }
+
+        thickness = drawBranch.GetTreeHeight() / 10.0f;
 
         for (int i = 0; i < branchNum; i++)
         {

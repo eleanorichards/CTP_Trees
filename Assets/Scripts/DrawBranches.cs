@@ -41,12 +41,7 @@ public class DrawBranches : MonoBehaviour
     {
         if (!_GD)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
-        float height = 0;
-
-        if (_GD.surrounded)
-            height = 30;
-        else
-            height = 40;
+        float height = GetTreeHeight();
 
         // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
@@ -110,21 +105,16 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
-    public float GetTreeHeight(BranchData _BD)
+    public float GetTreeHeight()
     {
         float height = 50.0f;
         //calculatoins arre okay.
         //sometimes groupID = 0 branch is at the tip
-        height /= (((float)_BD.Hierachy + 1) / 10.0f) + 2;
+        float a = height * _GD._avgPrecip;
+        float b = height * _GD._avgTemp;
+        float c = height * (_GD.density / 10.0f) + 1;
+        height += a + b + c;
 
-        height /= (((float)_BD.GroupID / 10.0f) + 1);
-
-        if (_GD.surrounded) //soon, this should be moved to represent the density of the forest
-        {
-            height += 10.0f;
-        }
-        height += _GD._avgPrecip;
-        height += _GD._avgTemp;
         return height;
     }
 
