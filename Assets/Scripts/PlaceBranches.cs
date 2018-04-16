@@ -36,7 +36,7 @@ public class PlaceBranches : MonoBehaviour
         }
     }
 
-    private void BuildTree()
+    public void BuildTree()
     {
         foreach (GameObject oldBranch in BranchTransforms)
         {
