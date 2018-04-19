@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class DrawBranches : MonoBehaviour
 {
-    private float deg_to_rad = Mathf.PI / 180.0f;
     public int depth = 9; // gets slow over 15
-    private float scale = 0.2f;
-    private GameData _GD;
+    public GameData _GD;
 
     public float maxWindAngle = 30.0f;
     public float maxSunAngle = 50.0f;
+
+    public bool editor = true;
 
     ///Height
     //Surrounded/solo
@@ -28,12 +28,10 @@ public class DrawBranches : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        if (!editor)
+            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        else
+            _GD = GetComponentInParent<GameData>();
     }
 
     //Surrounded, Sun strength
@@ -46,7 +44,7 @@ public class DrawBranches : MonoBehaviour
         height = GetBranchHeight(_BD, height);
         // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
-        spline.DrawSpline(transform.position, nodeNum, _BD);
+        spline.DrawSpline(transform.position, nodeNum, _BD, _GD);
     }
 
     public Vector3 InitBranchDefaults(Vector3 _originalRot, BranchData _BD)
@@ -73,14 +71,13 @@ public class DrawBranches : MonoBehaviour
                 newRot.y += 37.0f;
                 newRot.x = -55.0f;
                 break;
-            
+
             default:
                 break;
         }
 
         if (_BD.Hierachy < 1)
             newRot.x = 0.0f;
-
 
         return newRot;
     }
@@ -90,7 +87,7 @@ public class DrawBranches : MonoBehaviour
         float height = 50.0f;
         float a = height * _GD._avgPrecip; //+- 10%
         float b = height * _GD._avgTemp; //+=20%
-        float c = height * (_GD.density / 10.0f) + 1; 
+        float c = height * (_GD.density / 10.0f) + 1;
         height += a + b + c;
 
         return height;
@@ -101,33 +98,31 @@ public class DrawBranches : MonoBehaviour
         float x = 0;
 
         //Precipitation
-        if(_GD._avgPrecip > 0.05f)       
+        if (_GD._avgPrecip > 0.05f)
             for (float i = _GD._avgTemp; i > 0; i -= 0.01f)
             {
                 x += 0.01f;
-                _GD._tangliness += x ;
+                _GD._tangliness += x;
             }
-        
         else if (_GD._avgPrecip < -0.05f)
             for (float i = _GD._avgPrecip; i < 0f; i += 0.01f)
             {
                 x += 0.01f;
                 _GD._tangliness += x;
             }
-              
+
         //Temperature
         if (_GD._avgTemp > 0.1f)
-            for (float i = _GD._avgTemp; i > 0; i -= 0.01f)           
+            for (float i = _GD._avgTemp; i > 0; i -= 0.01f)
                 x += 0.01f;
-        else if(_GD._avgTemp < -0.1f)
+        else if (_GD._avgTemp < -0.1f)
             for (float i = _GD._avgTemp; i < 0f; i += 0.01f)
                 x += 0.01f;
 
         //Wind
-        if(_GD._windSpeed > 0.7f)   
-            for(float i = _GD._windSpeed; i > 0f; i-= 0.01f)
+        if (_GD._windSpeed > 0.7f)
+            for (float i = _GD._windSpeed; i > 0f; i -= 0.01f)
                 x += 0.01f;
-
 
         _GD._tangliness += x;
     }
@@ -138,15 +133,19 @@ public class DrawBranches : MonoBehaviour
         {
             case 0:
                 break;
+
             case 1:
                 height *= 0.7f;
                 break;
+
             case 2:
                 height *= 0.3f;
                 break;
+
             case 3:
                 height *= 0.1f;
                 break;
+
             default:
                 break;
         }

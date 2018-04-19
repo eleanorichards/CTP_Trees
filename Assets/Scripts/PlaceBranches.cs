@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlaceBranches : MonoBehaviour
 {
     private DrawBranches drawBranch;
-    private GameData _GD;
+    public GameData _GD;
     private List<GameObject> BranchTransforms = new List<GameObject>();
     private List<GameObject> fractalList = new List<GameObject>();
 
@@ -20,10 +20,11 @@ public class PlaceBranches : MonoBehaviour
 
     private Vector3 newRot = Vector3.zero;
 
+    public bool editor = true;
+
     // Use this for initialization
     private void Start()
     {
-        _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
         drawBranch = GetComponent<DrawBranches>();
         BuildTree();
     }
@@ -38,6 +39,14 @@ public class PlaceBranches : MonoBehaviour
 
     public void BuildTree()
     {
+        if (!editor)
+            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        else
+        {
+            _GD = GetComponentInParent<GameData>();
+            drawBranch._GD = _GD;
+        }
+
         foreach (GameObject oldBranch in BranchTransforms)
         {
             Destroy(oldBranch);

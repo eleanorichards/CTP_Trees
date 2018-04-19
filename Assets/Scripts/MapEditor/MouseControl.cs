@@ -6,10 +6,13 @@ public class MouseControl : MonoBehaviour
 {
     private Camera cam;
     private MapToWorld map;
+    private GameData _GD;
 
     // Use this for initialization
     private void Start()
     {
+        map = GameObject.Find("Plane").GetComponent<MapToWorld>();
+        _GD = GetComponent<GameData>();
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
@@ -17,27 +20,40 @@ public class MouseControl : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, cam.ScreenToWorldPoint(Input.mousePosition).y, 0);
-        //Vector3 origin = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, Camera.main.nearClipPlane);
-        Vector3 origin = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.nearClipPlane));
+        this.transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
 
-        Ray ray = cam.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cam.farClipPlane));
+        RaycastHit hit;
 
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground"));
-        Debug.DrawRay(origin, ray.direction, Color.red);
+        Debug.DrawRay(transform.position, -transform.up, Color.red);
         // RaycastHit hit;
 
-        if (hit)
+        if (Physics.Raycast(transform.position, -transform.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Tile")))
         {
-            if (transform.localPosition.x < map.width && transform.localPosition.y < map.height && transform.localPosition.x >= 0 && transform.localPosition.y >= 0)
+            transform.position = hit.collider.transform.position;
+            if (Input.GetKey(KeyCode.Mouse0))
             {
-                transform.position = hit.collider.transform.position;
-                if (Input.GetKey(KeyCode.Mouse0))
-                {
-                    Debug.Log(hit.collider.transform.localPosition);
-                    map.SetMapTile((int)hit.collider.transform.localPosition.x, (int)hit.collider.transform.localPosition.y);
-                }
+                hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
+                CopyComponent(_GD, hit.transform.gameObject);
+                // hit.transform.GetComponent<mapTile>().SetGameData(_GD);
             }
         }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            map.DrawTrees();
+        }
+    }
+
+    private Component CopyComponent(Component original, GameObject destination)
+    {
+        System.Type type = original.GetType();
+        Component copy = destination.AddComponent(type);
+        // Copied fields can be restricted with BindingFlags
+        System.Reflection.FieldInfo[] fields = type.GetFields();
+        foreach (System.Reflection.FieldInfo field in fields)
+        {
+            field.SetValue(copy, field.GetValue(original));
+        }
+        return copy;
     }
 }

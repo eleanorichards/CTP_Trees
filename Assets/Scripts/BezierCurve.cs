@@ -7,13 +7,15 @@ public class BezierCurve : MonoBehaviour
     private Vector3 initialStep;
     private GameData _GD;
     private int x = 0;
+    public bool editor = true;
+
     /// <summary>
     /// First Func Called
     /// Initialise here, BranchData already set
     /// </summary>
     /// <param name="node0Pos"></param>
     /// <param name="segmentCount"></param>
-    public void DrawSpline(Vector3 node0Pos, int segmentCount, BranchData _BD)
+    public void DrawSpline(Vector3 node0Pos, int segmentCount, BranchData _BD, GameData _GD)
     {
         segmentCount /= 4;
 
@@ -22,8 +24,11 @@ public class BezierCurve : MonoBehaviour
         SetNodeSize(segmentCount);
 
         //i == 1/groupID
-        if (!_GD)
-            _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        //if (!_GD && !editor)
+        //    _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+        //else if (!_GD && editor)
+        //    _GD = GetComponentInParent<GameData>();
+
         x = 0;
 
         for (int i = 1; i < segmentCount; i++)
