@@ -39,21 +39,21 @@ public class DrawBranches : MonoBehaviour
     public Vector3 InitBranchDefaults(Vector3 _originalRot, BranchData _BD)
     {
         Vector3 newRot = _originalRot;
-        newRot.y = GetRandomNumInRange(0, 360);
+        //newRot.y = GetRandomNumInRange(0, 360);
         switch (_GD._treeType)
         {
             case TreeType.DICHOTOMOUS:
-                newRot.y += GetRandomNumAround(180, 10);
+                newRot.y += GetRandomNumAround(180, 30);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.SYMPODIAL:
-                newRot.y += GetRandomNumAround(140, 10);
+                newRot.y += GetRandomNumAround(140, 30);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.MONOPODIAL:
-                newRot.y += GetRandomNumAround(90, 20);
+                newRot.y += GetRandomNumAround(90, 30);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 

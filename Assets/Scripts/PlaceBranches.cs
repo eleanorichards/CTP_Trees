@@ -19,7 +19,7 @@ public class PlaceBranches : MonoBehaviour
     private float thickness = 1.0f; //Reverse direction of hierachy
 
     private Vector3 newRot = Vector3.zero;
-
+    private TubeRenderer tubeRend;
     public bool editor = true;
 
     // Use this for initialization
@@ -27,6 +27,7 @@ public class PlaceBranches : MonoBehaviour
     {
         // drawBranch = GetComponent<DrawBranches>();
         // BuildTree();
+        tubeRend = GameObject.Find("TubeRenderer").GetComponent<TubeRenderer>();
     }
 
     private void Update()
@@ -214,18 +215,22 @@ public class PlaceBranches : MonoBehaviour
 
     private void SetLineToSpline(LineRenderer line, BezierCurve spline)
     {
+        int steps = stepsPerCurve * spline.CurveCount;
+        Vector3[] points = new Vector3[steps];
+
         if (line.positionCount >= 4)
         {
             //Internal Calculations
             Vector3 point = spline.GetPoint(0f);
             line.SetPosition(0, point);
-            int steps = stepsPerCurve * spline.CurveCount;
             line.positionCount = steps;
             line.SetPosition(0, spline.GetPoint(0));
             for (int x = 1; x < steps - 1; x++)
             {
                 point = spline.GetPoint((float)x / (float)steps);
                 //this is the curves within line rednerer
+                //tubeRend.vertices.SetValue()
+                points[x] = point;
                 line.SetPosition(x, point);
             }
             line.SetPosition(line.positionCount - 1, spline.GetPoint(1));
@@ -235,5 +240,7 @@ public class PlaceBranches : MonoBehaviour
             print("more nodes needed");
             return;
         }
+        tubeRend.SetVertices(points, points.Length, 1.0f);
+        tubeRend.RenderMesh();
     }
 }
