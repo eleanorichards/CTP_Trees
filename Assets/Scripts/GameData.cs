@@ -43,8 +43,9 @@ public enum TempZones
 
 public class GameData : MonoBehaviour
 {
-    public int _treeNum = 1;
+    //public int _treeNum = 0;
     public TreeType _treeType;
+
     public WindHeading _windHeading;
     public LightHeading _lightHeading;
     public TempZones _tempZones;
@@ -54,7 +55,7 @@ public class GameData : MonoBehaviour
     public float _avgTemp = 0.0f;
     public float _avgPrecip = 0.0f;
     public float _tangliness = 0.1f;
-    public float density = 0.0f;
+    public int density = 0;
     public bool leaves = false;
 
     // Use this for initialization

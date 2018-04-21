@@ -12,6 +12,7 @@ public class DrawBranches : MonoBehaviour
     public bool editor = true;
 
     private int seed = 20;
+
     // Use this for initialization
     private void Start()
     {
@@ -38,26 +39,27 @@ public class DrawBranches : MonoBehaviour
     public Vector3 InitBranchDefaults(Vector3 _originalRot, BranchData _BD)
     {
         Vector3 newRot = _originalRot;
+        newRot.y = GetRandomNumInRange(0, 360);
         switch (_GD._treeType)
         {
             case TreeType.DICHOTOMOUS:
-                newRot.y += GetRandomNumInRange(180,10);
-                newRot.x = GetRandomNumInRange(-55, 5);
+                newRot.y += GetRandomNumAround(180, 10);
+                newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.SYMPODIAL:
-                newRot.y += GetRandomNumInRange(140, 10);
-                newRot.x = GetRandomNumInRange(-55, 5);
+                newRot.y += GetRandomNumAround(140, 10);
+                newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.MONOPODIAL:
-                newRot.y += GetRandomNumInRange(90, 20);
-                newRot.x = GetRandomNumInRange(-55, 5);
+                newRot.y += GetRandomNumAround(90, 20);
+                newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.WHORLED:
-                newRot.y += GetRandomNumInRange(40, 30);
-                newRot.x = GetRandomNumInRange(-55, 5);
+                newRot.y += GetRandomNumAround(40, 30);
+                newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             default:
@@ -70,11 +72,20 @@ public class DrawBranches : MonoBehaviour
         return newRot;
     }
 
-    private float GetRandomNumInRange(int number, int leeway)
+    private float GetRandomNumAround(int number, int leeway)
     {
         seed += 3;
         System.Random rndSeed = new System.Random(seed);
-        float newNum = rndSeed.Next((int)(number-leeway), (int)(number + leeway));
+        float newNum = rndSeed.Next((int)(number - leeway), (int)(number + leeway));
+
+        return newNum;
+    }
+
+    private float GetRandomNumInRange(int number1, int number2)
+    {
+        seed += 3;
+        System.Random rndSeed = new System.Random(seed);
+        float newNum = rndSeed.Next((number1), (number2));
 
         return newNum;
     }

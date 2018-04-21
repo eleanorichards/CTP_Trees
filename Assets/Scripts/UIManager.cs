@@ -94,13 +94,12 @@ public class UIManager : MonoBehaviour
         tempDD.AddOptions(tempNames);
     }
 
-
     //SLIDERS
 
     //PRECIP
     public void DensitySliderChanged()
     {
-        _GD.density = densitySlider.value;
+        _GD.density = (int)densitySlider.value;
     }
 
     //WINDSPEED
@@ -139,6 +138,4 @@ public class UIManager : MonoBehaviour
         _GD.leaves = _leaves;
         //return _leaves;
     }
-
-  
 }

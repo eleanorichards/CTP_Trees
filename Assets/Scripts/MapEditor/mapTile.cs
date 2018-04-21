@@ -31,7 +31,7 @@ public class mapTile : MonoBehaviour
     public void BuildTrees()
     {
         tileData = GetComponent<GameData>();
-        for (int i = 0; i < treeNum; i++)
+        for (int i = 0; i < tileData.density; i++)
         {
             GameObject tempTree = Instantiate(tree) as GameObject;
             treeSpawn.Add(tempTree);
@@ -40,13 +40,13 @@ public class mapTile : MonoBehaviour
             tempTree.GetComponent<PlaceBranches>()._GD = tileData;
             tempTree.GetComponent<PlaceBranches>().BuildTree();
             tempTree.transform.localPosition = RaycastPointInTile();
-        }   
+        }
     }
 
     public Vector3 RaycastPointInTile()
     {
         System.Random rndSeed = new System.Random(seed);
-        float xPos = rndSeed.Next( (int)-(tileSize / 2), (int)(tileSize / 2));
+        float xPos = rndSeed.Next((int)-(tileSize / 2), (int)(tileSize / 2));
         float zPos = rndSeed.Next((int)-(tileSize / 2), (int)(tileSize / 2));
         seed++;
         // this.transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
@@ -59,7 +59,7 @@ public class mapTile : MonoBehaviour
 
         if (Physics.Raycast(origin, -Vector3.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Terrain")))
         {
-            print(hit.point);
+            //print(hit.point);
             return hit.point;
         }
         return Vector3.zero;
