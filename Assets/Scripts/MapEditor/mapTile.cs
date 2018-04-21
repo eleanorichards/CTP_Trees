@@ -40,12 +40,7 @@ public class mapTile : MonoBehaviour
             tempTree.GetComponent<PlaceBranches>()._GD = tileData;
             tempTree.GetComponent<PlaceBranches>().BuildTree();
             tempTree.transform.localPosition = RaycastPointInTile();
-        }
-        for (int i = 0; i < treeNum; i++)
-        {
-            // treeSpawn[i].transform.position = RaycastPointInTile();
-
-        }
+        }   
     }
 
     public Vector3 RaycastPointInTile()
@@ -64,6 +59,7 @@ public class mapTile : MonoBehaviour
 
         if (Physics.Raycast(origin, -Vector3.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Terrain")))
         {
+            print(hit.point);
             return hit.point;
         }
         return Vector3.zero;

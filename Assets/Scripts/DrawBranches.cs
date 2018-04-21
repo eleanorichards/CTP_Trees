@@ -4,27 +4,14 @@ using UnityEngine;
 
 public class DrawBranches : MonoBehaviour
 {
-    public int depth = 9; // gets slow over 15
     public GameData _GD;
 
+    public int depth = 9; // gets slow over 15
     public float maxWindAngle = 30.0f;
     public float maxSunAngle = 50.0f;
-
     public bool editor = true;
 
-    ///Height
-    //Surrounded/solo
-    //moisture
-    //soil quality
-    ///Density
-    //height
-    //surrounded/solo
-    ///Rotation
-    //Sun
-    //wind
-    ///Randomness
-    //soil quality/density
-
+    private int seed = 20;
     // Use this for initialization
     private void Start()
     {
@@ -54,23 +41,23 @@ public class DrawBranches : MonoBehaviour
         switch (_GD._treeType)
         {
             case TreeType.DICHOTOMOUS:
-                newRot.y += 180.0f;
-                newRot.x = -55.0f;
+                newRot.y += GetRandomNumInRange(180,10);
+                newRot.x = GetRandomNumInRange(-55, 5);
                 break;
 
             case TreeType.SYMPODIAL:
-                newRot.y += 137.5f;
-                newRot.x = -55.0f;
+                newRot.y += GetRandomNumInRange(140, 10);
+                newRot.x = GetRandomNumInRange(-55, 5);
                 break;
 
             case TreeType.MONOPODIAL:
-                newRot.y += 90.0f;
-                newRot.x = -55.0f;
+                newRot.y += GetRandomNumInRange(90, 20);
+                newRot.x = GetRandomNumInRange(-55, 5);
                 break;
 
             case TreeType.WHORLED:
-                newRot.y += 37.0f;
-                newRot.x = -55.0f;
+                newRot.y += GetRandomNumInRange(40, 30);
+                newRot.x = GetRandomNumInRange(-55, 5);
                 break;
 
             default:
@@ -81,6 +68,15 @@ public class DrawBranches : MonoBehaviour
             newRot.x = 0.0f;
 
         return newRot;
+    }
+
+    private float GetRandomNumInRange(int number, int leeway)
+    {
+        seed += 3;
+        System.Random rndSeed = new System.Random(seed);
+        float newNum = rndSeed.Next((int)(number-leeway), (int)(number + leeway));
+
+        return newNum;
     }
 
     public float GetTreeHeight()

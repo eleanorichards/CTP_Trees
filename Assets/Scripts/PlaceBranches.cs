@@ -39,7 +39,7 @@ public class PlaceBranches : MonoBehaviour
 
     public void BuildTree()
     {
-        print(transform.position);
+        //print(transform.position);
         drawBranch = GetComponent<DrawBranches>();
         //_GD.copy
         if (!editor)
