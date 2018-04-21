@@ -5,7 +5,7 @@ using UnityEngine;
 public class mapTile : MonoBehaviour
 {
     public int treeNum; //_GD.density
-    public int tileSize;
+    public float tileSize;
     private GameData tileData;
     private PlaceBranches drawTree;
     private List<GameObject> treeSpawn = new List<GameObject>();
@@ -35,24 +35,25 @@ public class mapTile : MonoBehaviour
         {
             GameObject tempTree = Instantiate(tree) as GameObject;
             treeSpawn.Add(tempTree);
-            tempTree.transform.position = RaycastPointInTile();
             tempTree.transform.SetParent(this.transform);
+            tempTree.GetComponent<DrawBranches>()._GD = tileData;
+            tempTree.GetComponent<PlaceBranches>()._GD = tileData;
+            tempTree.GetComponent<PlaceBranches>().BuildTree();
+            tempTree.transform.localPosition = RaycastPointInTile();
         }
         for (int i = 0; i < treeNum; i++)
         {
             // treeSpawn[i].transform.position = RaycastPointInTile();
-            treeSpawn[i].GetComponent<PlaceBranches>()._GD = tileData;
-            treeSpawn[i].GetComponent<DrawBranches>()._GD = tileData;
 
-            treeSpawn[i].GetComponent<PlaceBranches>().BuildTree();
         }
     }
 
     public Vector3 RaycastPointInTile()
     {
         System.Random rndSeed = new System.Random(seed);
-        float xPos = rndSeed.Next((int)transform.position.x - (tileSize / 2), (int)transform.position.x + (tileSize / 2));
-        float zPos = rndSeed.Next((int)transform.position.z - (tileSize / 2), (int)transform.position.z + (tileSize / 2));
+        float xPos = rndSeed.Next( (int)-(tileSize / 2), (int)(tileSize / 2));
+        float zPos = rndSeed.Next((int)-(tileSize / 2), (int)(tileSize / 2));
+        seed++;
         // this.transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
 
         Vector3 origin = new Vector3(xPos, 500.0f, zPos);

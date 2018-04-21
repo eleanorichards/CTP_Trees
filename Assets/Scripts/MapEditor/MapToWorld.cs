@@ -14,7 +14,7 @@ public class MapToWorld : MonoBehaviour
     public Terrain terrain;
     private float terrWidth;
     private float terrHeight;
-
+    private int seed = 0;
     //public int ma
     public List<GameObject> mapTiles = new List<GameObject>();
 
@@ -47,6 +47,9 @@ public class MapToWorld : MonoBehaviour
                 tileData = tile.GetComponent<mapTile>();
                 mapTiles.Add(tile);
                 tileData.SetMapIndex(x, y);
+                tileData.tileSize = (terrWidth / width);
+                seed++;
+                tileData.seed = seed;
                 tile.transform.SetParent(this.transform); //Set this map fill obj as parent
                 //tile.GetComponent<SpriteRenderer>().sprite = tileSprites[0];
             }
