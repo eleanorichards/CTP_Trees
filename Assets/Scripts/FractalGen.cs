@@ -40,7 +40,7 @@ public class FractalGen : MonoBehaviour
         GameObject branch = new GameObject("branch");
 
         // make this branch child of our main gameobject
-        branch.transform.parent = gameObject.transform;
+        branch.transform.SetParent(gameObject.transform);
 
         // add line renderer to our gameobject
         LineRenderer line = branch.AddComponent<LineRenderer>();

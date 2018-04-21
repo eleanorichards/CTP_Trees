@@ -30,8 +30,8 @@ public class DrawBranches : MonoBehaviour
     {
         if (!editor)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
-        else
-            _GD = GetComponentInParent<GameData>();
+        // else
+        //_GD = GetComponentInParent<GameData>();
     }
 
     //Surrounded, Sun strength
@@ -39,6 +39,7 @@ public class DrawBranches : MonoBehaviour
     {
         if (!_GD)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
+
         float height = GetTreeHeight();
 
         height = GetBranchHeight(_BD, height);

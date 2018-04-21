@@ -25,8 +25,8 @@ public class PlaceBranches : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        drawBranch = GetComponent<DrawBranches>();
-        BuildTree();
+        // drawBranch = GetComponent<DrawBranches>();
+        // BuildTree();
     }
 
     private void Update()
@@ -39,12 +39,15 @@ public class PlaceBranches : MonoBehaviour
 
     public void BuildTree()
     {
+        print(transform.position);
+        drawBranch = GetComponent<DrawBranches>();
+        //_GD.copy
         if (!editor)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
         else
         {
-            _GD = GetComponentInParent<GameData>();
-            drawBranch._GD = _GD;
+            //_GD = GetComponentInParent<GameData>();
+            //drawBranch._GD = _GD;
         }
 
         foreach (GameObject oldBranch in BranchTransforms)
@@ -70,6 +73,7 @@ public class PlaceBranches : MonoBehaviour
         {
             GameObject branch = new GameObject("branch" + i);
             BranchTransforms.Add(branch);
+            BranchTransforms[i].transform.SetParent(this.transform);
             LineRenderer line = BranchTransforms[i].AddComponent<LineRenderer>();
             BranchData _BD = BranchTransforms[i].AddComponent<BranchData>();
             BezierCurve spline = BranchTransforms[i].AddComponent<BezierCurve>();

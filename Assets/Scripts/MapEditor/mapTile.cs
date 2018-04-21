@@ -35,12 +35,15 @@ public class mapTile : MonoBehaviour
         {
             GameObject tempTree = Instantiate(tree) as GameObject;
             treeSpawn.Add(tempTree);
+            tempTree.transform.position = RaycastPointInTile();
             tempTree.transform.SetParent(this.transform);
         }
         for (int i = 0; i < treeNum; i++)
         {
-            treeSpawn[i].transform.position = RaycastPointInTile();
+            // treeSpawn[i].transform.position = RaycastPointInTile();
             treeSpawn[i].GetComponent<PlaceBranches>()._GD = tileData;
+            treeSpawn[i].GetComponent<DrawBranches>()._GD = tileData;
+
             treeSpawn[i].GetComponent<PlaceBranches>().BuildTree();
         }
     }

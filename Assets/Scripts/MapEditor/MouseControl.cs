@@ -30,7 +30,7 @@ public class MouseControl : MonoBehaviour
         if (Physics.Raycast(transform.position, -transform.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Tile")))
         {
             transform.position = hit.collider.transform.position;
-            if (Input.GetKey(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
                 CopyComponent(_GD, hit.transform.gameObject);
@@ -47,7 +47,7 @@ public class MouseControl : MonoBehaviour
     private Component CopyComponent(Component original, GameObject destination)
     {
         System.Type type = original.GetType();
-        Component copy = destination.AddComponent(type);
+        Component copy = destination.GetComponent(type);
         // Copied fields can be restricted with BindingFlags
         System.Reflection.FieldInfo[] fields = type.GetFields();
         foreach (System.Reflection.FieldInfo field in fields)
