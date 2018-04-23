@@ -12,7 +12,9 @@ public class MapToWorld : MonoBehaviour
     public GameObject tilePrefab;
     private mapTile tileData;
     public Terrain terrain;
+
     public GameObject terrain2;
+
     private float terrWidth;
     private float terrHeight;
     private int seed = 0;
@@ -34,9 +36,8 @@ public class MapToWorld : MonoBehaviour
         }
         else if (terrain2)
         {
-            terrWidth = terrain2.transform.localScale.x*2.5f;
-            terrHeight = terrain2.transform.localScale.z*2.5f;
-
+            terrWidth = terrain2.GetComponent<Renderer>().bounds.size.x;
+            terrHeight = terrain2.GetComponent<Renderer>().bounds.size.z;
         }
 
 
