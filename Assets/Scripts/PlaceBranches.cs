@@ -27,7 +27,7 @@ public class PlaceBranches : MonoBehaviour
     {
         // drawBranch = GetComponent<DrawBranches>();
         // BuildTree();
-        tubeRend = GameObject.Find("TubeRenderer").GetComponent<TubeRenderer>();
+        //tubeRend = GameObject.Find("TubeRenderer").GetComponent<TubeRenderer>();
     }
 
     private void Update()
@@ -70,6 +70,7 @@ public class PlaceBranches : MonoBehaviour
         thickness = drawBranch.GetTreeHeight() / 15.0f;
         _GD._tangliness = 0.3f;
         drawBranch.SetTreeTangliness();
+        drawBranch.GetTreeHeight();
         for (int i = 0; i < branchNum; i++)
         {
             GameObject branch = new GameObject("branch" + i);
@@ -199,7 +200,6 @@ public class PlaceBranches : MonoBehaviour
         line.startWidth = (thickness / tierCount[_BD.Hierachy]) * 1.1f;
         line.endWidth = (thickness / tierCount[_BD.Hierachy]) * 0.5f;
         drawBranch.DrawSplineBranches(spline, _BD);
-        //spline.DrawSpline(transform.position, line.positionCount, _BD);
         SetLineToSpline(line, spline);
         if (_BD.Hierachy > 0) //TRUNK
         {
@@ -222,6 +222,7 @@ public class PlaceBranches : MonoBehaviour
         {
             //Internal Calculations
             Vector3 point = spline.GetPoint(0f);
+            points[0] = point;
             line.SetPosition(0, point);
             line.positionCount = steps;
             line.SetPosition(0, spline.GetPoint(0));
@@ -233,14 +234,18 @@ public class PlaceBranches : MonoBehaviour
                 points[x] = point;
                 line.SetPosition(x, point);
             }
-            line.SetPosition(line.positionCount - 1, spline.GetPoint(1));
+            line.SetPosition(steps - 1, spline.GetPoint(1));
         }
         else
         {
             print("more nodes needed");
             return;
         }
+        //rendering cylinder
+        /*
+        points[steps - 1] = spline.GetPoint(1);
         tubeRend.SetVertices(points, points.Length, 1.0f);
         tubeRend.RenderMesh();
+        */
     }
 }

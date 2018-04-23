@@ -64,6 +64,7 @@ public class TubeRenderer : MonoBehaviour
 
     public void SetVertices(Vector3[] pos, int verticeLength, float radius)
     {
+        
         vertices = new TubeVertex[verticeLength];
 
         for (int i = 0; i < verticeLength; i++)
@@ -115,7 +116,7 @@ public class TubeRenderer : MonoBehaviour
                 uvs[vertexIndex] = new Vector2((0.0f + c) / crossSegments, (0.0f + p) / vertices.Length);
                 colors[vertexIndex] = vertices[p].color;
 
-                //				print(c+" - vertex index "+(p*crossSegments+c) + " is " + meshVertices[p*crossSegments+c]);
+                				//print(c+" - vertex index "+(p*crossSegments+c) + " is " + meshVertices[p*crossSegments+c]);
                 lastVertices[c] = theseVertices[c];
                 theseVertices[c] = p * crossSegments + c;
             }
@@ -131,7 +132,7 @@ public class TubeRenderer : MonoBehaviour
                     tris[start + 3] = tris[start + 2];
                     tris[start + 4] = tris[start + 1];
                     tris[start + 5] = theseVertices[(c + 1) % crossSegments];
-                    //					print("Triangle: indexes("+tris[start]+", "+tris[start+1]+", "+tris[start+2]+"), ("+tris[start+3]+", "+tris[start+4]+", "+tris[start+5]+")");
+                    					//print("Triangle: indexes("+tris[start]+", "+tris[start+1]+", "+tris[start+2]+"), ("+tris[start+3]+", "+tris[start+4]+", "+tris[start+5]+")");
                 }
             }
         }
@@ -141,10 +142,15 @@ public class TubeRenderer : MonoBehaviour
         {
             mesh = new Mesh();
         }
+        //mesh.vertices.
+
+
+        if (meshVertices.Length < 3)
+            return;
         mesh.vertices = meshVertices;
         mesh.triangles = tris;
         mesh.RecalculateNormals();
-        mesh.uv = uvs;
+        mesh.uv = uvs;                      //UV and Vertice should be same size
     }
 
     //sets all the points to points of a Vector3 array, as well as capping the ends.

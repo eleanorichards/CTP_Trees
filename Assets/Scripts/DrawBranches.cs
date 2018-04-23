@@ -12,7 +12,8 @@ public class DrawBranches : MonoBehaviour
     public bool editor = true;
 
     private int seed = 20;
-
+    private float height = 50.0f;
+    private float[] tierBranchLength = new float[4];
     // Use this for initialization
     private void Start()
     {
@@ -28,7 +29,7 @@ public class DrawBranches : MonoBehaviour
         if (!_GD)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
 
-        float height = GetTreeHeight();
+        
 
         height = GetBranchHeight(_BD, height);
         // height *= _GD._sunStrength;
@@ -40,25 +41,28 @@ public class DrawBranches : MonoBehaviour
     {
         Vector3 newRot = _originalRot;
         //newRot.y = GetRandomNumInRange(0, 360);
+
+        _GD._treeType = (TreeType)(int)GetRandomNumInRange(0, 3);
+
         switch (_GD._treeType)
         {
             case TreeType.DICHOTOMOUS:
-                newRot.y += GetRandomNumAround(180, 30);
+                newRot.y += GetRandomNumAround(180, 80);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.SYMPODIAL:
-                newRot.y += GetRandomNumAround(140, 30);
+                newRot.y += GetRandomNumAround(140, 80);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.MONOPODIAL:
-                newRot.y += GetRandomNumAround(90, 30);
+                newRot.y += GetRandomNumAround(90, 80);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
             case TreeType.WHORLED:
-                newRot.y += GetRandomNumAround(40, 30);
+                newRot.y += GetRandomNumAround(40, 80);
                 newRot.x = GetRandomNumAround(-55, 5);
                 break;
 
@@ -74,7 +78,7 @@ public class DrawBranches : MonoBehaviour
 
     private float GetRandomNumAround(int number, int leeway)
     {
-        seed += 3;
+        seed ++;
         System.Random rndSeed = new System.Random(seed);
         float newNum = rndSeed.Next((int)(number - leeway), (int)(number + leeway));
 
@@ -83,7 +87,7 @@ public class DrawBranches : MonoBehaviour
 
     private float GetRandomNumInRange(int number1, int number2)
     {
-        seed += 3;
+        seed ++;
         System.Random rndSeed = new System.Random(seed);
         float newNum = rndSeed.Next((number1), (number2));
 
@@ -92,18 +96,22 @@ public class DrawBranches : MonoBehaviour
 
     public float GetTreeHeight()
     {
-        float height = 50.0f;
+        height = GetRandomNumAround(50, 30);
         float a = height * _GD._avgPrecip; //+- 10%
         float b = height * _GD._avgTemp; //+=20%
         float c = height * (_GD.density / 10.0f) + 1;
         height += a + b + c;
 
+        for(int i = 0; i < tierBranchLength.Length; i++)
+        {
+            tierBranchLength[i] = height;
+        }
         return height;
     }
 
     public void SetTreeTangliness()
     {
-        float x = 0;
+        float x = 0.5f;
 
         //Precipitation
         if (_GD._avgPrecip > 0.05f)
@@ -113,24 +121,38 @@ public class DrawBranches : MonoBehaviour
                 _GD._tangliness += x;
             }
         else if (_GD._avgPrecip < -0.05f)
+        {
+
             for (float i = _GD._avgPrecip; i < 0f; i += 0.01f)
             {
                 x += 0.01f;
                 _GD._tangliness += x;
             }
+        }
 
         //Temperature
         if (_GD._avgTemp > 0.1f)
+        {
             for (float i = _GD._avgTemp; i > 0; i -= 0.01f)
+            {
                 x += 0.01f;
+            }
+        }
         else if (_GD._avgTemp < -0.1f)
+        {
             for (float i = _GD._avgTemp; i < 0f; i += 0.01f)
+            {
                 x += 0.01f;
-
+            }
+        }
         //Wind
         if (_GD._windSpeed > 0.7f)
+        {
             for (float i = _GD._windSpeed; i > 0f; i -= 0.01f)
+            {
                 x += 0.01f;
+            }
+        }
 
         _GD._tangliness += x;
     }
@@ -143,7 +165,9 @@ public class DrawBranches : MonoBehaviour
                 break;
 
             case 1:
-                height *= 0.7f;
+                tierBranchLength[1] *= 0.7f;
+                height = tierBranchLength[1];
+                print(height);
                 break;
 
             case 2:

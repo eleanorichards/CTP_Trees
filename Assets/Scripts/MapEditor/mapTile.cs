@@ -57,11 +57,14 @@ public class mapTile : MonoBehaviour
         Debug.DrawRay(origin, -transform.up, Color.red);
         // RaycastHit hit;
 
-        if (Physics.Raycast(origin, -Vector3.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Terrain")))
+        if (Physics.Raycast(origin, -Vector3.up, out hit, 2000.0f, 1 << LayerMask.NameToLayer("Terrain")))
         {
             //print(hit.point);
+            Debug.DrawRay(hit.point, transform.up, Color.magenta);
+
             return hit.point;
         }
+        print("not found");
         return Vector3.zero;
     }
 

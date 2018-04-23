@@ -12,6 +12,7 @@ public class MapToWorld : MonoBehaviour
     public GameObject tilePrefab;
     private mapTile tileData;
     public Terrain terrain;
+    public GameObject terrain2;
     private float terrWidth;
     private float terrHeight;
     private int seed = 0;
@@ -25,8 +26,20 @@ public class MapToWorld : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        if(terrain)
+        {
         terrWidth = terrain.terrainData.heightmapWidth;
         terrHeight = terrain.terrainData.heightmapWidth;
+
+        }
+        else if (terrain2)
+        {
+            terrWidth = terrain2.transform.localScale.x*2.5f;
+            terrHeight = terrain2.transform.localScale.z*2.5f;
+
+        }
+
+
         tilePrefab = Resources.Load("GridZone") as GameObject;
         transform.position = new Vector3(0, 0, 0);
 
