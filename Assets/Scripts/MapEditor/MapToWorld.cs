@@ -18,6 +18,7 @@ public class MapToWorld : MonoBehaviour
     private float terrWidth;
     private float terrHeight;
     private int seed = 0;
+
     //public int ma
     public List<GameObject> mapTiles = new List<GameObject>();
 
@@ -28,18 +29,16 @@ public class MapToWorld : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        if(terrain)
+        if (terrain)
         {
-        terrWidth = terrain.terrainData.heightmapWidth;
-        terrHeight = terrain.terrainData.heightmapWidth;
-
+            terrWidth = terrain.terrainData.heightmapWidth;
+            terrHeight = terrain.terrainData.heightmapWidth;
         }
         else if (terrain2)
         {
             terrWidth = terrain2.GetComponent<Renderer>().bounds.size.x;
             terrHeight = terrain2.GetComponent<Renderer>().bounds.size.z;
         }
-
 
         tilePrefab = Resources.Load("GridZone") as GameObject;
         transform.position = new Vector3(0, 0, 0);
@@ -73,6 +72,8 @@ public class MapToWorld : MonoBehaviour
             for (float y = (-terrHeight / 2) + (terrHeight / height) / 2; y <= (terrHeight / 2); y += (terrHeight / (height)))
             {
                 mapTiles[tileNo].transform.position = new Vector3(x, 0, y) + transform.position; //setLocations + mapGeneratorPos
+                //Instantiate(pointMarker");
+                //pointmarker.renderer.setmaterial("red");
                 tileNo++;
             }
         }
