@@ -42,7 +42,7 @@ public class DrawBranches : MonoBehaviour
         Vector3 newRot = _originalRot;
         //newRot.y = GetRandomNumInRange(0, 360);
 
-        _GD._treeType = (TreeType)(int)GetRandomNumInRange(0, 3);
+       
 
         switch (_GD._treeType)
         {
@@ -85,7 +85,7 @@ public class DrawBranches : MonoBehaviour
         return newNum;
     }
 
-    private float GetRandomNumInRange(int number1, int number2)
+    public float GetRandomNumInRange(int number1, int number2)
     {
         seed ++;
         System.Random rndSeed = new System.Random(seed);

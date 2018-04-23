@@ -16,7 +16,7 @@ public class PlaceBranches : MonoBehaviour
 
     private int branchNum; //density!
     private int stepsPerCurve = 5; //quality of curves
-    private float thickness = 1.0f; //Reverse direction of hierachy
+    private float thickness = 0.8f; //Reverse direction of hierachy
 
     private Vector3 newRot = Vector3.zero;
     private TubeRenderer tubeRend;
@@ -34,7 +34,7 @@ public class PlaceBranches : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            BuildTree();
+           // BuildTree();
         }
     }
 
@@ -197,8 +197,8 @@ public class PlaceBranches : MonoBehaviour
     private void InitBranchSpline(int globalID, LineRenderer line, BranchData _BD, BezierCurve spline)
     {
         line.positionCount = 16 / (_BD.Hierachy + 1); //Cannot divide by 0
-        line.startWidth = (thickness / tierCount[_BD.Hierachy]) * 1.1f;
-        line.endWidth = (thickness / tierCount[_BD.Hierachy]) * 0.5f;
+        line.startWidth = SetLineThickness( _BD);
+        line.endWidth = SetLineThickness( _BD) * 0.5f; //set end thickness to lower to 'point' branch
         drawBranch.DrawSplineBranches(spline, _BD);
         SetLineToSpline(line, spline);
         if (_BD.Hierachy > 0) //TRUNK
@@ -211,6 +211,28 @@ public class PlaceBranches : MonoBehaviour
             BranchTransforms[globalID].transform.position
         = ReturnBranchParent(_BD).GetComponent<BezierCurve>().GetPoint(tierProgress[_BD.Hierachy]);
         }
+    }
+
+
+    private float  SetLineThickness(BranchData _BD)
+    {
+        float lineWidth = thickness;
+        switch (_BD.Hierachy)
+        {
+            case 0:
+                break;
+            case 1:
+                lineWidth = thickness * 0.6f;
+                break;
+            case 2:
+                lineWidth = thickness * 0.2f;
+                break;
+            case 3: lineWidth = thickness * 0.1f;
+                break;
+            default:
+                break;
+        }
+        return lineWidth;
     }
 
     private void SetLineToSpline(LineRenderer line, BezierCurve spline)
@@ -226,10 +248,9 @@ public class PlaceBranches : MonoBehaviour
             line.SetPosition(0, point);
             line.positionCount = steps;
             line.SetPosition(0, spline.GetPoint(0));
-            for (int x = 1; x < steps - 1; x++)
+            for (int x = 1; x < steps - 1; x++) //EACH STEP OF LINE RENDERER
             {
                 point = spline.GetPoint((float)x / (float)steps);
-                //this is the curves within line rednerer
                 //tubeRend.vertices.SetValue()
                 points[x] = point;
                 line.SetPosition(x, point);

@@ -8,6 +8,7 @@ public class mapTile : MonoBehaviour
     public float tileSize;
     private GameData tileData;
     private PlaceBranches drawTree;
+    private DrawBranches drawBranch;
     private List<GameObject> treeSpawn = new List<GameObject>();
     private GameObject tree;
 
@@ -21,6 +22,8 @@ public class mapTile : MonoBehaviour
     {
         tree = Resources.Load("Tree") as GameObject;
         drawTree = tree.GetComponent<PlaceBranches>();
+        drawBranch = tree.GetComponent<DrawBranches>();
+
     }
 
     // Update is called once per frame
@@ -33,6 +36,7 @@ public class mapTile : MonoBehaviour
         tileData = GetComponent<GameData>();
         for (int i = 0; i < tileData.density; i++)
         {
+            tileData._treeType = (TreeType)(int)drawBranch.GetRandomNumInRange(0, 3);
             GameObject tempTree = Instantiate(tree) as GameObject;
             treeSpawn.Add(tempTree);
             tempTree.transform.SetParent(this.transform);
