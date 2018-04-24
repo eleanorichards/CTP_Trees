@@ -34,7 +34,7 @@ public class PlaceBranches : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-           // BuildTree();
+            // BuildTree();
         }
     }
 
@@ -84,7 +84,8 @@ public class PlaceBranches : MonoBehaviour
             InitBranchSpline(i, line, _BD, spline);
             if (_GD.leaves)
                 if (i > (branchNum - tierCount[tierCount.Length - 1]))
-                    fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
+                    // fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
+                    fractalList.Add(drawBranch.AddLeaves(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
         }
 
         //rotationPass - in reverse to avoid parent's effects
@@ -197,8 +198,8 @@ public class PlaceBranches : MonoBehaviour
     private void InitBranchSpline(int globalID, LineRenderer line, BranchData _BD, BezierCurve spline)
     {
         line.positionCount = 16 / (_BD.Hierachy + 1); //Cannot divide by 0
-        line.startWidth = SetLineThickness( _BD);
-        line.endWidth = SetLineThickness( _BD) * 0.5f; //set end thickness to lower to 'point' branch
+        line.startWidth = SetLineThickness(_BD);
+        line.endWidth = SetLineThickness(_BD) * 0.5f; //set end thickness to lower to 'point' branch
         drawBranch.DrawSplineBranches(spline, _BD);
         SetLineToSpline(line, spline);
         if (_BD.Hierachy > 0) //TRUNK
@@ -213,22 +214,26 @@ public class PlaceBranches : MonoBehaviour
         }
     }
 
-
-    private float  SetLineThickness(BranchData _BD)
+    private float SetLineThickness(BranchData _BD)
     {
         float lineWidth = thickness;
         switch (_BD.Hierachy)
         {
             case 0:
                 break;
+
             case 1:
                 lineWidth = thickness * 0.6f;
                 break;
+
             case 2:
                 lineWidth = thickness * 0.2f;
                 break;
-            case 3: lineWidth = thickness * 0.1f;
+
+            case 3:
+                lineWidth = thickness * 0.1f;
                 break;
+
             default:
                 break;
         }

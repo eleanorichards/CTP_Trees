@@ -328,6 +328,15 @@ public class DrawBranches : MonoBehaviour
         return thisFractal;
     }
 
+    public GameObject AddLeaves(GameObject _parent, BezierCurve _parentCurve)
+    {
+        GameObject leaf = Resources.Load("Leaves") as GameObject;
+        GameObject thisLeaf = Instantiate(leaf, _parentCurve.GetPoint(1), Quaternion.identity);
+        thisLeaf.transform.SetParent(_parent.transform);
+        thisLeaf.transform.Rotate(0, 0, 90);
+        return thisLeaf;
+    }
+
     public string ReturnBranchFacingDir(Vector3 rotation, string checkZone)
     {
         while (rotation.y < 0)

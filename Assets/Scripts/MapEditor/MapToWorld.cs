@@ -4,26 +4,24 @@ using UnityEngine;
 
 public class MapToWorld : MonoBehaviour
 {
-    //public GameData _GD;
-    public int width;
-
+    [Header("Tiling dimensions")]
     public int height;
 
-    public GameObject tilePrefab;
-    private mapTile tileData;
+    public int width;
 
+    [Header("Terrain links")]
     [Tooltip("drag in Unity terrain obj (tagged terrain)")]
     public Terrain terrain;
 
     [Tooltip("drag in Unity gameObject (tagged terrain)")]
     public GameObject terrain2;
 
-    private float terrWidth;
-    private float terrHeight;
-
+    private GameObject tilePrefab;
     private int seed = 0;
-
-    public List<GameObject> mapTiles = new List<GameObject>();
+    private float terrHeight;
+    private float terrWidth;
+    private mapTile tileData;
+    private List<GameObject> mapTiles = new List<GameObject>();
 
     // Use this for initialization
     private void Start()
@@ -64,7 +62,6 @@ public class MapToWorld : MonoBehaviour
                 seed++;
                 tileData.seed = seed;
                 tile.transform.SetParent(this.transform); //Set this map fill obj as parent
-                //tile.GetComponent<SpriteRenderer>().sprite = tileSprites[0];
             }
         }
         for (float x = (-terrWidth / 2) + (terrWidth / width) / 2; x <= (terrWidth / 2); x += (terrWidth / (width)))
@@ -72,12 +69,10 @@ public class MapToWorld : MonoBehaviour
             for (float y = (-terrHeight / 2) + (terrHeight / height) / 2; y <= (terrHeight / 2); y += (terrHeight / (height)))
             {
                 mapTiles[tileNo].transform.position = new Vector3(x, 0, y) + transform.position; //setLocations + mapGeneratorPos
-                //Instantiate(pointMarker");
-                //pointmarker.renderer.setmaterial("red");
+
                 tileNo++;
             }
         }
-        //
     }
 
     public void DrawTrees()
@@ -87,17 +82,4 @@ public class MapToWorld : MonoBehaviour
             tile.GetComponent<mapTile>().BuildTrees();
         }
     }
-
-    // Update is called once per frame
-    //public void SetMapTile(int x, int y)
-    //{
-    //    foreach (GameObject tile in mapTiles)
-    //    {
-    //        mapTile tileData = tile.GetComponent<mapTile>();
-    //        if (tileData.GetMapX() == x && tileData.GetMapY() == y)
-    //        {
-    //            tileData.SetGameData(_GD);
-    //        }
-    //    }
-    //}
 }
