@@ -11,8 +11,8 @@ public class MouseControl : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        map = GameObject.Find("Plane").GetComponent<MapToWorld>();
         _GD = GetComponent<GameData>();
+        map = GameObject.Find("MapGen").GetComponent<MapToWorld>();
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
@@ -33,6 +33,7 @@ public class MouseControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
+                //Instantiate(resources.load("selectedPoint")
                 CopyComponent(_GD, hit.transform.gameObject);
                 // hit.transform.GetComponent<mapTile>().SetGameData(_GD);
             }

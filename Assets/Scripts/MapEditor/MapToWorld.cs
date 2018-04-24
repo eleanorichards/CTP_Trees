@@ -11,12 +11,16 @@ public class MapToWorld : MonoBehaviour
 
     public GameObject tilePrefab;
     private mapTile tileData;
+
+    [Tooltip("drag in Unity terrain obj (tagged terrain)")]
     public Terrain terrain;
 
+    [Tooltip("drag in Unity gameObject (tagged terrain)")]
     public GameObject terrain2;
 
     private float terrWidth;
     private float terrHeight;
+
     private int seed = 0;
 
     //public int ma
