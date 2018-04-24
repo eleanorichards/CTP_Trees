@@ -39,7 +39,6 @@ public class DrawBranches : MonoBehaviour
     public Vector3 InitBranchDefaults(Vector3 _originalRot, BranchData _BD)
     {
         Vector3 newRot = _originalRot;
-        //newRot.y = GetRandomNumInRange(0, 360);
 
         switch (_GD._treeType)
         {

@@ -1,48 +1,88 @@
-﻿Shader "Custom/UIOverlayShader" {
-	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "UI/Default Font Draw On Top" {
+	Properties{
+		_MainTex("Font Texture", 2D) = "white" {}
+	_Color("Text Color", Color) = (1,1,1,1)
+
+		_StencilComp("Stencil Comparison", Float) = 8
+		_Stencil("Stencil ID", Float) = 0
+		_StencilOp("Stencil Operation", Float) = 0
+		_StencilWriteMask("Stencil Write Mask", Float) = 255
+		_StencilReadMask("Stencil Read Mask", Float) = 255
+
+		_ColorMask("Color Mask", Float) = 15
 	}
-	SubShader {
-		Tags { "RenderType"="Opaque" }
-		LOD 200
-		
+
+		SubShader{
+		Tags
+	{
+		"Queue" = "Transparent"
+		"IgnoreProjector" = "True"
+		"RenderType" = "Transparent"
+		"PreviewType" = "Plane"
+	}
+
+		Stencil
+	{
+		Ref[_Stencil]
+		Comp[_StencilComp]
+		Pass[_StencilOp]
+		ReadMask[_StencilReadMask]
+		WriteMask[_StencilWriteMask]
+	}
+
+		Lighting Off
+		Cull Off
+		ZTest Off
+		ZWrite Off
+		Blend SrcAlpha OneMinusSrcAlpha
+		ColorMask[_ColorMask]
+
+		Pass
+	{
 		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
+#pragma vertex vert
+#pragma fragment frag
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
+#include "UnityCG.cginc"
 
-		sampler2D _MainTex;
+		struct appdata_t {
+		float4 vertex : POSITION;
+		fixed4 color : COLOR;
+		float2 texcoord : TEXCOORD0;
+	};
 
-		struct Input {
-			float2 uv_MainTex;
-		};
+	struct v2f {
+		float4 vertex : SV_POSITION;
+		fixed4 color : COLOR;
+		float2 texcoord : TEXCOORD0;
+	};
 
-		half _Glossiness;
-		half _Metallic;
-		fixed4 _Color;
+	sampler2D _MainTex;
+	uniform float4 _MainTex_ST;
+	uniform fixed4 _Color;
 
-		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-		// #pragma instancing_options assumeuniformscaling
-		UNITY_INSTANCING_CBUFFER_START(Props)
-			// put more per-instance properties here
-		UNITY_INSTANCING_CBUFFER_END
+	v2f vert(appdata_t v)
+	{
+		v2f o;
+		o.vertex = UnityObjectToClipPos(v.vertex);
+		o.color = v.color * _Color;
+		o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+#ifdef UNITY_HALF_TEXEL_OFFSET
+		o.vertex.xy += (_ScreenParams.zw - 1.0)*float2(-1,1);
+#endif
+		return o;
+	}
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			// Metallic and smoothness come from slider variables
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
-		}
+	fixed4 frag(v2f i) : SV_Target
+	{
+		fixed4 col = i.color;
+	col.a *= tex2D(_MainTex, i.texcoord).a;
+	clip(col.a - 0.01);
+	return col;
+	}
 		ENDCG
 	}
-	FallBack "Diffuse"
+	}
 }

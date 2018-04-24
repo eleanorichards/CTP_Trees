@@ -44,6 +44,7 @@ public class mapTile : MonoBehaviour
         for (int i = 0; i < tileData.density; i++)
         {
             tileData._treeType = (TreeType)(int)drawBranch.GetRandomNumInRange(0, 3);
+            print(tileData._treeType);
             GameObject tempTree = Instantiate(tree) as GameObject;
             treeSpawn.Add(tempTree);
             tempTree.transform.SetParent(this.transform);

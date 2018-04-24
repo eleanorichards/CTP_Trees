@@ -17,10 +17,9 @@ public class MouseControl : MonoBehaviour
     }
 
     //MOUSE CONTROL
-
     private void FixedUpdate()
     {
-        this.transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
+        transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
 
         RaycastHit hit;
 
@@ -29,20 +28,23 @@ public class MouseControl : MonoBehaviour
 
         if (Physics.Raycast(transform.position, -transform.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Tile")))
         {
-            //hit.transform.GetComponent<mapTile>().SetToHover();
-
             transform.position = hit.collider.transform.position;
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                //hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
-                //Instantiate(resources.load("selectedPoint")
                 CopyComponent(_GD, hit.transform.gameObject);
                 hit.transform.GetComponent<mapTile>().SetToClicked();
             }
         }
-
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (Physics.Raycast(cam.ScreenToWorldPoint(Input.mousePosition), -transform.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("UI")))
+            {
+                print("UI HIT");
+            }
+        }
         if (Input.GetButtonDown("Jump"))
         {
+            print("constructing...");
             map.DrawTrees();
         }
     }
