@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class mapTile : MonoBehaviour
 {
-    public int treeNum; //_GD.density
     public float tileSize;
     private GameData tileData;
     private PlaceBranches drawTree;
@@ -12,10 +11,17 @@ public class mapTile : MonoBehaviour
     private List<GameObject> treeSpawn = new List<GameObject>();
     private GameObject tree;
 
+    [HideInInspector]
     public int seed = 0;
 
     private int xIndex = 0;
     private int yIndex = 0;
+    public GameObject plane;
+    private Renderer planeRend;
+
+    public Material[] tileSprites; //0 = clear
+                                   //1 = hovered
+                                   //2 = set
 
     // Use this for initialization
     private void Start()
@@ -23,12 +29,13 @@ public class mapTile : MonoBehaviour
         tree = Resources.Load("Tree") as GameObject;
         drawTree = tree.GetComponent<PlaceBranches>();
         drawBranch = tree.GetComponent<DrawBranches>();
-
+        planeRend = plane.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        // SetToDefault();
     }
 
     public void BuildTrees()
@@ -43,7 +50,7 @@ public class mapTile : MonoBehaviour
             tempTree.GetComponent<DrawBranches>()._GD = tileData;
             tempTree.GetComponent<PlaceBranches>()._GD = tileData;
             tempTree.GetComponent<PlaceBranches>().BuildTree();
-            tempTree.transform.localPosition = RaycastPointInTile();
+            tempTree.transform.position = RaycastPointInTile();
         }
     }
 
@@ -53,9 +60,8 @@ public class mapTile : MonoBehaviour
         float xPos = rndSeed.Next((int)-(tileSize / 2), (int)(tileSize / 2));
         float zPos = rndSeed.Next((int)-(tileSize / 2), (int)(tileSize / 2));
         seed++;
-        // this.transform.position = cam.ScreenToWorldPoint((Input.mousePosition));
 
-        Vector3 origin = new Vector3(xPos, 500.0f, zPos);
+        Vector3 origin = new Vector3(xPos, 500.0f, zPos) + transform.position; //random loc within tile + tile's transform
         RaycastHit hit;
 
         Debug.DrawRay(origin, -transform.up, Color.red);
@@ -63,13 +69,39 @@ public class mapTile : MonoBehaviour
 
         if (Physics.Raycast(origin, -Vector3.up, out hit, 2000.0f, 1 << LayerMask.NameToLayer("Terrain")))
         {
-            //print(hit.point);
-            Debug.DrawRay(hit.point, transform.up, Color.magenta);
-
+            Debug.DrawLine(hit.point, hit.point + Vector3.up);
             return hit.point;
         }
+        //map either not marked as terrain, or scale values incorrect
         print("not found");
         return Vector3.zero;
+    }
+
+    public void SetToDefault()
+    {
+        if (planeRend.material != tileSprites[0])
+        {
+            StartCoroutine(ResetMat(0.5f));
+
+            planeRend.material = tileSprites[0];
+        }
+    }
+
+    private IEnumerator ResetMat(float secs)
+    {
+        yield return new WaitForSeconds(secs);
+    }
+
+    public void SetToHover()
+    {
+        if (planeRend.material != tileSprites[1] /*&& planeRend.material != tileSprites[1]*/)
+            planeRend.material = tileSprites[1];
+    }
+
+    public void SetToClicked()
+    {
+        if (planeRend.material != tileSprites[2])
+            planeRend.material = tileSprites[2];
     }
 
     public void SetMapIndex(int x, int y)

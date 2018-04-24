@@ -23,12 +23,7 @@ public class MapToWorld : MonoBehaviour
 
     private int seed = 0;
 
-    //public int ma
     public List<GameObject> mapTiles = new List<GameObject>();
-
-    public Sprite[] tileSprites; //0 = clear
-                                 //1 = hovered
-                                 //2 = set
 
     // Use this for initialization
     private void Start()
@@ -62,6 +57,7 @@ public class MapToWorld : MonoBehaviour
                 GameObject tile = Instantiate(tilePrefab);
 
                 tileData = tile.GetComponent<mapTile>();
+
                 mapTiles.Add(tile);
                 tileData.SetMapIndex(x, y);
                 tileData.tileSize = (terrWidth / width);

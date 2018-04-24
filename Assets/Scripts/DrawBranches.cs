@@ -14,6 +14,7 @@ public class DrawBranches : MonoBehaviour
     private int seed = 20;
     private float height = 50.0f;
     private float[] tierBranchLength = new float[4];
+
     // Use this for initialization
     private void Start()
     {
@@ -29,8 +30,6 @@ public class DrawBranches : MonoBehaviour
         if (!_GD)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
 
-        
-
         height = GetBranchHeight(_BD, height);
         // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
@@ -41,8 +40,6 @@ public class DrawBranches : MonoBehaviour
     {
         Vector3 newRot = _originalRot;
         //newRot.y = GetRandomNumInRange(0, 360);
-
-       
 
         switch (_GD._treeType)
         {
@@ -78,7 +75,7 @@ public class DrawBranches : MonoBehaviour
 
     private float GetRandomNumAround(int number, int leeway)
     {
-        seed ++;
+        seed++;
         System.Random rndSeed = new System.Random(seed);
         float newNum = rndSeed.Next((int)(number - leeway), (int)(number + leeway));
 
@@ -87,7 +84,7 @@ public class DrawBranches : MonoBehaviour
 
     public float GetRandomNumInRange(int number1, int number2)
     {
-        seed ++;
+        seed++;
         System.Random rndSeed = new System.Random(seed);
         float newNum = rndSeed.Next((number1), (number2));
 
@@ -102,7 +99,7 @@ public class DrawBranches : MonoBehaviour
         float c = height * (_GD.density / 10.0f) + 1;
         height += a + b + c;
 
-        for(int i = 0; i < tierBranchLength.Length; i++)
+        for (int i = 0; i < tierBranchLength.Length; i++)
         {
             tierBranchLength[i] = height;
         }
@@ -122,7 +119,6 @@ public class DrawBranches : MonoBehaviour
             }
         else if (_GD._avgPrecip < -0.05f)
         {
-
             for (float i = _GD._avgPrecip; i < 0f; i += 0.01f)
             {
                 x += 0.01f;
@@ -167,7 +163,6 @@ public class DrawBranches : MonoBehaviour
             case 1:
                 tierBranchLength[1] *= 0.7f;
                 height = tierBranchLength[1];
-                print(height);
                 break;
 
             case 2:

@@ -29,13 +29,15 @@ public class MouseControl : MonoBehaviour
 
         if (Physics.Raycast(transform.position, -transform.up, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Tile")))
         {
+            //hit.transform.GetComponent<mapTile>().SetToHover();
+
             transform.position = hit.collider.transform.position;
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
+                //hit.collider.transform.GetComponentInChildren<Light>().color = Color.red;
                 //Instantiate(resources.load("selectedPoint")
                 CopyComponent(_GD, hit.transform.gameObject);
-                // hit.transform.GetComponent<mapTile>().SetGameData(_GD);
+                hit.transform.GetComponent<mapTile>().SetToClicked();
             }
         }
 
