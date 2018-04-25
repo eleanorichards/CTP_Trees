@@ -90,7 +90,7 @@ public class PlaceBranches : MonoBehaviour
         }
 
         //rotationPass - in reverse to avoid parent's effects
-        for (int i = branchNum - 1; i > 0; i--)
+        for (int i = branchNum - 1; i >= 0; i--)
         {
             BranchData _BD = BranchTransforms[i].GetComponent<BranchData>();
             InitBranchRot(i, _BD);
@@ -106,8 +106,6 @@ public class PlaceBranches : MonoBehaviour
     {
         foreach (GameObject fractal in fractalList)
         {
-            // fractal.transform.SetParent(BranchTransforms[index].transform);
-            //fractal.transform.position = _parent.GetPoint(1);
             fractal.transform.Rotate(fractal.transform.parent.transform.rotation.eulerAngles);
         }
     }
@@ -232,7 +230,7 @@ public class PlaceBranches : MonoBehaviour
                 break;
 
             case 3:
-                lineWidth = thickness * 0.1f;
+                lineWidth = thickness * 0.08f;
                 break;
 
             default:

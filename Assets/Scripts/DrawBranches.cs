@@ -193,11 +193,11 @@ public class DrawBranches : MonoBehaviour
                 {
                     if (ReturnBranchFacingDir(_originalRot, "N") == "N")
                     {
-                        newRot.x = maxSunAngle * _GD._sunStrength;
+                        newRot.x = maxSunAngle * _GD._sunStrength / 4;
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxSunAngle * _GD._sunStrength;
+                    newRot.x = maxSunAngle * _GD._sunStrength / 4;
 
                 break;
 
@@ -207,11 +207,11 @@ public class DrawBranches : MonoBehaviour
                 {
                     if (ReturnBranchFacingDir(_originalRot, "E") == "E")
                     {
-                        newRot.x = maxSunAngle * _GD._sunStrength;
+                        newRot.x = maxSunAngle * _GD._sunStrength / 4;
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxSunAngle * _GD._sunStrength;
+                    newRot.x = maxSunAngle * _GD._sunStrength / 4;
 
                 break;
 
@@ -225,7 +225,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxSunAngle * _GD._sunStrength;
+                    newRot.x = maxSunAngle * _GD._sunStrength / 4;
 
                 break;
 
@@ -239,7 +239,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxSunAngle * _GD._sunStrength;
+                    newRot.x = maxSunAngle * _GD._sunStrength / 4;
 
                 break;
 
@@ -269,7 +269,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 4);
                 break;
 
             case WindHeading.EAST:
@@ -282,7 +282,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 4);
 
                 break;
 
@@ -295,7 +295,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 4);
 
                 break;
 
@@ -308,7 +308,7 @@ public class DrawBranches : MonoBehaviour
                     }
                 }
                 else if (_BD.Hierachy < 1) //Trunk
-                    newRot.x = maxWindAngle * (_GD._windSpeed / 2);
+                    newRot.x = maxWindAngle * (_GD._windSpeed / 4);
 
                 break;
 
