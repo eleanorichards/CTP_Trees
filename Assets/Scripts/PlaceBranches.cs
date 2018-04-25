@@ -34,7 +34,7 @@ public class PlaceBranches : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-             BuildTree();
+            //BuildTree();
         }
     }
 

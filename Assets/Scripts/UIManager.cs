@@ -12,8 +12,10 @@ public class UIManager : MonoBehaviour
 
     public Slider windSpeedSlider;
     public Slider sunStrengthSlider;
-    public Slider tanglinessSlider;
+
+    // public Slider tanglinessSlider;
     public Slider tempSlider;
+
     public Slider precipSlider;
     public Slider densitySlider;
 
@@ -127,10 +129,10 @@ public class UIManager : MonoBehaviour
     }
 
     //TANGLINESS
-    public void TanglinessSliderChanged()
-    {
-        _GD._tangliness = tanglinessSlider.value;
-    }
+    //public void TanglinessSliderChanged()
+    //{
+    //    _GD._tangliness = tanglinessSlider.value;
+    //}
 
     //LEAVES
     public void HasLeaves(bool _leaves)

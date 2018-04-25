@@ -7,8 +7,8 @@ public class DrawBranches : MonoBehaviour
     public GameData _GD;
 
     public int depth = 9; // gets slow over 15
-    public float maxWindAngle = 30.0f;
-    public float maxSunAngle = 50.0f;
+    private float maxWindAngle = 30.0f;
+    private float maxSunAngle = 50.0f;
     public bool editor = true;
 
     private int seed = 20;
@@ -253,6 +253,7 @@ public class DrawBranches : MonoBehaviour
     {
         Vector3 newRot = Vector3.zero;
         //SECOND PASS FOR ENVIRON EFFECTS
+
         switch (_GD._windHeading)
         {
             case WindHeading.NONE:
@@ -340,20 +341,20 @@ public class DrawBranches : MonoBehaviour
     {
         while (rotation.y < 0)
             rotation.y += 360;
-        if (((rotation.y % 360.0f) > 180 && (rotation.y % 360.0f) < 360) && checkZone == "N")
+
+        if (((rotation.y % 360.0f) > 90 && (rotation.y % 360.0f) < 270) && checkZone == "N")
         {
             return "N";
         }
-        if ((((rotation.y % 360.0f) > 270 && (rotation.y % 360.0f) < 360)
-            || ((rotation.y % 360.0f) < 90 && (rotation.y % 360.0f) > 0)) && checkZone == "E")
+        if (((rotation.y % 360.0f) > 360 && (rotation.y % 360.0f) > 180) && checkZone == "E")
         {
             return "E";
         }
-        if (((rotation.y % 360.0f) < 180 && (rotation.y % 360.0f) > 0) && checkZone == "S")
+        if ((((rotation.y % 360.0f) > 270) || (rotation.y % 360.0f) < 90) && checkZone == "S")
         {
             return "S";
         }
-        if ((((rotation.y % 360.0f) < 270 && (rotation.y % 360.0f) > 90)) && checkZone == "W")
+        if ((((rotation.y % 360.0f) > 0 && (rotation.y % 360.0f) < 180)) && checkZone == "W")
         {
             return "W";
         }
