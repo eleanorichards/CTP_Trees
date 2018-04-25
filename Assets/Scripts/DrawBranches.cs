@@ -12,7 +12,7 @@ public class DrawBranches : MonoBehaviour
     public bool editor = true;
 
     private int seed = 20;
-    private float height = 50.0f;
+    public float height = 50.0f;
     private float[] tierBranchLength = new float[4];
 
     // Use this for initialization

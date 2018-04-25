@@ -34,7 +34,7 @@ public class PlaceBranches : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            // BuildTree();
+             BuildTree();
         }
     }
 
@@ -42,6 +42,7 @@ public class PlaceBranches : MonoBehaviour
     {
         //print(transform.position);
         drawBranch = GetComponent<DrawBranches>();
+        drawBranch.height = 50.0f;
         //_GD.copy
         if (!editor)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
