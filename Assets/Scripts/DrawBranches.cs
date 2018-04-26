@@ -31,11 +31,11 @@ public class DrawBranches : MonoBehaviour
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
 
         height = GetBranchHeight(_BD, height);
-        // height *= _GD._sunStrength;
         int nodeNum = (int)height - ((int)height % 4); //make a multiple of 4
         spline.DrawSpline(transform.position, nodeNum, _BD, _GD);
     }
 
+    //creates initial tree structure
     public Vector3 InitBranchDefaults(Vector3 _originalRot, BranchData _BD)
     {
         Vector3 newRot = _originalRot;
@@ -90,6 +90,7 @@ public class DrawBranches : MonoBehaviour
         return newNum;
     }
 
+    //passes initial height through variables
     public float GetTreeHeight()
     {
         height = GetRandomNumAround(50, 30);
@@ -105,6 +106,7 @@ public class DrawBranches : MonoBehaviour
         return height;
     }
 
+    //passes random dispersion of nodes through environmental variables
     public void SetTreeTangliness()
     {
         float x = 0.5f;
@@ -318,6 +320,8 @@ public class DrawBranches : MonoBehaviour
         return new Vector3(newRot.x, 0, 0);
     }
 
+    //DEPRECATED
+    //however still spawns fractals at rotation 0,0,0 if used instead of leaves
     public GameObject AddFractals(GameObject _parent, BezierCurve _parentCurve)
     {
         GameObject fractal = Resources.Load("FractalObj") as GameObject;

@@ -25,11 +25,11 @@ public class PlaceBranches : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        // drawBranch = GetComponent<DrawBranches>();
-        // BuildTree();
+        //UNCOMMENT TO PREVIEW MESH RENDERING
         //tubeRend = GameObject.Find("TubeRenderer").GetComponent<TubeRenderer>();
     }
 
+    /// UNCOMMENT BUILD TREE FOR SOLO TREE EDITOR USE
     private void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -40,10 +40,8 @@ public class PlaceBranches : MonoBehaviour
 
     public void BuildTree()
     {
-        //print(transform.position);
         drawBranch = GetComponent<DrawBranches>();
         drawBranch.height = 50.0f;
-        //_GD.copy
         if (!editor)
             _GD = GameObject.Find("CONTROLLER").GetComponent<GameData>();
         else
@@ -68,6 +66,7 @@ public class PlaceBranches : MonoBehaviour
             branchNum += tierCount[i];
         }
 
+        //INIT tree values
         thickness = drawBranch.GetTreeHeight() / 15.0f;
         _GD._tangliness = 0.3f;
         drawBranch.SetTreeTangliness();
@@ -85,7 +84,6 @@ public class PlaceBranches : MonoBehaviour
             InitBranchSpline(i, line, _BD, spline);
             if (_GD.leaves)
                 if (i > (branchNum - tierCount[tierCount.Length - 1]))
-                    // fractalList.Add(drawBranch.AddFractals(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
                     fractalList.Add(drawBranch.AddLeaves(BranchTransforms[i], BranchTransforms[i].GetComponent<BezierCurve>()));
         }
 
@@ -97,7 +95,7 @@ public class PlaceBranches : MonoBehaviour
         }
         for (int i = branchNum - tierCount[tierCount.Length - 1] - 1; i < branchNum - 1; i++)
         {
-            //Fractal pass
+            //Fractal pass - deprecated
             //RotateFractals(BranchTransforms[i], i);
         }
     }
@@ -148,13 +146,6 @@ public class PlaceBranches : MonoBehaviour
         }
     }
 
-    /// <summary>
-    ///         N[270]
-    ///
-    ///     E[180]       W[0]
-    ///
-    ///         S[90]
-    /// </summary>
     private void InitBranchRot(int globalID, BranchData _BD)
     {
         //First pass for default pos
